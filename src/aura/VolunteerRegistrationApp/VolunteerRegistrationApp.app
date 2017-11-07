@@ -1,2 +1,3 @@
-<aura:application description="VolunteerRegistrationApp">
+<aura:application description="VolunteerRegistrationApp" access="global">
+    <c:VolunteerRegistrationForm />
 </aura:application>
