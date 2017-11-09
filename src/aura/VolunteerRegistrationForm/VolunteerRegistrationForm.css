@@ -71,3 +71,7 @@
     padding: .5rem 2rem;
     border-radius: 0;
 }
+
+.THIS .slds-spinner_container {
+    position: fixed;
+}

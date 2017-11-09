@@ -1,37 +1,107 @@
 ({
+    
+    closeModal : function(component) {
+        component.set('v.showModal', false);
+    },
+    
+    loadPicklistValues : function(component) {
+        this.loadPronouns(component);
+        this.loadTrainingOptions(component);
+    },
+    
+    loadPronouns : function(component) {
+        var action = component.get('c.getPronouns');
+    
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+        
+            if ('SUCCESS' === state) {
+                component.set('v.pronounOptions', response.getReturnValue());
+            }
+            else if ('ERROR' === state) {
+                console.error('error loading pronoun picklist values',
+                    response.getError());
+            }
+        });
+    
+        $A.enqueueAction(action);
+    },
+    
+    loadTrainingOptions : function(component) {
+        var action = component.get('c.getTrainings');
+    
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+        
+            if ('SUCCESS' === state) {
+                component.set('v.trainingOptions', response.getReturnValue());
+            }
+            else if ('ERROR' === state) {
+                console.error('error loading training picklist values',
+                    response.getError());
+            }
+        });
+    
+        $A.enqueueAction(action);
+    },
+    
     submitForm : function(component) {
-        console.log('firstName', component.get('v.firstName'));
-        console.log('lastName', component.get('v.lastName'));
-        console.log('preferredName', component.get('v.preferredName'));
-        console.log('pronouns', component.get('v.pronouns'));
-        console.log('address1', component.get('v.address1'));
-        console.log('address2', component.get('v.address2'));
-        console.log('city', component.get('v.city'));
-        console.log('state', component.get('v.state'));
-        console.log('zip', component.get('v.zip'));
-        console.log('country', component.get('v.country'));
-        console.log('email', component.get('v.email'));
-        console.log('phone1', component.get('v.phone1'));
-        console.log('phone2', component.get('v.phone2'));
-        console.log('phone3', component.get('v.phone3'));
-        console.log('dobMonth', component.get('v.dobMonth'));
-        console.log('dobDay', component.get('v.dobDay'));
-        console.log('dobYear', component.get('v.dobYear'));
-        console.log('ecFirstName', component.get('v.ecFirstName'));
-        console.log('ecLastName', component.get('v.ecLastName'));
-        console.log('ecRelationship', component.get('v.ecRelationship'));
-        console.log('ecPhone1', component.get('v.ecPhone1'));
-        console.log('ecPhone2', component.get('v.ecPhone2'));
-        console.log('ecPhone3', component.get('v.ecPhone3'));
-        console.log('reason', component.get('v.reason'));
-        console.log('training', component.get('v.training'));
+        var action = component.get('c.registerVolunteer');
+        var volunteerInfo;
         
         if (!this.isFormValid(component)) {
-            console.log('form not valid');
             return;
         }
+    
+        volunteerInfo = {
+            'firstName' : component.get('v.firstName'),
+            'lastName' : component.get('v.lastName'),
+            'preferredName' : component.get('v.preferredName'),
+            'pronouns' : component.get('v.pronouns'),
+            'street' : component.get('v.street'),
+            'city' : component.get('v.city'),
+            'state' : component.get('v.state'),
+            'zip' : component.get('v.zip'),
+            'country' : component.get('v.country'),
+            'email' : component.get('v.email'),
+            'phone1' : component.get('v.phone1'),
+            'phone2' : component.get('v.phone2'),
+            'phone3' : component.get('v.phone3'),
+            'dobMonth' : component.get('v.dobMonth'),
+            'dobDay' : component.get('v.dobDay'),
+            'dobYear' : component.get('v.dobYear'),
+            'ecFirstName' : component.get('v.ecFirstName'),
+            'ecLastName' : component.get('v.ecLastName'),
+            'ecRelationship' : component.get('v.ecRelationship'),
+            'ecPhone1' : component.get('v.ecPhone1'),
+            'ecPhone2' : component.get('v.ecPhone2'),
+            'ecPhone3' : component.get('v.ecPhone3'),
+            'reason' : component.get('v.reason'),
+            'training' : component.get('v.training')
+        };
         
-        console.log('form IS valid!');
+        action.setParams({'volunteerInfo' : volunteerInfo});
+    
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+    
+            component.set('v.showSpinner', false);
+            component.set('v.modalType', state);
+            component.set('v.showModal', true);
+        
+            if ('SUCCESS' === state) {
+                console.log(state, response.getReturnValue());
+            }
+            else if ('ERROR' === state) {
+                console.log(state, response.getError());
+                
+            }
+        });
+        
+        component.set('v.showSpinner', true);
+        
+        $A.enqueueAction(action);
+        
     },
     
     isFormValid : function(component) {
@@ -43,6 +113,7 @@
         );
         
         return allValid;
-    }
+    },
+    
     
 })

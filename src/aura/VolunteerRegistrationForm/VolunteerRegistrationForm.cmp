@@ -1,11 +1,11 @@
-<aura:component description="VolunteerRegistrationForm" access="global">
+<aura:component description="VolunteerRegistrationForm" access="global"
+        controller="VolunteerRegistrationController">
 
     <aura:attribute name="firstName" access="private" type="String" default="" />
     <aura:attribute name="lastName" access="private" type="String" default="" />
     <aura:attribute name="preferredName" access="private" type="String" default="" />
     <aura:attribute name="pronouns" access="private" type="String" default="" />
-    <aura:attribute name="address1" access="private" type="String" default="" />
-    <aura:attribute name="address2" access="private" type="String" default="" />
+    <aura:attribute name="street" access="private" type="String" default="" />
     <aura:attribute name="city" access="private" type="String" default="" />
     <aura:attribute name="state" access="private" type="String" default="" />
     <aura:attribute name="zip" access="private" type="String" default="" />
@@ -26,6 +26,12 @@
     <aura:attribute name="reason" access="private" type="String" default="" />
     <aura:attribute name="training" access="private" type="String" default="" />
     <aura:attribute name="trainingOptions" access="private" type="Object[]" default="" />
+    <aura:attribute name="pronounOptions" access="private" type="String[]" default="" />
+    <aura:attribute name="showSpinner" access="private" type="Boolean" default="false" />
+    <aura:attribute name="showModal" access="private" type="Boolean" default="false" />
+    <aura:attribute name="modalType" access="private" type="String" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
 
     <div class="slds">
@@ -60,11 +66,9 @@
             <div class="slds-size_1-of-1 slds-p-horizontal_medium">
                 <lightning:select name="pronouns" value="{!v.pronouns}"
                         label="These are the pronouns you like to be referred to as.">
-                    <option value="He/him/his">He/him/his</option>
-                    <option value="She/her/hers">She/her/hers</option>
-                    <option value="They/them/theirs">They/them/theirs</option>
-                    <option value="Ze/hir/hirs">Ze/hir/hirs</option>
-                    <option value="Xe/xem/xyrs">Xe/xem/xyrs</option>
+                    <aura:iteration var="p" items="{!v.pronounOptions}">
+                        <option value="{!p}" text="{!p}" />
+                    </aura:iteration>
                 </lightning:select>
             </div>
 
@@ -75,13 +79,9 @@
                 <span>We require your address in order to be able to do a background check.</span>
             </div>
             <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:input name="address1" label="Address 1" type="text"
-                        required="true" aura:id="required" value="{!v.address1}"
+                <lightning:input name="street" label="Street Address" type="text"
+                        required="true" aura:id="required" value="{!v.street}"
                         class="label-below" />
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:input name="address2" label="Address 2" type="text"
-                        value="{!v.address2}" class="label-below" />
             </div>
             <div class="slds-size_3-of-4 slds-p-horizontal_medium">
                 <lightning:input name="city" label="City" type="text"
@@ -218,7 +218,7 @@
             </div>
             <div class="slds-size_1-of-1 slds-p-horizontal_medium">
                 <lightning:textarea name="reason" label="Reason"
-                        class="no-label" maxlength="500" value="{!v.reason}" />
+                        class="no-label" maxlength="2500" value="{!v.reason}" />
             </div>
             <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
                 Which Volunteer Training will you attend? *
@@ -227,9 +227,9 @@
                 <lightning:select name="training" value="{!v.training}"
                         label="training" class="no-label">
                     <aura:iteration items="{!v.trainingOptions}" var="o">
-                        <option value="{!o.id}" text="{!o.label}"></option>
+                        <option value="{!o.id}" text="{!o.detailedName}" />
                     </aura:iteration>
-                    <option value="0">Notify me of other trainings</option>
+                    <option value="X">Notify me of other trainings</option>
                 </lightning:select>
             </div>
         </div>
@@ -239,7 +239,52 @@
                     variant="brand" onclick="{!c.submitForm}" />
         </div>
 
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner variant="brand" size="large"
+                    alternativeText="Saving" />
+        </aura:if>
 
+        <aura:if isTrue="{!v.showModal}">
+            <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+                    aria-modal="true" aria-describedby="modal-content-id-1"
+                    class="slds-modal slds-fade-in-open">
+
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                title="Close" onclick="{!c.closeModal}">
+                            <lightning:icon alternativeText="Close"
+                                    iconName="utility:close" />
+                        </button>
+                        <h2 id="modal-heading-01"
+                                class="slds-text-heading_medium slds-hyphenate">
+                            <aura:if isTrue="{!v.modalType == 'ERROR'}">
+                                <lightning:icon iconName="action:close"
+                                        size="medium" alternativeText="error" />
+                                Error!
+                            </aura:if>
+                            <aura:if isTrue="{!v.modalType == 'SUCCESS'}">
+                                <lightning:icon iconName="action:approval"
+                                        size="medium" alternativeText="success" />
+                                Success!
+                            </aura:if>
+                        </h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <aura:if isTrue="{!v.modalType == 'ERROR'}">
+                            There was an error registering you as a volunteer.
+                            Please check the information you submitted for any
+                            invalid data and try again.
+                        </aura:if>
+                        <aura:if isTrue="{!v.modalType == 'SUCCESS'}">
+                            Your volunteer registration information has been
+                            successfully submitted.
+                        </aura:if>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
     </div>
 
 </aura:component>

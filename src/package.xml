@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>TrainingModel</members>
+        <members>TrainingService</members>
+        <members>TrainingService_TEST</members>
         <members>VolunteerRegistrationController</members>
+        <members>VolunteerRegistrationController_TEST</members>
+        <members>VolunteerService</members>
+        <members>VolunteerService_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -11,6 +17,14 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
+        <members>Contact.Emergency_Contact_First_Name__c</members>
+        <members>Contact.Emergency_Contact_Last_Name__c</members>
+        <members>Contact.Emergency_Contact_Phone__c</members>
+        <members>Contact.Emergency_Contact_Relationship__c</members>
+        <members>Contact.Legal_First_Name__c</members>
+        <members>Contact.Notify_of_Upcoming_Trainings__c</members>
+        <members>Contact.Pronouns__c</members>
+        <members>Contact.Volunteering_Reason__c</members>
         <members>Volunteer_Training_Attendance__c.Completed_Training__c</members>
         <members>Volunteer_Training_Attendance__c.Volunteer__c</members>
         <members>Volunteer_Training_Attendance__c.Volunteer_Training__c</members>
@@ -21,6 +35,7 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>Contact</members>
         <members>Volunteer_Training_Attendance__c</members>
         <members>Volunteer_Training__c</members>
         <name>CustomObject</name>
