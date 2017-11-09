@@ -4,11 +4,22 @@
         <members>TrainingModel</members>
         <members>TrainingService</members>
         <members>TrainingService_TEST</members>
+        <members>TriggerHandler</members>
+        <members>TriggerHandler_Test</members>
+        <members>VolTrainingAttendanceTriggerHandler</members>
         <members>VolunteerRegistrationController</members>
         <members>VolunteerRegistrationController_TEST</members>
         <members>VolunteerService</members>
         <members>VolunteerService_TEST</members>
+        <members>VolunteerTrainingTriggerHandler</members>
+        <members>VTATriggerHandler_TEST</members>
+        <members>VTTriggerHandler_TEST</members>
         <name>ApexClass</name>
+    </types>
+    <types>
+        <members>VolTrainingAttendanceTrigger</members>
+        <members>VolunteerTrainingTrigger</members>
+        <name>ApexTrigger</name>
     </types>
     <types>
         <members>VolunteerRegistrationApp</members>
@@ -21,11 +32,13 @@
         <members>Contact.Emergency_Contact_Last_Name__c</members>
         <members>Contact.Emergency_Contact_Phone__c</members>
         <members>Contact.Emergency_Contact_Relationship__c</members>
+        <members>Contact.Last_Volunteer_Training__c</members>
         <members>Contact.Legal_First_Name__c</members>
         <members>Contact.Notify_of_Upcoming_Trainings__c</members>
         <members>Contact.Pronouns__c</members>
         <members>Contact.Volunteering_Reason__c</members>
         <members>Volunteer_Training_Attendance__c.Completed_Training__c</members>
+        <members>Volunteer_Training_Attendance__c.StartDateTime__c</members>
         <members>Volunteer_Training_Attendance__c.Volunteer__c</members>
         <members>Volunteer_Training_Attendance__c.Volunteer_Training__c</members>
         <members>Volunteer_Training__c.Description__c</members>
@@ -51,11 +64,7 @@
         <name>FlexiPage</name>
     </types>
     <types>
-        <members>Contact-Contact Layout</members>
         <members>Contact-Contact Lightning Layout</members>
-        <members>Contact-Copy of Contact Layout</members>
-        <members>Contact-Page Layout 1</members>
-        <members>Contact-Updated Contact Layout</members>
         <members>Volunteer_Training_Attendance__c-Volunteer Training Attendance Layout</members>
         <members>Volunteer_Training__c-Volunteer Training Layout</members>
         <name>Layout</name>

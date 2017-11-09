@@ -63,6 +63,14 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>StartDateTime__c</fullName>
+        <externalId>false</externalId>
+        <label>Start Date and Time</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
         <fullName>Volunteer_Training__c</fullName>
         <externalId>false</externalId>
         <label>Volunteer Training</label>
