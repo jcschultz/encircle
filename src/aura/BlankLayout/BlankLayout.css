@@ -1,0 +1,5 @@
+.THIS { }
+
+.THIS > div > .contentRegion {
+    padding: 0 !important;
+}
