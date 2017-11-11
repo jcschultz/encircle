@@ -1,5 +1,6 @@
 <aura:component description="VolunteerRegistrationForm" access="global"
-        controller="VolunteerRegistrationController">
+        controller="VolunteerRegistrationController"
+        implements="forceCommunity:availableForAllPageTypes">
 
     <aura:attribute name="firstName" access="private" type="String" default="" />
     <aura:attribute name="lastName" access="private" type="String" default="" />

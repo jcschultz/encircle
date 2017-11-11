@@ -1,0 +1,10 @@
+<aura:event type="COMPONENT" description="VolunteerShiftToggleEvent">
+    <aura:attribute name="dateOfMonth" type="Integer" />
+    <aura:attribute name="dayOfWeek" type="String" />
+    <aura:attribute name="monthAbbreviation" type="String" />
+    <aura:attribute name="duration" type="Decimal" />
+    <aura:attribute name="shiftId" type="String" />
+    <aura:attribute name="jobName" type="String" />
+    <aura:attribute name="startTime" type="String" />
+    <aura:attribute name="selected" type="Boolean" />
+</aura:event>

@@ -1,0 +1,6 @@
+<aura:component description="BlankLayout" implements="forceCommunity:themeLayout" access="global">
+
+    <div class="blankLayoutMainContainer">
+        {!v.body}
+    </div>
+</aura:component>

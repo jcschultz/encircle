@@ -1,19 +1,29 @@
 @IsTest
 private class VolunteerService_TEST {
     
-    static testMethod void testRegistration() {
-        String phone = '8568484606';
+    private static Contact con;
+    private static String phone;
+    
+    static {
+        phone = '8568484606';
+        
+        con = new Contact(
+            FirstName = 'testing',
+            LastName = 'lastName',
+            Phone = phone,
+            Allowed_to_Volunteer__c = true,
+            Volunteer__c = true
+        );
+    }
+    
+    @IsTest
+    static void testRegistration() {
         
         Volunteer_Training__c training = new Volunteer_Training__c(
             StartDateTime__c = Datetime.now()
         );
         insert training;
         
-        Contact con = new Contact(
-            FirstName = 'testing',
-            LastName = 'lastName',
-            Phone = phone
-        );
         
         Test.startTest();
         
@@ -72,6 +82,23 @@ private class VolunteerService_TEST {
     
         System.assertEquals(training.Id, vta.Volunteer_Training__c);
         System.assertEquals(con.Id, vta.Volunteer__c);
+        
+        Test.stopTest();
+    }
+    
+    @IsTest
+    static void testFuzzySearch() {
+        insert con;
+        
+        Test.startTest();
+        
+        // testing for no results
+        List<Contact> noResults = VolunteerService.findByFuzzyNameSearch('xxxx');
+        System.assertEquals(0, noResults.size());
+        
+        // testing for positive results
+        List<Contact> hasResults = VolunteerService.findByFuzzyNameSearch('tes las');
+        System.assertEquals(1, hasResults.size());
         
         Test.stopTest();
     }

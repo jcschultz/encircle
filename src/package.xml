@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>CalendarDataViewModel</members>
         <members>TrainingModel</members>
         <members>TrainingService</members>
         <members>TrainingService_TEST</members>
@@ -11,6 +12,12 @@
         <members>VolunteerRegistrationController_TEST</members>
         <members>VolunteerService</members>
         <members>VolunteerService_TEST</members>
+        <members>VolunteerShiftCalendarController</members>
+        <members>VolunteerShiftCalendarCtrl_TEST</members>
+        <members>VolunteerShiftService</members>
+        <members>VolunteerShiftService_TEST</members>
+        <members>VolunteerShiftSignupController</members>
+        <members>VolunteerShiftSignupCtrl_TEST</members>
         <members>VolunteerTrainingTriggerHandler</members>
         <members>VTATriggerHandler_TEST</members>
         <members>VTTriggerHandler_TEST</members>
@@ -22,12 +29,20 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>BlankLayout</members>
         <members>VolunteerRegistrationApp</members>
         <members>VolunteerRegistrationForm</members>
         <members>VolunteerRegistrationLtngOut</members>
+        <members>VolunteerShiftCalendar</members>
+        <members>VolunteerShiftCalendarShift</members>
+        <members>VolunteerShiftSignupApp</members>
+        <members>VolunteerShiftSignupForm</members>
+        <members>VolunteerShiftSignupLtngOut</members>
+        <members>VolunteerShiftToggleEvent</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
+        <members>Contact.Allowed_to_Volunteer__c</members>
         <members>Contact.Emergency_Contact_First_Name__c</members>
         <members>Contact.Emergency_Contact_Last_Name__c</members>
         <members>Contact.Emergency_Contact_Phone__c</members>

@@ -1,0 +1,101 @@
+.THIS { }
+
+.THIS .job {
+    color: #fff;
+    padding: .5rem;
+    margin: .25rem;
+    display: inline-block;
+    border: 6px solid #fff;
+}
+
+.THIS .job.selected {
+    border-color: cyan;
+}
+
+.THIS .job.open {
+    cursor: pointer;
+}
+
+.THIS .job.closed {
+    cursor: not-allowed;
+}
+
+.THIS .job1, .THIS .job21, .THIS .job41 {
+    background-color: #92363b;
+}
+
+.THIS .job2, .THIS .job22, .THIS .job42 {
+    background-color: #a87932;
+}
+
+.THIS .job3, .THIS .job23, .THIS .job43 {
+    background-color: #2b628b;
+}
+
+.THIS .job4, .THIS .job24, .THIS .job44 {
+    background-color: #476259;
+}
+
+.THIS .job5, .THIS .job25, .THIS .job45 {
+    background-color: #754c86;
+}
+
+.THIS .job6, .THIS .job26, .THIS .job46 {
+    background-color: #7e4b4b;
+}
+
+.THIS .job7, .THIS .job27, .THIS .job47 {
+    background-color: #a08e67;
+}
+
+.THIS .job8, .THIS .job28, .THIS .job48 {
+    background-color: #36616a;
+}
+
+.THIS .job9, .THIS .job29, .THIS .job49 {
+    background-color: #441a64;
+}
+
+.THIS .job10, .THIS .job30, .THIS .job50 {
+    background-color: #29224a;
+}
+
+.THIS .job11, .THIS .job31, .THIS .job51 {
+    background-color: #9a8a68;
+}
+
+.THIS .job12, .THIS .job32, .THIS .job52 {
+    background-color: #7c4e42;
+}
+
+.THIS .job13, .THIS .job33, .THIS .job53 {
+    background-color: #422121;
+}
+
+.THIS .job14, .THIS .job34, .THIS .job54 {
+    background-color: #606c7c;
+}
+
+.THIS .job15, .THIS .job35, .THIS .job55 {
+    background-color: #1e304f;
+}
+
+.THIS .job16, .THIS .job36, .THIS .job56 {
+    background-color: #7d9879;
+}
+
+.THIS .job17, .THIS .job37, .THIS .job57 {
+    background-color: #c1ba7a;
+}
+
+.THIS .job18, .THIS .job38, .THIS .job58 {
+    background-color: #74b9c3;
+}
+
+.THIS .job19, .THIS .job39, .THIS .job59 {
+    background-color: #ba7ea3;
+}
+
+.THIS .job20, .THIS .job40, .THIS .job60 {
+    background-color: #d0ac80;
+}

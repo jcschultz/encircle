@@ -1,0 +1,28 @@
+<aura:component description="VolunteerShiftCalendarShift" access="global">
+
+    <aura:attribute name="shift" access="global" type="Object" required="true" />
+    <aura:attribute name="monthAbbreviation" access="global" type="String" required="true" />
+    <aura:attribute name="dateOfMonth" access="global" type="String" required="true" />
+    <aura:attribute name="dayOfWeek" access="global" type="String" required="true" />
+
+    <aura:registerEvent name="shiftToggleEvent" type="c:VolunteerShiftToggleEvent" />
+
+    <div class="{!'job ' + v.shift.jobClass + if(v.shift.volunteersStillNeeded > 0, ' open ', ' closed ') + if(v.shift.selected, ' selected ')}" onclick="{!c.handleJobClick}">
+        <div class="job-name">{!v.shift.jobName}</div>
+        <div class="job-start-time">{!v.shift.startTime}</div>
+        <div class="job-duration">{!v.shift.duration} hours</div>
+        <div class="job-total-volunteers">Total volunteers: {!v.shift.volunteersNeeded}</div>
+        <div class="job-volunteers-still-needed">Volunteers still needed: {!v.shift.volunteersStillNeeded}</div>
+        <aura:if isTrue="{!v.shift.volunteersSignedUp > 0}">
+            <div class="job-signed-up slds-grid">
+                <div class="slds-p-right_xx-small">Volunteers signed up:</div>
+                <div>
+                    <aura:iteration items="{!v.shift.volunteers}" var="v">
+                        <div class="job-signed-up-volunteer">{!v.firstInitial}. {!v.lastName}</div>
+                    </aura:iteration>
+                </div>
+            </div>
+        </aura:if>
+    </div>
+
+</aura:component>

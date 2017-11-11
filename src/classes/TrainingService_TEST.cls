@@ -1,7 +1,8 @@
 @IsTest
 private class TrainingService_TEST {
-
-    static testMethod void testUpcomingTrainings() {
+    
+    @IsTest
+    static void testUpcomingTrainings() {
         Volunteer_Training__c training1 = new Volunteer_Training__c(
             StartDateTime__c = Datetime.now().addDays(1)
         );
@@ -15,6 +16,10 @@ private class TrainingService_TEST {
         List<TrainingModel> trainings = TrainingService.getUpcomingTrainings();
         System.assertEquals(1, trainings.size());
         System.assertEquals(training1.Id, trainings[0].id);
+    
+        List<Volunteer_Training__c> byId = TrainingService.getTrainingsById(new Set<String>{training2.Id});
+        System.assertEquals(1, byId.size());
+        System.assertEquals(training2.StartDateTime__c, byId[0].StartDateTime__c);
     
         Test.stopTest();
     }

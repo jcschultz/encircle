@@ -66,4 +66,39 @@ public class VolunteerService {
         
         return c;
     }
+    
+    /**
+     * @description Retrieves contact by fuzzy search on names
+     *
+     * @param searchTerm: A string of words, separated by spaces
+     *
+     * @return List of contacts
+     */
+    public static List<Contact> findByFuzzyNameSearch(String searchTerm) {
+        List<Contact> contacts;
+        List<String> terms = new List<String>();
+        
+        if (String.isNotBlank(searchTerm)) {
+            for (String s : searchTerm.split(' ')) {
+                terms.add('%' + s + '%');
+            }
+            
+            contacts = [
+                SELECT
+                    Id,
+                    Name
+                FROM Contact
+                WHERE Volunteer__c = true
+                AND Allowed_to_Volunteer__c = true
+                AND (
+                    FirstName LIKE :terms
+                    OR LastName LIKE :terms
+                    OR Legal_First_Name__c LIKE :terms
+                )
+                ORDER BY FirstName
+            ];
+        }
+        
+        return contacts;
+    }
 }

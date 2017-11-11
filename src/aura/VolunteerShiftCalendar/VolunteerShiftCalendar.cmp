@@ -1,0 +1,53 @@
+<aura:component description="VolunteerShiftCalendar" access="global" controller="VolunteerShiftCalendarController">
+
+    <aura:attribute name="calendarDays" access="private" type="Object[]" />
+    <aura:attribute name="nextStartDate" access="private" type="String" />
+    <aura:attribute name="nextEndDate" access="private" type="String" />
+    <aura:attribute name="showSpinner" access="private" type="Boolean" default="true" />
+    <aura:attribute name="jobClasses" access="private" type="Object" />
+    <aura:attribute name="jobCount" access="private" type="Integer" default="0" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+
+    <table class="slds-table slds-table_striped">
+        <aura:iteration items="{!v.calendarDays}" var="cd">
+            <tr class="{!'calendar-row ' + if(cd.rowType == 'month', 'month-row slds-theme_shade slds-theme_alert-texture', 'day-row') }">
+                <aura:if isTrue="{!cd.rowType == 'month'}">
+                    <td class="" colspan="2">
+                        <div class="month-label slds-text-heading_medium">
+                            {!cd.monthLabel}
+                        </div>
+                    </td>
+                </aura:if>
+                <aura:if isTrue="{!cd.rowType == 'day'}">
+                    <td class="day-date-col">
+                        <div class="month-abbreviation">{!cd.monthAbbreviation}</div>
+                        <div class="date">{!cd.dateOfMonth}</div>
+                        <div class="day">{!cd.dayOfWeek}</div>
+                    </td>
+                    <td class="day-shifts-col">
+                        <aura:iteration items="{!cd.shifts}" var="shift">
+                            <c:VolunteerShiftCalendarShift shift="{!shift}"
+                                    monthAbbreviation="{!cd.monthAbbreviation}"
+                                    dateOfMonth="{!cd.dateOfMonth}"
+                                    dayOfWeek="{!cd.dayOfWeek}" />
+                        </aura:iteration>
+                    </td>
+                </aura:if>
+            </tr>
+        </aura:iteration>
+        <tr class="calendar-row load-more-row">
+            <td colspan="2">
+                <div class="slds-text-align_center">
+                    <lightning:button label="Load the next month" variant="brand" onclick="{!c.loadNextMonth}" />
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <aura:if isTrue="{!v.showSpinner}">
+        <lightning:spinner variant="brand" size="large" />
+    </aura:if>
+
+</aura:component>

@@ -1,7 +1,8 @@
 @IsTest
 private class VolunteerRegistrationController_TEST {
     
-    static testMethod void testRegistration() {
+    @IsTest
+    static void testRegistration() {
         Volunteer_Training__c training = new Volunteer_Training__c(
             StartDateTime__c = Datetime.now()
         );
@@ -53,7 +54,8 @@ private class VolunteerRegistrationController_TEST {
         System.assertEquals(volunteerInfo.get('firstName'), testCon.Legal_First_Name__c);
     }
     
-    static testMethod void testPicklists() {
+    @IsTest
+    static void testPicklists() {
         Volunteer_Training__c training1 = new Volunteer_Training__c(
             StartDateTime__c = Datetime.now().addDays(1)
         );
