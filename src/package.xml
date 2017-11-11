@@ -52,6 +52,32 @@
         <members>Contact.Notify_of_Upcoming_Trainings__c</members>
         <members>Contact.Pronouns__c</members>
         <members>Contact.Volunteering_Reason__c</members>
+        <members>Door_Activity__c.Date__c</members>
+        <members>Door_Activity__c.Visitor_Type__c</members>
+        <members>Door_Activity__c.X0__c</members>
+        <members>Door_Activity__c.X10__c</members>
+        <members>Door_Activity__c.X11__c</members>
+        <members>Door_Activity__c.X12__c</members>
+        <members>Door_Activity__c.X13__c</members>
+        <members>Door_Activity__c.X14__c</members>
+        <members>Door_Activity__c.X15__c</members>
+        <members>Door_Activity__c.X16__c</members>
+        <members>Door_Activity__c.X17__c</members>
+        <members>Door_Activity__c.X18__c</members>
+        <members>Door_Activity__c.X19__c</members>
+        <members>Door_Activity__c.X1__c</members>
+        <members>Door_Activity__c.X20__c</members>
+        <members>Door_Activity__c.X21__c</members>
+        <members>Door_Activity__c.X22__c</members>
+        <members>Door_Activity__c.X23__c</members>
+        <members>Door_Activity__c.X2__c</members>
+        <members>Door_Activity__c.X3__c</members>
+        <members>Door_Activity__c.X4__c</members>
+        <members>Door_Activity__c.X5__c</members>
+        <members>Door_Activity__c.X6__c</members>
+        <members>Door_Activity__c.X7__c</members>
+        <members>Door_Activity__c.X8__c</members>
+        <members>Door_Activity__c.X9__c</members>
         <members>Volunteer_Training_Attendance__c.Completed_Training__c</members>
         <members>Volunteer_Training_Attendance__c.StartDateTime__c</members>
         <members>Volunteer_Training_Attendance__c.Volunteer__c</members>
@@ -64,6 +90,7 @@
     </types>
     <types>
         <members>Contact</members>
+        <members>Door_Activity__c</members>
         <members>Volunteer_Training_Attendance__c</members>
         <members>Volunteer_Training__c</members>
         <name>CustomObject</name>
