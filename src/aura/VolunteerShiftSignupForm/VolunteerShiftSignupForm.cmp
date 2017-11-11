@@ -18,7 +18,7 @@
 
     <div class="slds">
 
-        <div class="form-section-title">Your Basic Information</div>
+        <div class="form-section-title">Find Your Volunteer Record</div>
         <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
             <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
                 Your Name
@@ -30,7 +30,7 @@
                 <div class="slds-form-element">
                     <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
                         <lightning:icon size="x-small" iconName="utility:search" class="slds-input__icon slds-input__icon_left slds-icon-text-default" />
-                        <ui:inputText aura:id="nameInput" class="slds-input"
+                        <ui:inputText aura:id="nameInput" class="slds-input contact-search"
                                 keyup="{!c.nameInputChange}" updateOn="keyup" />
                         <aura:if isTrue="{!v.chosenVolunteer != ''}">
                             <div class="chosen-volunteer">
@@ -120,7 +120,7 @@
                     </table>
                 </div>
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-p-vertical_large slds-text-align_center">
-                    <lightning:button label="Sign Up" onclick="{!c.handleSignUpClick}" class="sign-up-button" />
+                    <lightning:button label="Sign Up" onclick="{!c.handleSignUpClick}" class="submit-button" />
                 </div>
             </div>
         </aura:if>
@@ -139,7 +139,7 @@
                         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
                                 title="Close" onclick="{!c.closeModal}">
                             <lightning:icon alternativeText="Close"
-                                    iconName="utility:close" />
+                                    iconName="utility:close" variant="inverse" />
                         </button>
                         <h2 id="modal-heading-01"
                                 class="slds-text-heading_medium slds-hyphenate">

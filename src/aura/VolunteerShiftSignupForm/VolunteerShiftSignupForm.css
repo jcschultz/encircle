@@ -151,17 +151,6 @@
     line-height: 1;
 }
 
-.THIS .sign-up-button {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 0;
-    padding: .5rem 2rem;
-}
-
-.THIS .sign-up-button:hover,
-.THIS .sign-up-button:focus,
-.THIS .sign-up-button:active {
-    background-color: #000;
-    border: none;
+.THIS .contact-search {
+    padding-left: 2rem;
 }

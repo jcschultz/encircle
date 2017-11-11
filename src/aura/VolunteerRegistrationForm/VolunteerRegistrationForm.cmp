@@ -255,7 +255,7 @@
                         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
                                 title="Close" onclick="{!c.closeModal}">
                             <lightning:icon alternativeText="Close"
-                                    iconName="utility:close" />
+                                    iconName="utility:close" variant="inverse" />
                         </button>
                         <h2 id="modal-heading-01"
                                 class="slds-text-heading_medium slds-hyphenate">
