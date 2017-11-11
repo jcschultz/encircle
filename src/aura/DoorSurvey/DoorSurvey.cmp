@@ -1,0 +1,51 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes"
+        access="global" controller="DoorSurveyController">
+
+    <aura:attribute name="step" access="private" type="String" default="buttons" />
+    <aura:attribute name="visitorTypes" access="private" type="String[]" />
+    <aura:attribute name="showSpinner" access="private" type="Boolean" default="false" />
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <div class="slds-grid slds-grid_frame slds-wrap slds-grid_vertical-align-start">
+        <div class="slds-size_1-of-1 header">
+            <img src="{!$Resource.DoorSurveyAssets + '/img/logo-white.png'}" />
+        </div>
+
+        <aura:if isTrue="{!v.step == 'buttons'}">
+            <div class="slds-size_1-of-1 slds-p-horizontal_x-large slds-p-top_x-large">
+                <div class="welcome-title slds-text-align_center">
+                    Welcome!
+                </div>
+            </div>
+            <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
+                <div class="welcome-tagline slds-text-align_center">
+                    Please help us serve our community better by touching the button
+                    below that matches your age bracket. <span class="bold">Responses
+                are completely anonymous.</span>
+                </div>
+            </div>
+            <div class="slds-size_1-of-1 slds-p-horizontal_x-large slds-p-top_medium slds-m-bottom_large">
+                <div class="welcome-volunteer-tagline slds-text-align_center">
+                    If you are a trained volunteer, who is here to begin your shift,
+                    please touch the <span class="bold">Trained Volunteer button</span>.
+                </div>
+            </div>
+
+            <aura:iteration items="{!v.visitorTypes}" var="vt">
+                <div class="slds-size_1-of-1 slds-m-around_small slds-text-align_center">
+                    <lightning:button class="visitor-type-btn" variant="brand"
+                            label="{!vt}" onclick="{!c.handleActivityClick}" />
+                </div>
+            </aura:iteration>
+        </aura:if>
+
+
+
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner variant="brand" size="large" />
+        </aura:if>
+    </div>
+    
+</aura:component>

@@ -2,6 +2,10 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>CalendarDataViewModel</members>
+        <members>DoorActivityService</members>
+        <members>DoorActivityService_TEST</members>
+        <members>DoorSurveyController</members>
+        <members>DoorSurveyController_TEST</members>
         <members>TrainingModel</members>
         <members>TrainingService</members>
         <members>TrainingService_TEST</members>
@@ -30,6 +34,7 @@
     </types>
     <types>
         <members>BlankLayout</members>
+        <members>DoorSurvey</members>
         <members>VolunteerRegistrationApp</members>
         <members>VolunteerRegistrationForm</members>
         <members>VolunteerRegistrationLtngOut</members>
@@ -114,6 +119,10 @@
     <types>
         <members>Volunteer_Training__c.All</members>
         <name>ListView</name>
+    </types>
+    <types>
+        <members>DoorSurveyAssets</members>
+        <name>StaticResource</name>
     </types>
     <version>41.0</version>
 </Package>
