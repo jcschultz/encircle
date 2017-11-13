@@ -1,9 +1,21 @@
 <aura:component implements="forceCommunity:availableForAllPageTypes"
         access="global" controller="DoorSurveyController">
 
-    <aura:attribute name="step" access="private" type="String" default="buttons" />
+    <aura:attribute name="step" type="String" access="private" default="welcome" />
     <aura:attribute name="visitorTypes" access="private" type="String[]" />
     <aura:attribute name="showSpinner" access="private" type="Boolean" default="false" />
+    <aura:attribute name="didInitialRender" type="Boolean" access="private" default="false" />
+    <aura:attribute name="nameInput" type="String" access="private" default="" />
+    <aura:attribute name="showVolunteersPicklist" type="Boolean" access="private" default="false" />
+    <aura:attribute name="showNoVolunteers" type="Boolean" access="private" default="false" />
+    <aura:attribute name="volunteerResults" access="private" type="Object[]" />
+    <aura:attribute name="timer" access="private" type="Object" default="" />
+    <aura:attribute name="chosenVolunteer" access="private" type="Object" default="" />
+    <aura:attribute name="showSearchQuestion" access="private" type="Boolean" default="false" />
+    <aura:attribute name="showNoShiftsAvailable" access="private" type="Boolean" default="false" />
+    <aura:attribute name="showShiftSelection" access="private" type="Boolean" default="false" />
+    <aura:attribute name="availableShifts" access="private" type="Object[]" default="" />
+    <aura:attribute name="selectedShiftsCount" access="private" type="Integer" default="0" />
 
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -13,33 +25,189 @@
             <img src="{!$Resource.DoorSurveyAssets + '/img/logo-white.png'}" />
         </div>
 
-        <aura:if isTrue="{!v.step == 'buttons'}">
-            <div class="slds-size_1-of-1 slds-p-horizontal_x-large slds-p-top_x-large">
-                <div class="welcome-title slds-text-align_center">
-                    Welcome!
-                </div>
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
-                <div class="welcome-tagline slds-text-align_center">
-                    Please help us serve our community better by touching the button
-                    below that matches your age bracket. <span class="bold">Responses
-                are completely anonymous.</span>
-                </div>
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_x-large slds-p-top_medium slds-m-bottom_large">
-                <div class="welcome-volunteer-tagline slds-text-align_center">
-                    If you are a trained volunteer, who is here to begin your shift,
-                    please touch the <span class="bold">Trained Volunteer button</span>.
-                </div>
-            </div>
+        <div class="main-stage slds-size_1-of-1 slds-p-top_x-large">
+            <aura:if isTrue="{!v.step == 'welcome'}">
+                <div class="buttons-container step-container slds-grid slds-wrap">
+                    <div class="slds-size_1-of-1 slds-p-top_x-large">
+                        <div class="welcome-title slds-text-align_center">
+                            Welcome!
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-1">
+                        <div class="welcome-tagline slds-text-align_center">
+                            Please help us serve our community better by touching the button
+                            below that matches your age bracket.
+                            <span class="bold">Responses are completely anonymous.</span>
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-1 slds-p-top_medium slds-m-bottom_large">
+                        <div class="welcome-volunteer-tagline slds-text-align_center">
+                            If you are a trained volunteer, who is here to begin your shift,
+                            please touch the <span class="bold">Trained Volunteer button</span>.
+                        </div>
+                    </div>
 
-            <aura:iteration items="{!v.visitorTypes}" var="vt">
-                <div class="slds-size_1-of-1 slds-m-around_small slds-text-align_center">
-                    <lightning:button class="visitor-type-btn" variant="brand"
-                            label="{!vt}" onclick="{!c.handleActivityClick}" />
+                    <aura:iteration items="{!v.visitorTypes}" var="vt">
+                        <div class="slds-size_1-of-1 slds-m-around_small slds-text-align_center">
+                            <lightning:button class="visitor-type-btn encircle-btn"
+                                    label="{!vt}" onclick="{!c.handleActivityClick}" />
+                        </div>
+                    </aura:iteration>
                 </div>
-            </aura:iteration>
-        </aura:if>
+            </aura:if>
+
+            <aura:if isTrue="{!v.step == 'volunteer'}">
+                <div class="volunteer-container step-container slds-grid slds-wrap">
+                    <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-p-vertical_small">
+                        <lightning:button iconName="utility:chevronleft" iconPosition="left"
+                            label="Back" onclick="{!c.cancelVolunteerSignIn}"
+                            class="encircle-btn back-btn" />
+                    </div>
+                    <div class="slds-size_1-of-1 slds-p-bottom_large">
+                        <div class="welcome-title slds-text-align_center">
+                            Volunteer Sign In
+                        </div>
+                    </div>
+
+                    <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label">
+                        Your Name
+                    </div>
+
+                    <aura:if isTrue="{!v.chosenVolunteer == ''}">
+                        <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
+                            <lightning:input type="search" label="Your Name"
+                                    name="nameInput" value="{!v.nameInput}"
+                                    onchange="{!c.handleVolunteerInputChange}"
+                                    class="no-label" />
+
+                            <aura:if isTrue="{!v.showVolunteersPicklist}">
+                                <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid volunteer-results">
+                                    <aura:iteration items="{!v.volunteerResults}" var="v" indexVar="idx">
+                                        <li class="slds-listbox__item">
+                                            <div class="slds-listbox__option slds-listbox__option_plain"
+                                                    onclick="{!c.chooseVolunteer}"
+                                                    data-idx="{!idx}">
+                                                    {!v.name}
+                                            </div>
+                                        </li>
+                                    </aura:iteration>
+                                </ul>
+                            </aura:if>
+
+                            <aura:if isTrue="{!v.showNoVolunteers}">
+                                <div class="slds-text-color_error">
+                                    Your information could not be found.
+                                </div>
+                            </aura:if>
+                        </div>
+                    </aura:if>
+
+                    <aura:if isTrue="{!v.chosenVolunteer != ''}">
+                        <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
+                            <div class="chosen-volunteer">
+                                <span class="slds-text-heading_medium">
+                                    {!v.chosenVolunteer.name}
+                                </span>
+                                <lightning:button class="slds-button_destructive"
+                                        iconName="utility:clear" iconPosition="left"
+                                        label="Change Volunteer"
+                                        onclick="{!c.changeVolunteerClick}" />
+                            </div>
+                        </div>
+
+                        <aura:if isTrue="{!v.chosenVolunteer.shifts.length > 0}">
+                            <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label slds-p-top_large">
+                                Your Volunteer Shifts Today
+                            </div>
+                            <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
+                                <table class="slds-table slds-table_bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Shift Name</th>
+                                            <th>Start Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.chosenVolunteer.shifts}" var="shift">
+                                            <tr>
+                                                <td>{!shift.shiftName}</td>
+                                                <td>{!shift.startTime}</td>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="slds-size_1-of-1 slds-text-align_center slds-m-top_large">
+                                <lightning:button class="encircle-btn" label="Sign In"
+                                    onclick="{!c.volunteerSignIn}" />
+                            </div>
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.showSearchQuestion}">
+                            <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label slds-p-top_large">
+                                You have not signed up for any volunteer shifts for
+                                today. Would you like to sign up for one now?
+                            </div>
+
+                            <div class="slds-size_1-of-1 slds-text-align_center slds-m-top_large">
+                                <lightning:button class="search-now-buttons encircle-btn"
+                                        iconPosition="left" iconName="utility:back"
+                                        label="No thanks"
+                                        onclick="{!c.cancelVolunteerSignIn}" />
+                                <lightning:button class="search-now-buttons encircle-btn"
+                                        iconPosition="left" iconName="utility:success"
+                                        label="Yes, please"
+                                        onclick="{!c.handleShiftSearchClick}" />
+                            </div>
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.showNoShiftsAvailable}">
+                            <div class="slds-text-color_error slds-p-horizontal_x-large slds-text-align_center">
+                                There are no available volunteer shifts for today.
+                            </div>
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.showShiftSelection}">
+                            <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label slds-p-top_large">
+                                Available Shifts
+                            </div>
+                            <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
+                                <table class="slds-table slds-table_bordered slds-no-cell-focus slds-no-row-hover available-shifts-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Shift Name</th>
+                                            <th>Start Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.availableShifts}" var="shift" indexVar="idx">
+                                            <tr data-idx="{!idx}" onclick="{!c.toggleShift}" class="{!'clickable-shift ' + if(shift.selected, 'selected')}">
+                                                <td data-idx="{!idx}">{!shift.shiftName}</td>
+                                                <td data-idx="{!idx}">{!shift.startTime}</td>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <aura:if isTrue="{!v.selectedShiftsCount > 0}">
+                                <div class="slds-size_1-of-1 slds-p-top_large slds-text-align_center">
+                                    <lightning:button class="encircle-btn" label="Sign Up"
+                                        onclick="{!c.signUpAndSignIn}" />
+                                </div>
+                            </aura:if>
+
+
+                        </aura:if>
+
+                    </aura:if>
+
+                </div>
+
+            </aura:if>
+
+        </div>
+
 
 
 

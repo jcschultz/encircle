@@ -8,14 +8,16 @@
 public class VolunteerShiftService {
     
     public static final List<String> SIGNED_UP_STATUSES;
+    public static final String COMPLETED_STATUS;
     
     static {
         SIGNED_UP_STATUSES = new List<String>{
             'Prospect',
             'Confirmed',
-            'Web Sign Up',
-            'Completed'
+            'Web Sign Up'
         };
+        
+        COMPLETED_STATUS = 'Completed';
     }
     
     /**
@@ -27,6 +29,8 @@ public class VolunteerShiftService {
      * @return List of volunteer shifts
      */
     public static List<GW_Volunteers__Volunteer_Shift__c> getShiftsBetweenDates(Date startDate, Date endDate) {
+        Datetime startDateTime = Datetime.newInstance(startDate, Time.newInstance(0,0,0,0));
+        Datetime endDateTime = Datetime.newInstance(endDate, Time.newInstance(0,0,0,0));
         return [
             SELECT
                 Id,
@@ -57,8 +61,8 @@ public class VolunteerShiftService {
                     WHERE GW_Volunteers__Status__c IN :SIGNED_UP_STATUSES
                 )
             FROM GW_Volunteers__Volunteer_Shift__c
-            WHERE GW_Volunteers__Start_Date_Time__c >= :startDate
-            AND GW_Volunteers__Start_Date_Time__c < :endDate
+            WHERE GW_Volunteers__Start_Date_Time__c >= :startDateTime
+            AND GW_Volunteers__Start_Date_Time__c < :endDateTime
             AND GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Campaign__r.IsActive = true
             AND GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Display_On_Website__c = true
             ORDER BY GW_Volunteers__Start_Date_Time__c ASC
@@ -99,6 +103,52 @@ public class VolunteerShiftService {
         }
         
         insert hours;
+        
+        return hours;
+    }
+    
+    /**
+     * Finds volunteer shift hours for the contacts and date range.
+     *
+     * @param contactIds
+     * @param startDate
+     * @param endDate
+     *
+     * @return List of volunteer hour records.
+     */
+    public static List<GW_Volunteers__Volunteer_Hours__c> findHoursByContactAndDate(String[] contactIds, Date startDate, Date endDate) {
+        return [
+            SELECT
+                GW_Volunteers__Contact__c,
+                Id,
+                GW_Volunteers__Shift_Start_Date_Time__c,
+                GW_Volunteers__Volunteer_Job__r.Name
+            FROM GW_Volunteers__Volunteer_Hours__c
+            WHERE GW_Volunteers__Contact__c IN :contactIds
+            AND GW_Volunteers__Start_Date__c >= :startDate
+            AND GW_Volunteers__Start_Date__c < :endDate
+            ORDER BY GW_Volunteers__Shift_Start_Date_Time__c ASC
+        ];
+    }
+    
+    /**
+     * Mark the volunteer hours as completed.
+     *
+     * @param hourIds
+     *
+     * @return List of completed hours.
+     */
+    public static List<GW_Volunteers__Volunteer_Hours__c> completeHoursById(String[] hourIds) {
+        List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>();
+        
+        for (String h : hourIds) {
+            hours.add(new GW_Volunteers__Volunteer_Hours__c(
+                Id = h,
+                GW_Volunteers__Status__c = COMPLETED_STATUS
+            ));
+        }
+        
+        update hours;
         
         return hours;
     }

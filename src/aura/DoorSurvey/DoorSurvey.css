@@ -33,15 +33,70 @@
     font-weight: bold;
 }
 
-.THIS .visitor-type-btn,
-.THIS .visitor-type-btn:hover,
-.THIS .visitor-type-btn:active,
-.THIS .visitor-type-btn:focus {
+.THIS .encircle-btn,
+.THIS .encircle-btn:hover,
+.THIS .encircle-btn:active,
+.THIS .encircle-btn:focus {
     border-radius: 0;
     color: #000;
     background-color: transparent;
     border-color: #000;
     text-transform: uppercase;
     padding: .75rem 2rem;
+    box-shadow: none;
+}
+
+.THIS .encircle-btn.back-btn {
+    font-size: 75%;
+    padding: .125rem .5rem .125rem .25rem;
+}
+
+.THIS .encircle-btn.back-btn .slds-button__icon {
+    width: .75rem;
+    height: .75rem;
+    margin-right: .25rem;
+}
+
+.THIS .main-stage {
+    height: calc(100vh - 5rem);
+}
+
+.THIS .slds-input,
+.THIS .slds-select,
+.THIS .slds-textarea {
+    border-radius: 0;
+    border-color: #1f1f1f;
+    background-color: #fafafa;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+}
+
+.THIS .no-label .slds-form-element__label {
+    display: none;
+}
+
+.THIS .chosen-volunteer button {
+    border-radius: 0;
+    margin-left: 1rem;
+    font-size: 75%;
+    padding: 0 .25rem;
+    line-height: 1.25rem;
+    background-color: transparent;
+    color: red;
+}
+
+.THIS .clickable-shift {
+    cursor: pointer;
+}
+
+.THIS .slds-table.slds-table_bordered.available-shifts-table tbody tr.clickable-shift:focus td {
+    box-shadow: none;
+    background-color: white;
+}
+
+.THIS .clickable-shift.selected td,
+.THIS .slds-table.slds-table_bordered.available-shifts-table tbody tr.clickable-shift.selected:focus td {
+    color: #fff;
+    background-color: #000;
     box-shadow: none;
 }
