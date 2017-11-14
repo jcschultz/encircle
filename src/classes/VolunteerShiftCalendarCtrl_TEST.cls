@@ -1,8 +1,7 @@
 @IsTest
 private class VolunteerShiftCalendarCtrl_TEST {
     
-    @IsTest
-    static void testRetrieval() {
+    static testMethod void testRetrieval() {
         
         Account acc = new Account(
             Name = 'VolunteerShiftCalendarCtrl_TEST'

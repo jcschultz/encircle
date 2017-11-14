@@ -16,8 +16,7 @@ private class VolunteerService_TEST {
         );
     }
     
-    @IsTest
-    static void testRegistration() {
+    static testMethod void testRegistration() {
         
         Volunteer_Training__c training = new Volunteer_Training__c(
             StartDateTime__c = Datetime.now()
@@ -86,8 +85,7 @@ private class VolunteerService_TEST {
         Test.stopTest();
     }
     
-    @IsTest
-    static void testFuzzySearch() {
+    static testMethod void testFuzzySearch() {
         insert con;
         
         Test.startTest();

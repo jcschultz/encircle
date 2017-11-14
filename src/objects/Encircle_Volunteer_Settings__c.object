@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <description>Holds settings for the Encircle volunteering project.</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Unplanned_Volunteering_Job_Id__c</fullName>
+        <description>ID of the volunteering job used for volunteers to sign into if they haven&apos;t previously signed up for a volunteering shift and don&apos;t want to sign into one of the available drop in options.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the volunteering job used for volunteers to sign into if they haven&apos;t previously signed up for a volunteering shift and don&apos;t want to sign into one of the available drop in options.</inlineHelpText>
+        <label>Unplanned Volunteering Job Id</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Encircle Volunteer Settings</label>
+    <visibility>Public</visibility>
+</CustomObject>

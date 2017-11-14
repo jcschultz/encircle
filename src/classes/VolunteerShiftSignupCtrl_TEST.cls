@@ -1,8 +1,7 @@
 @IsTest
 private class VolunteerShiftSignupCtrl_TEST {
     
-    @IsTest
-    static void testSearchAndSignup() {
+    static testMethod void testSearchAndSignup() {
         Account acc = new Account(
             Name = 'VolunteerShiftService_TEST'
         );

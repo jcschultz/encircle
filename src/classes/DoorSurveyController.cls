@@ -120,6 +120,17 @@ public without sharing class DoorSurveyController {
         VolunteerShiftService.signContactUpForHours(contactId, shiftIds, VolunteerShiftService.COMPLETED_STATUS);
     }
     
+    /**
+     * Signs the volunteer into the unplanned shift/job/campaign
+     *
+     * @param contactId
+     * @param hours
+     */
+    @AuraEnabled
+    public static void signVolunteerInForUnplannedShift(String contactId, Decimal hours) {
+        VolunteerShiftService.signInToUnplannedShift(contactId, hours);
+    }
+    
     
     public class VolunteerResult {
         @AuraEnabled

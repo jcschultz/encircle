@@ -1,10 +1,10 @@
 @IsTest
 private class TrainingService_TEST {
     
-    @IsTest
-    static void testUpcomingTrainings() {
+    static testMethod void testUpcomingTrainings() {
         Volunteer_Training__c training1 = new Volunteer_Training__c(
-            StartDateTime__c = Datetime.now().addDays(1)
+            StartDateTime__c = Datetime.now().addDays(1),
+            Location__c = 'here'
         );
         Volunteer_Training__c training2 = new Volunteer_Training__c(
             StartDateTime__c = Datetime.now().addDays(-1)
@@ -16,6 +16,7 @@ private class TrainingService_TEST {
         List<TrainingModel> trainings = TrainingService.getUpcomingTrainings();
         System.assertEquals(1, trainings.size());
         System.assertEquals(training1.Id, trainings[0].id);
+        System.assert(trainings[0].detailedName.contains('here'));
     
         List<Volunteer_Training__c> byId = TrainingService.getTrainingsById(new Set<String>{training2.Id});
         System.assertEquals(1, byId.size());

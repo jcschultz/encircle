@@ -114,6 +114,7 @@
                 }
                 else {
                     component.set('v.showNoShiftsAvailable', true);
+                    component.set('v.showOtherSignIn', true);
                 }
             }
             else if ('ERROR' === state) {
@@ -129,6 +130,7 @@
         component.set('v.showSpinner', true);
         component.set('v.showNoShiftsAvailable', false);
         component.set('v.showShiftSelection', false);
+        component.set('v.showOtherSignIn', false);
     
         $A.enqueueAction(action);
     },
@@ -225,6 +227,9 @@
         component.set('v.showSearchQuestion', false);
         component.set('v.showNoShiftsAvailable', false);
         component.set('v.showShiftSelection', false);
+        component.set('v.showOtherSignIn', false);
+        component.set('v.otherHours', 1);
+        component.set('v.availableShifts', '');
     },
     
     resetVolunteerSearch : function(component) {
@@ -284,6 +289,47 @@
         component.set('v.showSpinner', true);
     
         $A.enqueueAction(action);
+    },
+    
+    signUpForOtherHours : function(component) {
+        var chosenVolunteer = component.get('v.chosenVolunteer');
+        var hours = component.get('v.otherHours');
+        var action = component.get('c.signVolunteerInForUnplannedShift');
+    
+        action.setParams({
+            'contactId' : chosenVolunteer.contactId,
+            'hours' : hours
+        });
+    
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+    
+            component.set('v.showSpinner', false);
+        
+            if ('SUCCESS' === state) {
+                this.showToast(component, 'success', 'Thanks!', 'You are now signed in. Thanks for volunteering today.');
+                this.resetApp(component);
+            }
+            else if ('ERROR' === state) {
+                var errors = response.getError();
+    
+                if (errors && errors[0]) {
+                    this.showToast(component, 'error', 'Error', 'There was an error signing you up for the other shift.');
+                }
+                console.error('error signing up for unplanned', response);
+            }
+        });
+    
+        component.set('v.showSpinner', true);
+    
+        $A.enqueueAction(action);
+    },
+    
+    switchToOtherHours : function(component) {
+        component.set('v.selectedShiftsCount', 0);
+        component.set('v.availableShifts', '');
+        component.set('v.showShiftSelection', false);
+        component.set('v.showOtherSignIn', true);
     },
     
     switchToVolunteerView : function(component) {

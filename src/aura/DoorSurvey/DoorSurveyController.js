@@ -33,6 +33,14 @@
         helper.signUpAndSignIn(component);
     },
     
+    signUpForOtherHours : function(component, event, helper) {
+        helper.signUpForOtherHours(component);
+    },
+    
+    switchToOtherHours : function(component, event, helper) {
+        helper.switchToOtherHours(component);
+    },
+    
     toggleShift : function(component, event, helper) {
         helper.toggleShift(component, event.target.dataset.idx);
     },

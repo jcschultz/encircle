@@ -153,4 +153,38 @@ public class VolunteerShiftService {
         return hours;
     }
     
+    /**
+     * Signs a volunteer into the unplanned shift/job/campaign.
+     *
+     * @param contactId
+     * @param duration
+     *
+     * @return Volunteer_Hours__c
+     */
+    public static GW_Volunteers__Volunteer_Hours__c signInToUnplannedShift(String contactId, Decimal duration) {
+        Encircle_Volunteer_Settings__c settings = Encircle_Volunteer_Settings__c.getOrgDefaults();
+        String unplannedId = settings.Unplanned_Volunteering_Job_Id__c;
+        
+        GW_Volunteers__Volunteer_Job__c job = [
+            SELECT
+                GW_Volunteers__Campaign__c
+            FROM GW_Volunteers__Volunteer_Job__c
+            WHERE Id = :unplannedId
+            LIMIT 1
+        ];
+        
+        GW_Volunteers__Volunteer_Hours__c hours = new GW_Volunteers__Volunteer_Hours__c(
+            GW_Volunteers__Contact__c = contactId,
+            GW_Volunteers__Hours_Worked__c = duration,
+            GW_Volunteers__Number_of_Volunteers__c = 1,
+            GW_Volunteers__Start_Date__c = Date.today(),
+            GW_Volunteers__Status__c = COMPLETED_STATUS,
+            GW_Volunteers__Volunteer_Job__c = unplannedId
+        );
+        
+        insert hours;
+        
+        return hours;
+    }
+    
 }

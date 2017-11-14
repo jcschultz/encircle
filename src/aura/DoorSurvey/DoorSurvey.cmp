@@ -16,6 +16,8 @@
     <aura:attribute name="showShiftSelection" access="private" type="Boolean" default="false" />
     <aura:attribute name="availableShifts" access="private" type="Object[]" default="" />
     <aura:attribute name="selectedShiftsCount" access="private" type="Integer" default="0" />
+    <aura:attribute name="showOtherSignIn" access="private" type="Boolean" default="false" />
+    <aura:attribute name="otherHours" access="private" type="Integer" default="1" />
 
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -164,6 +166,7 @@
                         <aura:if isTrue="{!v.showNoShiftsAvailable}">
                             <div class="slds-text-color_error slds-p-horizontal_x-large slds-text-align_center">
                                 There are no available volunteer shifts for today.
+                                But you can still sign in below.
                             </div>
                         </aura:if>
 
@@ -186,6 +189,9 @@
                                                 <td data-idx="{!idx}">{!shift.startTime}</td>
                                             </tr>
                                         </aura:iteration>
+                                        <tr onclick="{!c.switchToOtherHours}" class="clickable-shift">
+                                            <td colspan="2">None of these. Other...</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -198,6 +204,21 @@
                             </aura:if>
 
 
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.showOtherSignIn}">
+                            <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label slds-p-top_large">
+                                How many hours do you plan on volunteering today?
+                            </div>
+                            <div class="slds-p-horizontal_x-large slds-size_1-of-1">
+                                <lightning:input type="number" name="otherHours"
+                                    label="Other hours" class="no-label"
+                                    min="1" step="1" value="{!v.otherHours}" />
+                            </div>
+                            <div class="slds-size_1-of-1 slds-p-top_large slds-text-align_center">
+                                <lightning:button class="encircle-btn" label="Sign Up"
+                                        onclick="{!c.signUpForOtherHours}" />
+                            </div>
                         </aura:if>
 
                     </aura:if>
