@@ -80,7 +80,8 @@
                             <lightning:input type="search" label="Your Name"
                                     name="nameInput" value="{!v.nameInput}"
                                     onchange="{!c.handleVolunteerInputChange}"
-                                    class="no-label" />
+                                    class="no-label"
+                                    placeholder="Type at least 3 letters" />
 
                             <aura:if isTrue="{!v.showVolunteersPicklist}">
                                 <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid volunteer-results">

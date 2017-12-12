@@ -31,7 +31,8 @@
                     <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
                         <lightning:icon size="x-small" iconName="utility:search" class="slds-input__icon slds-input__icon_left slds-icon-text-default" />
                         <ui:inputText aura:id="nameInput" class="slds-input contact-search"
-                                keyup="{!c.nameInputChange}" updateOn="keyup" />
+                                keyup="{!c.nameInputChange}" updateOn="keyup"
+                                placeholder="Type at least 3 letters" />
                         <aura:if isTrue="{!v.chosenVolunteer != ''}">
                             <div class="chosen-volunteer">
                                 <span class="slds-badge">

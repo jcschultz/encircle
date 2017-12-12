@@ -31,6 +31,10 @@
             component.set('v.volunteerResults', '');
             return;
         }
+        
+        if (nameInput.length < 3) {
+            return;
+        }
     
         action.setParams({
             'nameInput' : nameInput
