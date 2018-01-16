@@ -124,6 +124,10 @@
         <name>ListView</name>
     </types>
     <types>
+        <members>Encircle_Volunteer_Management</members>
+        <name>PermissionSet</name>
+      </types>
+    <types>
         <members>DoorSurveyAssets</members>
         <name>StaticResource</name>
     </types>
