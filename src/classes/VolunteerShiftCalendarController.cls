@@ -15,7 +15,7 @@ public without sharing class VolunteerShiftCalendarController {
     @AuraEnabled
     public static CalendarData getInitialData() {
         Date startDate = Date.today();
-        Date endDate = startDate.toStartOfMonth().addMonths(2);
+        Date endDate = startDate.toStartOfMonth().addMonths(1);
         return getCalendarFromDates(startDate, endDate);
     }
     

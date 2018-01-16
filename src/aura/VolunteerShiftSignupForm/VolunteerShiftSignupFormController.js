@@ -5,10 +5,6 @@
         helper.choseVolunteer(component, event.target.dataset.idx);
     },
     
-    closeModal : function(component, event, helper) {
-        helper.closeModal(component);
-    },
-    
     handleShiftToggle : function(component, event, helper) {
         helper.parseShiftToggle(component, event);
     },

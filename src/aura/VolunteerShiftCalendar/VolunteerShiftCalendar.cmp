@@ -27,12 +27,14 @@
                         <div class="day">{!cd.dayOfWeek}</div>
                     </td>
                     <td class="day-shifts-col">
-                        <aura:iteration items="{!cd.shifts}" var="shift">
-                            <c:VolunteerShiftCalendarShift shift="{!shift}"
-                                    monthAbbreviation="{!cd.monthAbbreviation}"
-                                    dateOfMonth="{!cd.dateOfMonth}"
-                                    dayOfWeek="{!cd.dayOfWeek}" />
-                        </aura:iteration>
+                        <div class="slds-grid slds-wrap">
+                            <aura:iteration items="{!cd.shifts}" var="shift">
+                                <c:VolunteerShiftCalendarShift shift="{!shift}"
+                                        monthAbbreviation="{!cd.monthAbbreviation}"
+                                        dateOfMonth="{!cd.dateOfMonth}"
+                                        dayOfWeek="{!cd.dayOfWeek}" />
+                            </aura:iteration>
+                        </div>
                     </td>
                 </aura:if>
             </tr>

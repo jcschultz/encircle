@@ -7,12 +7,6 @@
         component.find('nameInput').set('v.value', '');
     },
     
-    closeModal : function(component) {
-        component.set('v.showModal', false);
-        component.set('v.modalType', '');
-        component.set('v.modalError', '');
-    },
-    
     displayNoVolunteerResults : function(component) {
         component.set('v.volunteerResults', '');
         component.set('v.showVolunteersPicklist', false);
@@ -126,7 +120,12 @@
         var shifts = component.get('v.selectedShifts');
         var volunteer = component.get('v.chosenVolunteer');
         var action = component.get('c.signUpContactForShifts');
+        var isSubmitting = component.get('v.isSubmitting');
         var shiftIds = [];
+        
+        if (isSubmitting) {
+            return;
+        }
         
         component.set('v.signupError', '');
         
@@ -142,27 +141,29 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
     
-            component.set('v.showSpinner', false);
-        
             if ('SUCCESS' === state) {
-                console.log('hours', response.getReturnValue());
-                component.set('v.modalType', 'SUCCESS');
-                component.set('v.showModal', true);
+                component.set('v.showForm', false);
+                component.set('v.didSuccessfullySave', true);
             }
             else if ('ERROR' === state) {
                 var errors = response.getError();
+    
+                component.set('v.showError', true);
                 
-                if (errors && errors[0]) {
-                    component.set('v.modalType', 'ERROR');
-                    component.set('v.modalError', 'There was an error saving your volunteer shift selection. Please try again.');
-                    component.set('v.showModal', true);
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        component.set('v.errorHeading', 'There was an error saving your volunteer shift selection. Please try again.');
+                        component.set('v.errorMsg', errors[0].message);
+                    }
                 }
                 
                 console.error('error signing up', errors);
             }
         });
-        
-        component.set('v.showSpinner', true);
+    
+        component.set('v.isSubmitting', true);
+        component.set('v.showError', false);
+        component.set('v.didSuccessfullySave', false);
     
         $A.enqueueAction(action);
     },
