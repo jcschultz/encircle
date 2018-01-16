@@ -44,6 +44,7 @@
         <members>VolunteerShiftSignupForm</members>
         <members>VolunteerShiftSignupLtngOut</members>
         <members>VolunteerShiftToggleEvent</members>
+        <members>VolunteerToast</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>

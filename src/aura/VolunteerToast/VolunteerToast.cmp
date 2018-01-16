@@ -1,0 +1,28 @@
+<aura:component description="VolunteerToast">
+    <aura:attribute name="iconName" access="public" type="String" default=""
+            description="Lightning icon name. ex: utility:info. Leave empty for none." />
+    <aura:attribute name="toastType" access="public" type="String" default="info"
+            description="error, warning, success, or info" required="true" />
+    <aura:attribute name="toastHeading" access="public" type="String"
+            description="The main text to be displayed in the toast." required="true" />
+    <aura:attribute name="toastDetails" access="public" type="String"
+            description="Any extra details or info." />
+    <aura:attribute name="isRelative" access="public" type="Boolean" default="false"
+            description="Should the toast container be relatively positions?" />
+
+    <div class="{!'slds-notify_container ' + if(v.isRelative, 'slds-is-relative')}">
+        <div class="{!'slds-notify slds-notify_toast slds-theme_' + v.toastType}" role="alert">
+            <span class="slds-assistive-text">{!v.toastType}</span>
+            <aura:if isTrue="{!!empty(v.iconName)}">
+                <lightning:icon iconName="{!v.iconName}" class="slds-m-right_small slds-no-flex slds-align-top"
+                        title="{!v.toastType + ' icon'}" alternativeText="{!v.toastType + ' icon'}" variant="inverse" />
+            </aura:if>
+            <div class="slds-notify__content">
+                <h2 class="slds-text-heading_small">{!v.toastHeading}</h2>
+                <aura:if isTrue="{!!empty(v.toastDetails)}">
+                    <p>{!v.toastDetails}</p>
+                </aura:if>
+            </div>
+        </div>
+    </div>
+</aura:component>

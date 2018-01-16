@@ -1,8 +1,5 @@
 ({
     
-    closeModal : function(component) {
-        component.set('v.showModal', false);
-    },
     
     loadPicklistValues : function(component) {
         this.loadPronouns(component);
@@ -47,12 +44,17 @@
     
     submitForm : function(component) {
         var action = component.get('c.registerVolunteer');
+        var isSubmitting = component.get('v.isSubmitting');
         var volunteerInfo;
+    
+        if (isSubmitting) {
+            return;
+        }
         
         if (!this.isFormValid(component)) {
             return;
         }
-    
+        
         volunteerInfo = {
             'firstName' : component.get('v.firstName'),
             'lastName' : component.get('v.lastName'),
@@ -85,23 +87,31 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
     
-            component.set('v.showSpinner', false);
-            component.set('v.modalType', state);
-            component.set('v.showModal', true);
+            component.set('v.isSubmitting', false);
         
             if ('SUCCESS' === state) {
-                console.log(state, response.getReturnValue());
+                component.set('v.showForm', false);
+                component.set('v.didSuccessfullySave', true);
             }
             else if ('ERROR' === state) {
-                console.log(state, response.getError());
+                component.set('v.showError', true);
+                var errors = response.getError();
                 
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        component.set('v.errorMsg', errors[0].message);
+                    }
+                }
+                
+                console.log(state, errors);
             }
         });
         
-        component.set('v.showSpinner', true);
+        component.set('v.isSubmitting', true);
+        component.set('v.showError', false);
+        component.set('v.didSuccessfullySave', false);
         
         $A.enqueueAction(action);
-        
     },
     
     isFormValid : function(component) {
@@ -114,6 +124,7 @@
         
         return allValid;
     },
+    
     
     
 })

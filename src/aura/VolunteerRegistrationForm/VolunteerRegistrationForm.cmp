@@ -28,263 +28,239 @@
     <aura:attribute name="training" access="private" type="String" default="" />
     <aura:attribute name="trainingOptions" access="private" type="Object[]" default="" />
     <aura:attribute name="pronounOptions" access="private" type="String[]" default="" />
-    <aura:attribute name="showSpinner" access="private" type="Boolean" default="false" />
-    <aura:attribute name="showModal" access="private" type="Boolean" default="false" />
-    <aura:attribute name="modalType" access="private" type="String" />
+    <aura:attribute name="isSubmitting" access="private" type="Boolean" default="false" />
+    <aura:attribute name="didSuccessfullySave" access="private" type="Boolean" default="false" />
+    <aura:attribute name="showForm" access="private" type="Boolean" default="true" />
+    <aura:attribute name="showError" access="private" type="Boolean" default="false" />
+    <aura:attribute name="errorMsg" access="private" type="String" default="" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
 
     <div class="slds">
-        <div class="form-section-title">Your Basic Information</div>
-        <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Name *
-            </div>
-            <div class="slds-size_1-of-2 slds-p-horizontal_medium">
-                <lightning:input name="firstName" label="First Name" type="text"
-                        required="true" value="{!v.firstName}"
-                        aura:id="required" class="label-below" />
-            </div>
-            <div class="slds-size_1-of-2 slds-p-horizontal_medium">
-                <lightning:input name="lastName" label="Last Name" type="text"
-                        required="true" value="{!v.lastName}"
-                        aura:id="required" class="label-below" />
-            </div>
-
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Preferred First Name
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:input name="preferredName" label="Nickname"
-                        type="text" value="{!v.preferredName}"
-                        class="label-below" />
-            </div>
-
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Personal Pronouns
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:select name="pronouns" value="{!v.pronouns}"
-                        label="These are the pronouns you like to be referred to as.">
-                    <aura:iteration var="p" items="{!v.pronounOptions}">
-                        <option value="{!p}" text="{!p}" />
-                    </aura:iteration>
-                </lightning:select>
-            </div>
-
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Address *
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-form-element__label">
-                <span>We require your address in order to be able to do a background check.</span>
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:input name="street" label="Street Address" type="text"
-                        required="true" aura:id="required" value="{!v.street}"
-                        class="label-below" />
-            </div>
-            <div class="slds-size_3-of-4 slds-p-horizontal_medium">
-                <lightning:input name="city" label="City" type="text"
-                        required="true" aura:id="required" value="{!v.city}"
-                        class="label-below" />
-            </div>
-            <div class="slds-size_1-of-4 slds-p-horizontal_medium">
-                <lightning:input name="state" label="State" type="text"
-                        required="true" aura:id="required" value="{!v.state}"
-                        class="label-below" />
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:input name="zip" label="Zip (#####)" type="text"
-                        maxlength="10" required="true" aura:id="required"
-                        value="{!v.zip}" class="label-below" minlength="5" />
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:input name="country" label="Country" type="text"
-                        required="true" aura:id="required" value="{!v.country}"
-                        class="label-below" />
-            </div>
-
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Email Address *
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:input name="email" label="Email" type="text"
-                        required="true" aura:id="required" value="{!v.email}"
-                        class="no-label" />
-            </div>
-
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Phone *
-            </div>
-            <div class="slds-size_1-of-1 slds-grid slds-p-horizontal_medium slds-grid_pull-padded-medium">
-                <div class="digit3 slds-p-left_medium">
-                    <lightning:input label="###" name="phone1" required="true"
-                            aura:id="required" value="{!v.phone1}"
-                            class="label-below" maxlength="3" minlength="3"
-                            pattern="[0-9]{3}" />
-                </div>
-                <div class="digit3 slds-p-left_small">
-                    <lightning:input label="###" name="phone2" required="true"
-                            aura:id="required" value="{!v.phone2}"
-                            class="label-below" maxlength="3" minlength="3"
-                            pattern="[0-9]{3}" />
-                </div>
-                <div class="digit4 slds-p-left_small">
-                    <lightning:input label="####" name="phone3" required="true"
-                            aura:id="required" value="{!v.phone3}"
-                            class="label-below" maxlength="4" minlength="4"
-                            pattern="[0-9]{4}" />
-                </div>
-            </div>
-
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Date of Birth *
-            </div>
-            <div class="slds-size_1-of-1 slds-grid slds-p-horizontal_medium slds-grid_pull-padded-medium">
-                <div class="digit2 slds-p-left_medium">
-                    <lightning:input label="MM" name="dobMonth" required="true"
-                            value="{!v.dobMonth}" class="label-below"
-                            maxlength="2" minlength="2" pattern="[0-9]{2}"
-                            aura:id="required" />
-                </div>
-                <div class="digit2 slds-p-left_small">
-                    <lightning:input label="DD" name="dobDay" required="true"
-                            value="{!v.dobDay}" class="label-below"
-                            maxlength="2" minlength="2" pattern="[0-9]{2}"
-                            aura:id="required" />
-                </div>
-                <div class="digit4 slds-p-left_small">
-                    <lightning:input label="YYYY" name="dobYear" required="true"
-                            value="{!v.dobYear}" class="label-below"
-                            maxlength="4" minlength="4" pattern="[0-9]{4}"
-                            aura:id="required" />
-                </div>
-            </div>
-        </div>
-
-        <div class="form-section-title">Emergency Contact Information</div>
-        <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Emergency Contact's Name *
-            </div>
-            <div class="slds-size_1-of-2 slds-p-horizontal_medium">
-                <lightning:input name="ecFirstName" label="First Name" type="text"
-                        required="true" value="{!v.ecFirstName}"
-                        aura:id="required" class="label-below" />
-            </div>
-            <div class="slds-size_1-of-2 slds-p-horizontal_medium">
-                <lightning:input name="ecLastName" label="Last Name" type="text"
-                        required="true" value="{!v.ecLastName}"
-                        aura:id="required" class="label-below" />
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Your Relationship to Emergency Contact *
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:input name="ecRelationship" label="Relationship"
-                        type="text" required="true" value="{!v.ecRelationship}"
-                        aura:id="required" class="no-label" />
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">Phone *</div>
-            <div class="slds-size_1-of-1 slds-grid slds-p-horizontal_medium slds-grid_pull-padded-medium">
-                <div class="digit3 slds-p-left_medium">
-                    <lightning:input label="###" name="ecPhone1" required="true"
-                            value="{!v.ecPhone1}" class="label-below"
-                            maxlength="3" minlength="3" pattern="[0-9]{3}"
-                            aura:id="required" />
-                </div>
-                <div class="digit3 slds-p-left_small">
-                    <lightning:input label="###" name="ecPhone2" required="true"
-                            value="{!v.ecPhone2}" class="label-below"
-                            maxlength="3" minlength="3" pattern="[0-9]{3}"
-                            aura:id="required" />
-                </div>
-                <div class="digit4 slds-p-left_small">
-                    <lightning:input label="####" name="ecPhone3" required="true"
-                            value="{!v.ecPhone3}" class="label-below"
-                            maxlength="4" minlength="4" pattern="[0-9]{4}"
-                            aura:id="required" />
-                </div>
-            </div>
-        </div>
-
-        <div class="form-section-title">Volunteering Information</div>
-        <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Why do you want to volunteer?
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-form-element__label">
-                <span>Tell us about you and your story.</span>
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:textarea name="reason" label="Reason"
-                        class="no-label" maxlength="2500" value="{!v.reason}" />
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Which Volunteer Training will you attend? *
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <lightning:select name="training" value="{!v.training}"
-                        label="training" class="no-label">
-                    <aura:iteration items="{!v.trainingOptions}" var="o">
-                        <option value="{!o.id}" text="{!o.detailedName}" />
-                    </aura:iteration>
-                    <option value="X">Notify me of other trainings</option>
-                </lightning:select>
-            </div>
-        </div>
-
-        <div class="slds-grid slds-grid_align-center slds-m-around_xx-large">
-            <lightning:button class="submit-button" label="Submit"
-                    variant="brand" onclick="{!c.submitForm}" />
-        </div>
-
-        <aura:if isTrue="{!v.showSpinner}">
-            <lightning:spinner variant="brand" size="large"
-                    alternativeText="Saving" />
+        <aura:if isTrue="{!v.didSuccessfullySave}">
+            <c:VolunteerToast toastType="success" iconName="utility:success" isRelative="true"
+                    toastHeading="Your volunteer registration information has been successfully submitted!" />
         </aura:if>
 
-        <aura:if isTrue="{!v.showModal}">
-            <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
-                    aria-modal="true" aria-describedby="modal-content-id-1"
-                    class="slds-modal slds-fade-in-open">
+        <aura:if isTrue="{!v.showError}">
+            <c:VolunteerToast toastType="error" iconName="utility:error" isRelative="true"
+                    toastHeading="There was an error registering you as a volunteer. Please check the information you submitted for any invalid data and try again."
+                    toastDetails="{!v.errorMsg}" />
+        </aura:if>
 
-                <div class="slds-modal__container">
-                    <header class="slds-modal__header">
-                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
-                                title="Close" onclick="{!c.closeModal}">
-                            <lightning:icon alternativeText="Close"
-                                    iconName="utility:close" variant="inverse" />
-                        </button>
-                        <h2 id="modal-heading-01"
-                                class="slds-text-heading_medium slds-hyphenate">
-                            <aura:if isTrue="{!v.modalType == 'ERROR'}">
-                                <lightning:icon iconName="action:close"
-                                        size="medium" alternativeText="error" />
-                                Error!
-                            </aura:if>
-                            <aura:if isTrue="{!v.modalType == 'SUCCESS'}">
-                                <lightning:icon iconName="action:approval"
-                                        size="medium" alternativeText="success" />
-                                Success!
-                            </aura:if>
-                        </h2>
-                    </header>
-                    <div class="slds-modal__content slds-p-around_medium">
-                        <aura:if isTrue="{!v.modalType == 'ERROR'}">
-                            There was an error registering you as a volunteer.
-                            Please check the information you submitted for any
-                            invalid data and try again.
-                        </aura:if>
-                        <aura:if isTrue="{!v.modalType == 'SUCCESS'}">
-                            Your volunteer registration information has been
-                            successfully submitted.
-                        </aura:if>
+        <aura:if isTrue="{!v.showForm}">
+            <div class="form-section-title">Your Basic Information</div>
+            <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Name *
+                </div>
+                <div class="slds-size_1-of-2 slds-p-horizontal_medium">
+                    <lightning:input name="firstName" label="First Name" type="text"
+                            required="true" value="{!v.firstName}"
+                            aura:id="required" class="label-below" />
+                </div>
+                <div class="slds-size_1-of-2 slds-p-horizontal_medium">
+                    <lightning:input name="lastName" label="Last Name" type="text"
+                            required="true" value="{!v.lastName}"
+                            aura:id="required" class="label-below" />
+                </div>
+
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Preferred First Name
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:input name="preferredName" label="Nickname"
+                            type="text" value="{!v.preferredName}"
+                            class="label-below" />
+                </div>
+
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Personal Pronouns
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:select name="pronouns" value="{!v.pronouns}"
+                            label="These are the pronouns you like to be referred to as.">
+                        <aura:iteration var="p" items="{!v.pronounOptions}">
+                            <option value="{!p}" text="{!p}" />
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Address *
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-form-element__label">
+                    <span>We require your address in order to be able to do a background check.</span>
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:input name="street" label="Street Address" type="text"
+                            required="true" aura:id="required" value="{!v.street}"
+                            class="label-below" />
+                </div>
+                <div class="slds-size_3-of-4 slds-p-horizontal_medium">
+                    <lightning:input name="city" label="City" type="text"
+                            required="true" aura:id="required" value="{!v.city}"
+                            class="label-below" />
+                </div>
+                <div class="slds-size_1-of-4 slds-p-horizontal_medium">
+                    <lightning:input name="state" label="State" type="text"
+                            required="true" aura:id="required" value="{!v.state}"
+                            class="label-below" />
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:input name="zip" label="Zip (#####)" type="text"
+                            maxlength="10" required="true" aura:id="required"
+                            value="{!v.zip}" class="label-below" minlength="5" />
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:input name="country" label="Country" type="text"
+                            required="true" aura:id="required" value="{!v.country}"
+                            class="label-below" />
+                </div>
+
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Email Address *
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:input name="email" label="Email" type="text"
+                            required="true" aura:id="required" value="{!v.email}"
+                            class="no-label" />
+                </div>
+
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Phone *
+                </div>
+                <div class="slds-size_1-of-1 slds-grid slds-p-horizontal_medium slds-grid_pull-padded-medium">
+                    <div class="digit3 slds-p-left_medium">
+                        <lightning:input label="###" name="phone1" required="true"
+                                aura:id="required" value="{!v.phone1}"
+                                class="label-below" maxlength="3" minlength="3"
+                                pattern="[0-9]{3}" />
+                    </div>
+                    <div class="digit3 slds-p-left_small">
+                        <lightning:input label="###" name="phone2" required="true"
+                                aura:id="required" value="{!v.phone2}"
+                                class="label-below" maxlength="3" minlength="3"
+                                pattern="[0-9]{3}" />
+                    </div>
+                    <div class="digit4 slds-p-left_small">
+                        <lightning:input label="####" name="phone3" required="true"
+                                aura:id="required" value="{!v.phone3}"
+                                class="label-below" maxlength="4" minlength="4"
+                                pattern="[0-9]{4}" />
+                    </div>
+                </div>
+
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Date of Birth *
+                </div>
+                <div class="slds-size_1-of-1 slds-grid slds-p-horizontal_medium slds-grid_pull-padded-medium">
+                    <div class="digit2 slds-p-left_medium">
+                        <lightning:input label="MM" name="dobMonth" required="true"
+                                value="{!v.dobMonth}" class="label-below"
+                                maxlength="2" minlength="2" pattern="[0-9]{2}"
+                                aura:id="required" />
+                    </div>
+                    <div class="digit2 slds-p-left_small">
+                        <lightning:input label="DD" name="dobDay" required="true"
+                                value="{!v.dobDay}" class="label-below"
+                                maxlength="2" minlength="2" pattern="[0-9]{2}"
+                                aura:id="required" />
+                    </div>
+                    <div class="digit4 slds-p-left_small">
+                        <lightning:input label="YYYY" name="dobYear" required="true"
+                                value="{!v.dobYear}" class="label-below"
+                                maxlength="4" minlength="4" pattern="[0-9]{4}"
+                                aura:id="required" />
                     </div>
                 </div>
             </div>
-            <div class="slds-backdrop slds-backdrop_open"></div>
+
+            <div class="form-section-title">Emergency Contact Information</div>
+            <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Emergency Contact's Name *
+                </div>
+                <div class="slds-size_1-of-2 slds-p-horizontal_medium">
+                    <lightning:input name="ecFirstName" label="First Name" type="text"
+                            required="true" value="{!v.ecFirstName}"
+                            aura:id="required" class="label-below" />
+                </div>
+                <div class="slds-size_1-of-2 slds-p-horizontal_medium">
+                    <lightning:input name="ecLastName" label="Last Name" type="text"
+                            required="true" value="{!v.ecLastName}"
+                            aura:id="required" class="label-below" />
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Your Relationship to Emergency Contact *
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:input name="ecRelationship" label="Relationship"
+                            type="text" required="true" value="{!v.ecRelationship}"
+                            aura:id="required" class="no-label" />
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">Phone *</div>
+                <div class="slds-size_1-of-1 slds-grid slds-p-horizontal_medium slds-grid_pull-padded-medium">
+                    <div class="digit3 slds-p-left_medium">
+                        <lightning:input label="###" name="ecPhone1" required="true"
+                                value="{!v.ecPhone1}" class="label-below"
+                                maxlength="3" minlength="3" pattern="[0-9]{3}"
+                                aura:id="required" />
+                    </div>
+                    <div class="digit3 slds-p-left_small">
+                        <lightning:input label="###" name="ecPhone2" required="true"
+                                value="{!v.ecPhone2}" class="label-below"
+                                maxlength="3" minlength="3" pattern="[0-9]{3}"
+                                aura:id="required" />
+                    </div>
+                    <div class="digit4 slds-p-left_small">
+                        <lightning:input label="####" name="ecPhone3" required="true"
+                                value="{!v.ecPhone3}" class="label-below"
+                                maxlength="4" minlength="4" pattern="[0-9]{4}"
+                                aura:id="required" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section-title">Volunteering Information</div>
+            <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Why do you want to volunteer?
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-form-element__label">
+                    <span>Tell us about you and your story.</span>
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:textarea name="reason" label="Reason"
+                            class="no-label" maxlength="2500" value="{!v.reason}" />
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Which Volunteer Training will you attend? *
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:select name="training" value="{!v.training}"
+                            label="training" class="no-label">
+                        <aura:iteration items="{!v.trainingOptions}" var="o">
+                            <option value="{!o.id}" text="{!o.detailedName}" />
+                        </aura:iteration>
+                        <option value="X">Notify me of other trainings</option>
+                    </lightning:select>
+                </div>
+            </div>
+
+            <aura:if isTrue="{!v.showError}">
+                <c:VolunteerToast toastType="error" iconName="utility:error" isRelative="true"
+                        toastHeading="There was an error registering you as a volunteer. Please check the information you submitted for any invalid data and try again."
+                        toastDetails="{!v.errorMsg}" />
+            </aura:if>
+
+            <div class="slds-grid slds-grid_align-center slds-m-around_xx-large">
+                <lightning:button class="submit-button"
+                        label="{!if(v.isSubmitting, 'Saving... (this may take a second or two)', 'Submit')}"
+                        disabled="{!v.isSubmitting}"
+                        variant="brand" onclick="{!c.submitForm}" />
+            </div>
         </aura:if>
     </div>
 

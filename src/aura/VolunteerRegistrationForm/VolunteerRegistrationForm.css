@@ -72,6 +72,9 @@
     border-radius: 0;
 }
 
-.THIS .slds-spinner_container {
-    position: fixed;
+.THIS .submit-button[disabled],
+.THIS .submit-button[disabled]:hover,
+.THIS .submit-button[disabled]:active,
+.THIS .submit-button[disabled]:focus {
+    background-color: #555;
 }

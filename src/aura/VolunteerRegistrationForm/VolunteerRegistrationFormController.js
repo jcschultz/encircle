@@ -1,8 +1,5 @@
 ({
     
-    closeModal : function(component, event, helper) {
-        helper.closeModal(component);
-    },
     
     doInit : function(component, event, helper) {
         helper.loadPicklistValues(component);
