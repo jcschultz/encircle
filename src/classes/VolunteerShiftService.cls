@@ -59,6 +59,7 @@ public class VolunteerShiftService {
                         GW_Volunteers__Contact__r.LastName
                     FROM GW_Volunteers__Volunteer_Hours__r
                     WHERE GW_Volunteers__Status__c IN :SIGNED_UP_STATUSES
+                        OR GW_Volunteers__Status__c = :COMPLETED_STATUS
                 )
             FROM GW_Volunteers__Volunteer_Shift__c
             WHERE GW_Volunteers__Start_Date_Time__c >= :startDateTime
