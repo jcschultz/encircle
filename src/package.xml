@@ -2,10 +2,17 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>CalendarDataViewModel</members>
+        <members>CalendarRowViewModel</members>
+        <members>CalendarShiftViewModel</members>
+        <members>CalendarVolunteerViewModel</members>
         <members>DoorActivityService</members>
         <members>DoorActivityService_TEST</members>
         <members>DoorSurveyController</members>
         <members>DoorSurveyController_TEST</members>
+        <members>DoorSurveyShiftViewModel</members>
+        <members>DoorSurveyVolunteerViewModel</members>
+        <members>MyVolunteerProfileController</members>
+        <members>MyVolunteerProfileController_TEST</members>
         <members>TrainingModel</members>
         <members>TrainingService</members>
         <members>TrainingService_TEST</members>
@@ -23,6 +30,7 @@
         <members>VolunteerShiftSignupController</members>
         <members>VolunteerShiftSignupCtrl_TEST</members>
         <members>VolunteerTrainingTriggerHandler</members>
+        <members>VolunteerViewModel</members>
         <members>VTATriggerHandler_TEST</members>
         <members>VTTriggerHandler_TEST</members>
         <name>ApexClass</name>
@@ -35,6 +43,9 @@
     <types>
         <members>BlankLayout</members>
         <members>DoorSurvey</members>
+        <members>MyVolunteerProfile</members>
+        <members>VolunteerNameTypeAhead</members>
+        <members>VolunteerNameTypeAheadEvent</members>
         <members>VolunteerRegistrationApp</members>
         <members>VolunteerRegistrationForm</members>
         <members>VolunteerRegistrationLtngOut</members>
