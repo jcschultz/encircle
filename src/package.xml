@@ -19,6 +19,7 @@
         <members>TriggerHandler</members>
         <members>TriggerHandler_Test</members>
         <members>VolTrainingAttendanceTriggerHandler</members>
+        <members>VolunteerHoursViewModel</members>
         <members>VolunteerRegistrationController</members>
         <members>VolunteerRegistrationController_TEST</members>
         <members>VolunteerService</members>
@@ -43,6 +44,8 @@
     <types>
         <members>BlankLayout</members>
         <members>DoorSurvey</members>
+        <members>MyShiftRow</members>
+        <members>MyShiftRowEvent</members>
         <members>MyVolunteerProfile</members>
         <members>VolunteerNameTypeAhead</members>
         <members>VolunteerNameTypeAheadEvent</members>
