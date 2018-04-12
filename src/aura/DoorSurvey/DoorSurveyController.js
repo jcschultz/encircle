@@ -1,52 +1,47 @@
 ({
     
-    cancelVolunteerSignIn : function(component, event, helper) {
-        helper.resetApp(component);
+    cancelVolunteerSignIn : function(cmp, event, helper) {
+        helper.resetApp(cmp);
     },
     
-    changeVolunteerClick : function(component, event, helper) {
-        helper.resetChosenVolunteer(component);
+    changeVolunteerClick : function(cmp, event, helper) {
+        helper.resetChosenVolunteer(cmp);
     },
     
-    chooseVolunteer : function(component, event, helper) {
-        helper.resetVolunteerSearch(component);
-        helper.chooseVolunteer(component, event.target.dataset.idx);
+    doInit : function(cmp, event, helper) {
+        helper.getVisitorTypes(cmp);
     },
     
-    doInit : function(component, event, helper) {
-        helper.getVisitorTypes(component);
+    handleActivityClick : function(cmp, event, helper) {
+        helper.handleActivityClick(cmp, event);
     },
     
-    handleActivityClick : function(component, event, helper) {
-        helper.handleActivityClick(component, event);
+    handleShiftSearchClick : function(cmp, event, helper) {
+        helper.findAvailableShifts(cmp);
     },
     
-    handleShiftSearchClick : function(component, event, helper) {
-        helper.findAvailableShifts(component);
+    handleTypeAheadEvent : function(cmp, event, helper) {
+        helper.handleTypeAheadEvent(cmp, event);
     },
     
-    handleVolunteerInputChange : function(component, event, helper) {
-        helper.handleVolunteerInputChange(component);
+    signUpAndSignIn : function(cmp, event, helper) {
+        helper.signUpAndSignIn(cmp);
     },
     
-    signUpAndSignIn : function(component, event, helper) {
-        helper.signUpAndSignIn(component);
+    signUpForOtherHours : function(cmp, event, helper) {
+        helper.signUpForOtherHours(cmp);
     },
     
-    signUpForOtherHours : function(component, event, helper) {
-        helper.signUpForOtherHours(component);
+    switchToOtherHours : function(cmp, event, helper) {
+        helper.switchToOtherHours(cmp);
     },
     
-    switchToOtherHours : function(component, event, helper) {
-        helper.switchToOtherHours(component);
+    toggleShift : function(cmp, event, helper) {
+        helper.toggleShift(cmp, event.target.dataset.idx);
     },
     
-    toggleShift : function(component, event, helper) {
-        helper.toggleShift(component, event.target.dataset.idx);
-    },
-    
-    volunteerSignIn : function(component, event, helper) {
-        helper.doVolunteerSignIn(component);
+    volunteerSignIn : function(cmp, event, helper) {
+        helper.doVolunteerSignIn(cmp);
     },
     
 })

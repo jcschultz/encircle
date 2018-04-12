@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="VolunteerNameTypeAheadEvent">
+    <aura:attribute name="action" type="String" description="What type of event: USER_INPUT, SELECTION" />
+    <aura:attribute name="userInput" type="String" description="The characters the user typed into the search field" />
+    <aura:attribute name="selectedObject" type="Object" description="The object/volunteer that the user selected" />
+</aura:event>

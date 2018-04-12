@@ -99,7 +99,7 @@ private class DoorSurveyController_TEST {
         
         Test.startTest();
         
-        List<DoorSurveyController.VolunteerResult> results = DoorSurveyController.searchContacts(con.FirstName);
+        List<DoorSurveyVolunteerViewModel> results = DoorSurveyController.searchContacts(con.FirstName);
         System.assertEquals(1, results.size());
         System.assertEquals(con.Id, results[0].contactId);
         System.assertEquals(1, results[0].shifts.size());
@@ -115,7 +115,7 @@ private class DoorSurveyController_TEST {
     static testMethod void testSignUp() {
         Test.startTest();
         
-        List<DoorSurveyController.ShiftResult> results = DoorSurveyController.findAvailableShifts();
+        List<DoorSurveyShiftViewModel> results = DoorSurveyController.findAvailableShifts();
         System.assertEquals(1, results.size());
         System.assertEquals(shift.Id, results[0].id);
         
@@ -130,7 +130,7 @@ private class DoorSurveyController_TEST {
     static testMethod void testUnplannedSignUp() {
         Test.startTest();
     
-        List<DoorSurveyController.VolunteerResult> results = DoorSurveyController.searchContacts(con.FirstName);
+        List<DoorSurveyVolunteerViewModel> results = DoorSurveyController.searchContacts(con.FirstName);
         System.assertEquals(1, results.size());
         System.assertEquals(con.Id, results[0].contactId);
         System.assertEquals(0, results[0].shifts.size());

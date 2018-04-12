@@ -44,8 +44,8 @@ public without sharing class DoorSurveyController {
      * @return List of contacts and hours
      */
     @AuraEnabled
-    public static List<VolunteerResult> searchContacts(String nameInput) {
-        Map<Id, VolunteerResult> results = new Map<Id, VolunteerResult>();
+    public static List<DoorSurveyVolunteerViewModel> searchContacts(String nameInput) {
+        Map<Id, DoorSurveyVolunteerViewModel> results = new Map<Id, DoorSurveyVolunteerViewModel>();
         List<String> contactIds = new List<String>();
         
         // first find matching contacts who are allowed to volunteer.
@@ -56,7 +56,7 @@ public without sharing class DoorSurveyController {
         if (contacts != null && !contacts.isEmpty()) {
             for (Contact c : contacts) {
                 contactIds.add(c.Id);
-                results.put(c.Id, new VolunteerResult(c));
+                results.put(c.Id, new DoorSurveyVolunteerViewModel(c));
             }
             
             for (GW_Volunteers__Volunteer_Hours__c h :
@@ -67,7 +67,7 @@ public without sharing class DoorSurveyController {
                 )
             ) {
             
-                results.get(h.GW_Volunteers__Contact__c).shifts.add(new ShiftResult(h));
+                results.get(h.GW_Volunteers__Contact__c).shifts.add(new DoorSurveyShiftViewModel(h));
             }
         }
         
@@ -90,8 +90,8 @@ public without sharing class DoorSurveyController {
      * @return List of open shifts.
      */
     @AuraEnabled
-    public static List<ShiftResult> findAvailableShifts() {
-        List<ShiftResult> results = new List<ShiftResult>();
+    public static List<DoorSurveyShiftViewModel> findAvailableShifts() {
+        List<DoorSurveyShiftViewModel> results = new List<DoorSurveyShiftViewModel>();
         
         for (GW_Volunteers__Volunteer_Shift__c vs :
             VolunteerShiftService.getShiftsBetweenDates(
@@ -101,7 +101,7 @@ public without sharing class DoorSurveyController {
         ) {
             
             if (vs.GW_Volunteers__Number_of_Volunteers_Still_Needed__c > 0) {
-                results.add(new ShiftResult(vs));
+                results.add(new DoorSurveyShiftViewModel(vs));
             }
         }
         
@@ -131,43 +131,4 @@ public without sharing class DoorSurveyController {
         VolunteerShiftService.signInToUnplannedShift(contactId, hours);
     }
     
-    
-    public class VolunteerResult {
-        @AuraEnabled
-        public String contactId;
-        @AuraEnabled
-        public String name;
-        @AuraEnabled
-        public List<ShiftResult> shifts;
-        
-        public VolunteerResult(Contact c) {
-            this.contactId = c.Id;
-            this.name = c.Name;
-            this.shifts = new List<ShiftResult>();
-        }
-    }
-    
-    public class ShiftResult {
-        @AuraEnabled
-        public String id;
-        @AuraEnabled
-        public String shiftName;
-        @AuraEnabled
-        public String startTime;
-        @AuraEnabled
-        public Boolean selected;
-        
-        public ShiftResult(GW_Volunteers__Volunteer_Hours__c h) {
-            this.id = h.Id;
-            this.shiftName = h.GW_Volunteers__Volunteer_Job__r.Name;
-            this.startTime = h.GW_Volunteers__Shift_Start_Date_Time__c.format('h:mm a');
-        }
-        
-        public ShiftResult(GW_Volunteers__Volunteer_Shift__c s) {
-            this.id = s.Id;
-            this.shiftName = s.GW_Volunteers__Volunteer_Job__r.Name;
-            this.startTime = s.GW_Volunteers__Start_Date_Time__c.format('h:mm a');
-            this.selected = false;
-        }
-    }
 }

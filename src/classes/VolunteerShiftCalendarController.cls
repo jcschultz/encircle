@@ -13,7 +13,7 @@ public without sharing class VolunteerShiftCalendarController {
      * @return Calendar days and volunteer shifts
      */
     @AuraEnabled
-    public static CalendarData getInitialData() {
+    public static CalendarDataViewModel getInitialData() {
         Date startDate = Date.today();
         Date endDate = startDate.toStartOfMonth().addMonths(1);
         return getCalendarFromDates(startDate, endDate);
@@ -29,7 +29,7 @@ public without sharing class VolunteerShiftCalendarController {
      * @return Calendar days and volunteer shifts
      */
     @AuraEnabled
-    public static CalendarData getCalendarData(String startDateString, String endDateString) {
+    public static CalendarDataViewModel getCalendarData(String startDateString, String endDateString) {
         String[] startDateParts = startDateString.split('-');
         String[] endDateParts = endDateString.split('-');
         Date startDate = Date.newInstance(
@@ -56,9 +56,8 @@ public without sharing class VolunteerShiftCalendarController {
      *
      * @return Calendar days and volunteer shifts.
      */
-    public static CalendarData getCalendarFromDates(Date startDate, Date endDate) {
+    public static CalendarDataViewModel getCalendarFromDates(Date startDate, Date endDate) {
         Map<Date, List<GW_Volunteers__Volunteer_Shift__c>> dates = new Map<Date, List<GW_Volunteers__Volunteer_Shift__c>>();
-        CalendarData cd = new CalendarData();
         CalendarDataViewModel cdvm = new CalendarDataViewModel();
         Integer daysBetween = startDate.daysBetween(endDate);
         String lastMonth = '';
@@ -68,8 +67,8 @@ public without sharing class VolunteerShiftCalendarController {
             dates.put(startDate.addDays(i), new List<GW_Volunteers__Volunteer_Shift__c>());
         }
     
-        cd.nextStartDate = endDate;
-        cd.nextEndDate = cd.nextStartDate.addMonths(1);
+        cdvm.nextStartDate = endDate;
+        cdvm.nextEndDate = cdvm.nextStartDate.addMonths(1);
         
         // inject volunteer shifts and sign-ups into the calendar.
         for (GW_Volunteers__Volunteer_Shift__c vs : VolunteerShiftService.getShiftsBetweenDates(startDate, endDate)) {
@@ -90,13 +89,13 @@ public without sharing class VolunteerShiftCalendarController {
             
             // need to create a new month header row if the data shows this as a new month.
             if (monthLabel != lastMonth) {
-                CalendarDataViewModel.Row monthRow = new CalendarDataViewModel.Row(CalendarDataViewModel.ROW_TYPE_MONTH);
+                CalendarRowViewModel monthRow = new CalendarRowViewModel(CalendarRowViewModel.ROW_TYPE_MONTH);
                 monthRow.monthLabel = monthLabel;
-                cdvm.rows.add(monthRow);
+                cdvm.days.add(monthRow);
                 lastMonth = monthLabel;
             }
     
-            CalendarDataViewModel.Row dayRow = new CalendarDataViewModel.Row(CalendarDataViewModel.ROW_TYPE_DAY);
+            CalendarRowViewModel dayRow = new CalendarRowViewModel(CalendarRowViewModel.ROW_TYPE_DAY);
             dayRow.monthLabel = monthLabel;
             dayRow.monthAbbreviation = monthAbbreviation;
             dayRow.dateOfMonth = dateOfMonth;
@@ -104,7 +103,7 @@ public without sharing class VolunteerShiftCalendarController {
             
             if (shifts != null && !shifts.isEmpty()) {
                 for (GW_Volunteers__Volunteer_Shift__c vs : shifts) {
-                    CalendarDataViewModel.Shift shift = new CalendarDataViewModel.Shift();
+                    CalendarShiftViewModel shift = new CalendarShiftViewModel();
                     shift.jobName = vs.GW_Volunteers__Volunteer_Job__r.Name;
                     shift.jobId = vs.GW_Volunteers__Volunteer_Job__c;
                     shift.shiftId = vs.Id;
@@ -117,7 +116,7 @@ public without sharing class VolunteerShiftCalendarController {
                     if (vs.GW_Volunteers__Volunteer_Hours__r != null && !vs.GW_Volunteers__Volunteer_Hours__r.isEmpty()) {
                         for (GW_Volunteers__Volunteer_Hours__c h : vs.GW_Volunteers__Volunteer_Hours__r) {
                             if (h.GW_Volunteers__Contact__r != null) {
-                                CalendarDataViewModel.Volunteer volunteer = new CalendarDataViewModel.Volunteer();
+                                CalendarVolunteerViewModel volunteer = new CalendarVolunteerViewModel();
                                 volunteer.firstInitial = h.GW_Volunteers__Contact__r.FirstName != null ? h.GW_Volunteers__Contact__r.FirstName.left(1) : '';
                                 volunteer.lastName = h.GW_Volunteers__Contact__r.LastName;
                                 
@@ -130,21 +129,11 @@ public without sharing class VolunteerShiftCalendarController {
                 }
             }
             
-            cdvm.rows.add(dayRow);
+            cdvm.days.add(dayRow);
         }
         
-        cd.days = cdvm.rows;
-    
-        return cd;
+        return cdvm;
     }
     
-    public class CalendarData {
-        @AuraEnabled
-        public List<CalendarDataViewModel.Row> days;
-        @AuraEnabled
-        public Date nextStartDate;
-        @AuraEnabled
-        public Date nextEndDate;
-        
-    }
+    
 }

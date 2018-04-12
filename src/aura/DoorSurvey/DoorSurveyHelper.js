@@ -1,30 +1,15 @@
 ({
     TRAINED_VOLUNTEER : 'Trained Volunteer',
     
-    chooseVolunteer : function(component, idx) {
-        var volunteers = component.get('v.volunteerResults');
-        var chosenVolunteer = volunteers[idx];
-        component.set('v.chosenVolunteer', chosenVolunteer);
-        component.set('v.nameInput', '');
-        component.set('v.showSearchQuestion', (!chosenVolunteer.shifts || chosenVolunteer.shifts.length < 1));
+    chooseVolunteer : function(cmp, chosenVolunteer) {
+        cmp.set('v.chosenVolunteer', chosenVolunteer);
+        cmp.set('v.showSearchQuestion', (!chosenVolunteer.shifts || chosenVolunteer.shifts.length < 1));
     },
     
-    doNameSearch : function(component) {
-        var action = component.get('c.searchContacts');
-        var nameInput = component.get('v.nameInput');
-        nameInput = nameInput ? nameInput.trim() : '';
+    doNameSearch : function(cmp, nameInput) {
+        var action = cmp.get('c.searchContacts');
     
-        this.resetChosenVolunteer(component);
-        this.resetVolunteerSearch(component);
-    
-        if (!nameInput.length) {
-            component.set('v.volunteerResults', '');
-            return;
-        }
-        
-        if (nameInput.length < 3) {
-            return;
-        }
+        this.resetChosenVolunteer(cmp);
     
         action.setParams({
             'nameInput' : nameInput
@@ -34,18 +19,10 @@
             var state = response.getState();
         
             if ('SUCCESS' === state) {
-                var results = response.getReturnValue();
-            
-                if (results && results.length) {
-                    component.set('v.volunteerResults', results);
-                    component.set('v.showVolunteersPicklist', true);
-                }
-                else {
-                    this.displayNoVolunteerResults(component);
-                }
+                cmp.set('v.volunteerResults', response.getReturnValue());
             }
             else if ('ERROR' === state) {
-                this.displayNoVolunteerResults(component);
+                cmp.set('v.volunteerResults', []);
                 console.error('error searching volunteers', response.getError());
             }
         });
@@ -53,9 +30,9 @@
         $A.enqueueAction(action);
     },
     
-    doVolunteerSignIn : function(component) {
-        var action = component.get('c.signVolunteerInToHours');
-        var chosenVolunteer = component.get('v.chosenVolunteer');
+    doVolunteerSignIn : function(cmp) {
+        var action = cmp.get('c.signVolunteerInToHours');
+        var chosenVolunteer = cmp.get('v.chosenVolunteer');
         var hourIds = [];
         
         if (chosenVolunteer.shifts.length) {
@@ -71,82 +48,75 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
     
-            component.set('v.showSpinner', false);
+            cmp.set('v.showSpinner', false);
         
             if ('SUCCESS' === state) {
-                this.showToast(component, 'success', 'Thanks!', 'You are now signed in for your shifts. Thanks for volunteering today.');
-                this.resetApp(component);
+                this.showToast(cmp, 'success', 'Thanks!', 'You are now signed in for your shifts. Thanks for volunteering today.');
+                this.resetApp(cmp);
             }
             else if ('ERROR' === state) {
                 var errors = response.getError();
     
                 if (errors && errors[0]) {
-                    this.showToast(component, 'error', 'Error', 'There was an error signing you in.');
+                    this.showToast(cmp, 'error', 'Error', 'There was an error signing you in.');
                 }
                 console.error('error signing in volunteer', response);
             }
         });
         
-        component.set('v.showSpinner', true);
+        cmp.set('v.showSpinner', true);
     
         $A.enqueueAction(action);
     },
     
-    displayNoVolunteerResults : function(component) {
-        component.set('v.volunteerResults', '');
-        component.set('v.showVolunteersPicklist', false);
-        component.set('v.showNoVolunteers', true);
-        this.resetShiftSearch(component);
-    },
-    
-    findAvailableShifts : function(component) {
-        var chosenVolunteer = component.get('v.chosenVolunteer');
-        var action = component.get('c.findAvailableShifts');
+    findAvailableShifts : function(cmp) {
+        var chosenVolunteer = cmp.get('v.chosenVolunteer');
+        var action = cmp.get('c.findAvailableShifts');
         
         action.setCallback(this, function(response) {
             var state = response.getState();
             
-            component.set('v.showSpinner', false);
+            cmp.set('v.showSpinner', false);
         
             if ('SUCCESS' === state) {
                 var shifts = response.getReturnValue();
-                component.set('v.showSearchQuestion', false);
+                cmp.set('v.showSearchQuestion', false);
                 
                 if (shifts && shifts.length) {
-                    component.set('v.availableShifts', shifts);
-                    component.set('v.showShiftSelection', true);
+                    cmp.set('v.availableShifts', shifts);
+                    cmp.set('v.showShiftSelection', true);
                 }
                 else {
-                    component.set('v.showNoShiftsAvailable', true);
-                    component.set('v.showOtherSignIn', true);
+                    cmp.set('v.showNoShiftsAvailable', true);
+                    cmp.set('v.showOtherSignIn', true);
                 }
             }
             else if ('ERROR' === state) {
                 var errors = response.getError();
     
                 if (errors && errors[0]) {
-                    this.showToast(component, 'error', 'Error', 'There was an error finding available shifts.');
+                    this.showToast(cmp, 'error', 'Error', 'There was an error finding available shifts.');
                 }
                 console.error('error finding shifts', response);
             }
         });
         
-        component.set('v.showSpinner', true);
-        component.set('v.showNoShiftsAvailable', false);
-        component.set('v.showShiftSelection', false);
-        component.set('v.showOtherSignIn', false);
+        cmp.set('v.showSpinner', true);
+        cmp.set('v.showNoShiftsAvailable', false);
+        cmp.set('v.showShiftSelection', false);
+        cmp.set('v.showOtherSignIn', false);
     
         $A.enqueueAction(action);
     },
     
-    getVisitorTypes : function(component) {
-        var action = component.get('c.getVisitorTypes');
+    getVisitorTypes : function(cmp) {
+        var action = cmp.get('c.getVisitorTypes');
     
         action.setCallback(this, function(response) {
             var state = response.getState();
         
             if ('SUCCESS' === state) {
-                component.set('v.visitorTypes', response.getReturnValue());
+                cmp.set('v.visitorTypes', response.getReturnValue());
             }
             else if ('ERROR' === state) {
                 console.error('error retrieving visitor types', error.getError());
@@ -156,9 +126,9 @@
         $A.enqueueAction(action);
     },
     
-    handleActivityClick : function(component, event) {
+    handleActivityClick : function(cmp, event) {
         var label = event.getSource().get('v.label');
-        var action = component.get('c.saveActivity');
+        var action = cmp.get('c.saveActivity');
         var now = new Date();
         var activityDate = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
         var hour = now.getHours().toString();
@@ -172,77 +142,66 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
             
-            component.set('v.showSpinner', false);
+            cmp.set('v.showSpinner', false);
         
             if ('SUCCESS' === state) {
                 if (label !== this.TRAINED_VOLUNTEER) {
-                    this.showToast(component, 'success', 'Thanks!', 'Your visit has been recorded. Thanks for visiting us today.');
+                    this.showToast(cmp, 'success', 'Thanks!', 'Your visit has been recorded. Thanks for visiting us today.');
                 }
             }
             else if ('ERROR' === state) {
                 var errors = response.getError();
                 
                 if (errors && errors[0]) {
-                    this.showToast(component, 'error', 'Error', 'There was an error recording your visit.');
+                    this.showToast(cmp, 'error', 'Error', 'There was an error recording your visit.');
                 }
                 console.error('error saving visitor', response);
             }
         });
         
         if (label === this.TRAINED_VOLUNTEER) {
-            this.switchToVolunteerView(component);
+            this.switchToVolunteerView(cmp);
         }
         else {
-            component.set('v.showSpinner', true);
+            cmp.set('v.showSpinner', true);
         }
     
         $A.enqueueAction(action);
     },
     
-    handleVolunteerInputChange : function(component) {
-        var delay = 400;
-        var timer = component.get('v.timer');
-        var that = this;
-    
-        clearTimeout(timer);
-    
-        timer = window.setTimeout(
-            $A.getCallback(function(){
-                that.doNameSearch(component);
-            }),
-            delay
-        );
-    
-        component.set('v.timer', timer);
+    handleTypeAheadEvent : function(cmp, event) {
+        var actionType = event.getParam('action');
+        
+        if ('USER_INPUT' === actionType) {
+            // do search and return results to typeahead.
+            this.doNameSearch(cmp, event.getParam('userInput'));
+        }
+        else if ('SELECTION' === actionType) {
+            // store chosen volunteer
+            this.chooseVolunteer(cmp, event.getParam('selectedObject'));
+        }
     },
     
-    resetApp : function(component) {
-        component.set('v.step', 'welcome');
-        this.resetChosenVolunteer(component);
-        this.resetVolunteerSearch(component);
+    resetApp : function(cmp) {
+        cmp.set('v.step', 'welcome');
+        this.resetChosenVolunteer(cmp);
     },
     
-    resetChosenVolunteer : function(component) {
-        component.set('v.chosenVolunteer', '');
-        this.resetShiftSearch(component);
+    resetChosenVolunteer : function(cmp) {
+        cmp.set('v.chosenVolunteer', '');
+        this.resetShiftSearch(cmp);
     },
     
-    resetShiftSearch : function(component) {
-        component.set('v.showSearchQuestion', false);
-        component.set('v.showNoShiftsAvailable', false);
-        component.set('v.showShiftSelection', false);
-        component.set('v.showOtherSignIn', false);
-        component.set('v.otherHours', 1);
-        component.set('v.availableShifts', '');
+    resetShiftSearch : function(cmp) {
+        cmp.set('v.showSearchQuestion', false);
+        cmp.set('v.showNoShiftsAvailable', false);
+        cmp.set('v.showShiftSelection', false);
+        cmp.set('v.showOtherSignIn', false);
+        cmp.set('v.otherHours', 1);
+        cmp.set('v.availableShifts', '');
     },
     
-    resetVolunteerSearch : function(component) {
-        component.set('v.showVolunteersPicklist', false);
-        component.set('v.showNoVolunteers', false);
-        this.resetShiftSearch(component);
-    },
-    
-    showToast : function(component, severity, title, message) {
+    showToast : function(cmp, severity, title, message) {
         var toastEvent = $A.get('e.force:showToast');
         
         toastEvent.setParams({
@@ -254,11 +213,11 @@
         toastEvent.fire();
     },
     
-    signUpAndSignIn : function(component) {
-        var availableShifts = component.get('v.availableShifts');
-        var chosenVolunteer = component.get('v.chosenVolunteer');
+    signUpAndSignIn : function(cmp) {
+        var availableShifts = cmp.get('v.availableShifts');
+        var chosenVolunteer = cmp.get('v.chosenVolunteer');
         var shiftIds = [];
-        var action = component.get('c.signVolunteerUpForShifts');
+        var action = cmp.get('c.signVolunteerUpForShifts');
         
         for (var i = 0; i < availableShifts.length; i++) {
             if (availableShifts[i].selected) {
@@ -274,31 +233,31 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
             
-            component.set('v.showSpinner', false);
+            cmp.set('v.showSpinner', false);
         
             if ('SUCCESS' === state) {
-                this.showToast(component, 'success', 'Thanks!', 'You are now signed in for your shifts. Thanks for volunteering today.');
-                this.resetApp(component);
+                this.showToast(cmp, 'success', 'Thanks!', 'You are now signed in for your shifts. Thanks for volunteering today.');
+                this.resetApp(cmp);
             }
             else if ('ERROR' === state) {
                 var errors = response.getError();
     
                 if (errors && errors[0]) {
-                    this.showToast(component, 'error', 'Error', 'There was an error signing you up for the selected shifts.');
+                    this.showToast(cmp, 'error', 'Error', 'There was an error signing you up for the selected shifts.');
                 }
                 console.error('error signing up for shifts', response);
             }
         });
         
-        component.set('v.showSpinner', true);
+        cmp.set('v.showSpinner', true);
     
         $A.enqueueAction(action);
     },
     
-    signUpForOtherHours : function(component) {
-        var chosenVolunteer = component.get('v.chosenVolunteer');
-        var hours = component.get('v.otherHours');
-        var action = component.get('c.signVolunteerInForUnplannedShift');
+    signUpForOtherHours : function(cmp) {
+        var chosenVolunteer = cmp.get('v.chosenVolunteer');
+        var hours = cmp.get('v.otherHours');
+        var action = cmp.get('c.signVolunteerInForUnplannedShift');
     
         action.setParams({
             'contactId' : chosenVolunteer.contactId,
@@ -308,41 +267,41 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
     
-            component.set('v.showSpinner', false);
+            cmp.set('v.showSpinner', false);
         
             if ('SUCCESS' === state) {
-                this.showToast(component, 'success', 'Thanks!', 'You are now signed in. Thanks for volunteering today.');
-                this.resetApp(component);
+                this.showToast(cmp, 'success', 'Thanks!', 'You are now signed in. Thanks for volunteering today.');
+                this.resetApp(cmp);
             }
             else if ('ERROR' === state) {
                 var errors = response.getError();
     
                 if (errors && errors[0]) {
-                    this.showToast(component, 'error', 'Error', 'There was an error signing you up for the other shift.');
+                    this.showToast(cmp, 'error', 'Error', 'There was an error signing you up for the other shift.');
                 }
                 console.error('error signing up for unplanned', response);
             }
         });
     
-        component.set('v.showSpinner', true);
+        cmp.set('v.showSpinner', true);
     
         $A.enqueueAction(action);
     },
     
-    switchToOtherHours : function(component) {
-        component.set('v.selectedShiftsCount', 0);
-        component.set('v.availableShifts', '');
-        component.set('v.showShiftSelection', false);
-        component.set('v.showOtherSignIn', true);
+    switchToOtherHours : function(cmp) {
+        cmp.set('v.selectedShiftsCount', 0);
+        cmp.set('v.availableShifts', '');
+        cmp.set('v.showShiftSelection', false);
+        cmp.set('v.showOtherSignIn', true);
     },
     
-    switchToVolunteerView : function(component) {
-        component.set('v.step', 'volunteer');
+    switchToVolunteerView : function(cmp) {
+        cmp.set('v.step', 'volunteer');
     },
     
-    toggleShift : function(component, idx) {
-        var availableShifts = component.get('v.availableShifts');
-        var selectedShiftsCount = component.get('v.selectedShiftsCount');
+    toggleShift : function(cmp, idx) {
+        var availableShifts = cmp.get('v.availableShifts');
+        var selectedShiftsCount = cmp.get('v.selectedShiftsCount');
         
         availableShifts[idx].selected = !availableShifts[idx].selected;
         
@@ -353,8 +312,8 @@
             selectedShiftsCount--;
         }
         
-        component.set('v.availableShifts', availableShifts);
-        component.set('v.selectedShiftsCount', selectedShiftsCount);
+        cmp.set('v.availableShifts', availableShifts);
+        cmp.set('v.selectedShiftsCount', selectedShiftsCount);
     },
     
 })

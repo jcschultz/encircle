@@ -118,18 +118,23 @@ public class VolunteerShiftService {
      * @return List of volunteer hour records.
      */
     public static List<GW_Volunteers__Volunteer_Hours__c> findHoursByContactAndDate(String[] contactIds, Date startDate, Date endDate) {
-        return [
+        List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>([
             SELECT
                 GW_Volunteers__Contact__c,
                 Id,
                 GW_Volunteers__Shift_Start_Date_Time__c,
-                GW_Volunteers__Volunteer_Job__r.Name
+                GW_Volunteers__Volunteer_Job__c,
+                GW_Volunteers__Volunteer_Job__r.Name,
+                GW_Volunteers__Volunteer_Shift__c,
+                GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c
             FROM GW_Volunteers__Volunteer_Hours__c
             WHERE GW_Volunteers__Contact__c IN :contactIds
             AND GW_Volunteers__Start_Date__c >= :startDate
             AND GW_Volunteers__Start_Date__c < :endDate
             ORDER BY GW_Volunteers__Shift_Start_Date_Time__c ASC
-        ];
+        ]);
+        
+        return hours;
     }
     
     /**

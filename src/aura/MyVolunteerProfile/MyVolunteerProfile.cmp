@@ -1,0 +1,64 @@
+<aura:component access="global" controller="MyVolunteerProfileController" 
+    implements="forceCommunity:availableForAllPageTypes">
+    
+    <aura:attribute name="volunteerResults" access="private" type="Object[]" />
+    <aura:attribute name="chosenVolunteer" access="private" type="Object" default="" />
+    <aura:attribute name="upcomingShifts" access="private" type="Object[]" default="" />
+    <aura:attribute name="noUpcomingShifts" type="Boolean" access="private" default="false" />
+    <aura:attribute name="showSpinner" type="Boolean" access="private" default="false" />
+
+    <aura:handler name="typeAheadEvent" event="c:VolunteerNameTypeAheadEvent" action="{!c.handleTypeAheadEvent}" />
+    <aura:handler name="myShiftRowEvent" event="c:MyShiftRowEvent" action="{!c.handleShiftRowEvent}" />
+    
+    <div class="slds">
+        <div class="form-section-title">Find Your Volunteer Record</div>
+
+        <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
+            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                Your Name
+            </div>
+            <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-form-element__label">
+                <span>Start typing your name below to find your volunteer record.</span>
+            </div>
+            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                <c:VolunteerNameTypeAhead volunteerResults="{!v.volunteerResults}" />
+            </div>
+
+        </div>
+
+        <aura:if isTrue="{! not(empty(v.chosenVolunteer))}">
+            <div class="form-section-title">Your Upcoming Volunteering Shifts</div>
+            
+            <aura:if isTrue="{!v.noUpcomingShifts}">
+                <div class="no-shifts">You are not currently signed up for any upcoming shifts.</div>
+            </aura:if>
+            
+            <aura:if isTrue="{! not(empty(v.upcomingShifts))}">
+                <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
+                    <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table_stacked-horizontal selected-shifts-table">
+                            <thead>
+                            <tr class="slds-text-title_caps">
+                                <th>Job Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Duration</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration items="{!v.upcomingShifts}" var="shift">
+                                    <c:MyShiftRow shift="{#shift}" />
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </aura:if>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner variant="brand" size="large" alternativeText="Working..." />
+        </aura:if>
+    </div>
+</aura:component>

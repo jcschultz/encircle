@@ -1,24 +1,16 @@
 ({
     
-    choseVolunteer : function(component, event, helper) {
-        helper.resetVolunteerSearch(component);
-        helper.choseVolunteer(component, event.target.dataset.idx);
+    handleShiftToggle : function(cmp, event, helper) {
+        helper.parseShiftToggle(cmp, event);
     },
     
-    handleShiftToggle : function(component, event, helper) {
-        helper.parseShiftToggle(component, event);
+    handleSignUpClick : function(cmp, event, helper) {
+        helper.signUp(cmp);
     },
     
-    handleSignUpClick : function(component, event, helper) {
-        helper.signUp(component);
+    handleTypeAheadEvent : function(cmp, event, helper) {
+        helper.handleTypeAheadEvent(cmp, event);
     },
     
-    nameInputChange : function(component, event, helper) {
-        helper.handleNameSearchChange(component);
-    },
-    
-    removeChosenVolunteer : function(component, event, helper) {
-        helper.resetChosenVolunteer(component);
-    },
     
 })

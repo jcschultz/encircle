@@ -1,0 +1,15 @@
+<aura:component >
+    <aura:attribute name="shift" type="Object" access="public" required="true" description="Object containing shift info" />
+    
+    <aura:registerEvent name="myShiftRowEvent" type="c:MyShiftRowEvent" />
+    
+    <tr>
+        <td title="Job Name">{!v.shift.jobName}</td>
+        <td title="Date">{!v.shift.dayOfWeek + ', ' + v.shift.monthAbbreviation + ' ' + v.shift.dateOfMonth}</td>
+        <td title="Time">{!v.shift.startTime}</td>
+        <td title="Duration">{!v.shift.duration + ' hours'}</td>
+        <td title="Action">
+            <lightning:button label="Remove" variant="destructive" title="Cancel My Shift" onclick="{!c.removeShift}" />
+        </td>
+    </tr>
+</aura:component>

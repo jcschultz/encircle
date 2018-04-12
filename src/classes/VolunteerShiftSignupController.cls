@@ -9,19 +9,23 @@ public class VolunteerShiftSignupController {
     
     /**
      * @description Retrieve volunteers, searching by names.
-     *
      * @param nameInput
-     *
      * @return list of contacts
      */
     @AuraEnabled
-    public static List<Contact> searchContacts(String nameInput) {
-        return VolunteerService.findByFuzzyNameSearch(nameInput);
+    public static List<VolunteerViewModel> searchContacts(String nameInput) {
+        List<VolunteerViewModel> results = new List<VolunteerViewModel>();
+        List<Contact> contacts = VolunteerService.findByFuzzyNameSearch(nameInput);
+        
+        for (Contact c : contacts) {
+            results.add(new VolunteerViewModel(c));
+        }
+        
+        return results;
     }
     
     /**
      * @description Signs the contact up for a volunteer shift.
-     *
      * @param contactId
      * @param shiftIds
      */

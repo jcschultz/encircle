@@ -1,0 +1,50 @@
+<aura:component description="Type-ahead input field for finding volunteers by name" >
+
+    <aura:attribute name="volunteerResults" type="Object[]" access="public" description="List of results to be chosen from." />
+    <aura:attribute name="showNoVolunteers" access="private" type="Boolean" default="false" />
+    <aura:attribute name="showVolunteersPicklist" access="private" type="Boolean" default="false" />
+    <aura:attribute name="timer" access="private" type="Object" default="" />
+    <aura:attribute name="chosenVolunteer" access="private" type="Object" default="" />
+    <aura:attribute name="userNameInput" access="private" type="String" default="" />
+
+    <aura:registerEvent name="typeAheadEvent" type="c:VolunteerNameTypeAheadEvent" />
+    <aura:handler name="change" value="{!v.volunteerResults}" action="{!c.handleVolunteerResultsChange}" />
+
+    <div>
+        <div class="slds-form-element">
+            <div id="search-container">
+                <lightning:input type="search" value="{!v.userNameInput}" label="name search" class="no-label" onchange="{!c.nameInputChange}" />
+                <aura:if isTrue="{!not(empty(v.chosenVolunteer))}">
+                    <div class="chosen-volunteer">
+                        <span class="slds-badge">
+                            <span>{!v.chosenVolunteer.name}</span>
+                            <lightning:buttonIcon alternativeText="Remove"
+                                    iconName="utility:clear" size="x-small"
+                                    onclick="{!c.removeChosenVolunteer}" />
+                        </span>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+
+        <aura:if isTrue="{!v.showVolunteersPicklist}">
+            <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid volunteer-results">
+                <aura:iteration items="{!v.volunteerResults}" var="v" indexVar="idx">
+                    <li class="slds-listbox__item">
+                        <div class="slds-listbox__option slds-listbox__option_plain">
+                            <lightning:button value="{!idx}" label="{!v.name}" onclick="{!c.choseVolunteer}"
+                                    class="volunteer-list-item" variant="neutral" />
+                        </div>
+                    </li>
+                </aura:iteration>
+            </ul>
+        </aura:if>
+
+        <aura:if isTrue="{!and(v.showNoVolunteers, and(not(empty(v.userNameInput)), v.userNameInput.length > 2))}">
+            <div class="slds-text-color_error">
+                Your information could not be found.
+            </div>
+        </aura:if>
+    </div>
+
+</aura:component>

@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Action to be taken on a particulr volunteer hour record">
+    <aura:attribute name="hourId" type="String" description="ID of the volunteer hour record" />
+    <aura:attribute name="action" type="String" description="Action to be taken: DELETE" />
+</aura:event>

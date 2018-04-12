@@ -51,16 +51,16 @@ private class VolunteerShiftCalendarCtrl_TEST {
         Test.startTest();
         
         
-        VolunteerShiftCalendarController.CalendarData cd = VolunteerShiftCalendarController.getCalendarData('2020-08-15', '2020-08-17');
+        CalendarDataViewModel cd = VolunteerShiftCalendarController.getCalendarData('2020-08-15', '2020-08-17');
         System.assertEquals(3, cd.days.size());
-        System.assertEquals(CalendarDataViewModel.ROW_TYPE_MONTH, cd.days[0].rowType);
-        System.assertEquals(CalendarDataViewModel.ROW_TYPE_DAY, cd.days[1].rowType);
+        System.assertEquals(CalendarRowViewModel.ROW_TYPE_MONTH, cd.days[0].rowType);
+        System.assertEquals(CalendarRowViewModel.ROW_TYPE_DAY, cd.days[1].rowType);
         System.assertEquals(1, cd.days[1].shifts.size());
         System.assertEquals(shift.Id, cd.days[1].shifts[0].shiftId);
         System.assertEquals(1, cd.days[1].shifts[0].volunteers.size());
         System.assertEquals(con.LastName, cd.days[1].shifts[0].volunteers[0].lastName);
         
-        VolunteerShiftCalendarController.CalendarData cd2 = VolunteerShiftCalendarController.getInitialData();
+        CalendarDataViewModel cd2 = VolunteerShiftCalendarController.getInitialData();
         System.assertNotEquals(null, cd2);
         
         Test.stopTest();

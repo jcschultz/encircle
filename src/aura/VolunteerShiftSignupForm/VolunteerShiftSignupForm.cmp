@@ -3,9 +3,6 @@
         controller="VolunteerShiftSignupController">
 
     <aura:attribute name="volunteerResults" access="private" type="Object[]" />
-    <aura:attribute name="showNoVolunteers" access="private" type="Boolean" default="false" />
-    <aura:attribute name="showVolunteersPicklist" access="private" type="Boolean" default="false" />
-    <aura:attribute name="timer" access="private" type="Object" default="" />
     <aura:attribute name="chosenVolunteer" access="private" type="Object" default="" />
     <aura:attribute name="selectedShifts" access="private" type="Object[]" default="" />
     <aura:attribute name="isSubmitting" access="private" type="Boolean" default="false" />
@@ -16,6 +13,7 @@
     <aura:attribute name="errorHeading" access="private" type="String" default="" />
 
     <aura:handler name="shiftToggleEvent" event="c:VolunteerShiftToggleEvent" action="{!c.handleShiftToggle}" />
+    <aura:handler name="typeAheadEvent" event="c:VolunteerNameTypeAheadEvent" action="{!c.handleTypeAheadEvent}" />
 
     <div class="slds">
         <aura:if isTrue="{!v.didSuccessfullySave}">
@@ -40,49 +38,12 @@
                     <span>Start typing your name below to find your volunteer record.</span>
                 </div>
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                    <div class="slds-form-element">
-                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
-                            <lightning:icon size="x-small" iconName="utility:search" class="slds-input__icon slds-input__icon_left slds-icon-text-default" />
-                            <ui:inputText aura:id="nameInput" class="slds-input contact-search"
-                                    keyup="{!c.nameInputChange}" updateOn="keyup"
-                                    placeholder="Type at least 3 letters" />
-                            <aura:if isTrue="{!v.chosenVolunteer != ''}">
-                                <div class="chosen-volunteer">
-                                <span class="slds-badge">
-                                {!v.chosenVolunteer.Name}
-                                    <lightning:buttonIcon alternativeText="Remove"
-                                            iconName="utility:clear" size="x-small"
-                                            onclick="{!c.removeChosenVolunteer}" />
-                                </span>
-                                </div>
-                            </aura:if>
-                        </div>
-                    </div>
-
-                    <aura:if isTrue="{!v.showVolunteersPicklist}">
-                        <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid volunteer-results">
-                            <aura:iteration items="{!v.volunteerResults}" var="v" indexVar="idx">
-                                <li class="slds-listbox__item">
-                                    <div class="slds-listbox__option slds-listbox__option_plain"
-                                            onclick="{!c.choseVolunteer}"
-                                            data-idx="{!idx}">
-                                            {!v.Name}
-                                    </div>
-                                </li>
-                            </aura:iteration>
-                        </ul>
-                    </aura:if>
-
-                    <aura:if isTrue="{!v.showNoVolunteers}">
-                        <div class="slds-text-color_error">
-                            Your information could not be found.
-                        </div>
-                    </aura:if>
+                    <c:VolunteerNameTypeAhead volunteerResults="{!v.volunteerResults}" />
                 </div>
 
             </div>
 
-            <aura:if isTrue="{!v.chosenVolunteer != ''}">
+            <aura:if isTrue="{! not(empty(v.chosenVolunteer))}">
                 <div class="form-section-title">Choose Your Volunteering Shifts</div>
                 <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-around--medium" role="status">
                     <div class="slds-media__figure">

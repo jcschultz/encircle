@@ -1,0 +1,53 @@
+.THIS {}
+
+.THIS .volunteer-results {
+    margin-top: -10px;
+}
+
+.THIS .chosen-volunteer {
+    position: absolute;
+    width: auto;
+    height: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.THIS .chosen-volunteer .slds-badge {
+    margin-top: .375rem;
+    margin-left: 2rem;
+    border-radius: 0;
+    background: #000;
+    color: #fff;
+    display: inline-block;
+    min-width: 10rem;
+    padding: 0.25rem 2rem;
+}
+
+.THIS .chosen-volunteer button {
+    border: 0;
+    color: #fff;
+    margin-left: .5rem;
+}
+
+.THIS .chosen-volunteer button:hover {
+    color: red;
+}
+
+.THIS button.slds-button.volunteer-list-item,
+.THIS button.slds-button.volunteer-list-item:hover,
+.THIS button.slds-button.volunteer-list-item:focus {
+    color: inherit;
+    padding: 0;
+    margin: 0;
+    border: none;
+    display: block;
+    width: 100%;
+    text-align: left;
+    background-color: transparent;
+}
+
+.THIS .no-label label {
+    display: none;
+}

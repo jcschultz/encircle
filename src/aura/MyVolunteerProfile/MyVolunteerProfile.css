@@ -1,0 +1,60 @@
+.THIS { }
+
+.THIS .form-section-title {
+    border-bottom: 1px solid #1f1f1f;
+    text-transform: uppercase;
+    margin-top: 2rem;
+}
+
+.THIS .fieldset-label {
+    margin-top: 1.5rem;
+}
+
+.THIS .label-below {
+    display: flex;
+    flex-direction: column;
+}
+
+.THIS .label-below label {
+    order: 1;
+    margin-bottom: .25rem;
+}
+
+.THIS .label-below .slds-form-element__control {
+    order: 0;
+}
+
+.THIS .slds-input,
+.THIS .slds-select,
+.THIS .slds-textarea {
+    border-radius: 0;
+    border-color: #1f1f1f;
+    background-color: #fafafa;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+}
+
+.THIS .slds-textarea {
+    min-height: 100px;
+}
+
+.THIS .slds-form-element__control {
+    margin-top: 0.375rem;
+    margin-bottom: 0.375rem;
+}
+
+.THIS .slds-required {
+    display: none;
+}
+
+.THIS .no-label label {
+    display: none;
+}
+
+.THIS .strong-text {
+    font-weight: 700;
+}
+
+.THIS .contact-search {
+    padding-left: 2rem;
+}

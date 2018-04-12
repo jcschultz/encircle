@@ -41,9 +41,9 @@ private class VolunteerShiftSignupCtrl_TEST {
         Test.startTest();
         
         // testing search.
-        List<Contact> contacts = VolunteerShiftSignupController.searchContacts('test');
+        List<VolunteerViewModel> contacts = VolunteerShiftSignupController.searchContacts('test');
         System.assertEquals(1, contacts.size());
-        System.assertEquals(con.Id, contacts[0].Id);
+        System.assertEquals(con.Id, contacts[0].id);
         
         // test signup
         List<GW_Volunteers__Volunteer_Hours__c> hours = VolunteerShiftSignupController.signUpContactForShifts(con.Id, new List<String>{shift.Id});
