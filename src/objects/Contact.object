@@ -57,6 +57,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Facilitator__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Does this person ever work at Encircle in the role of Facilitator?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Does this person ever work at Encircle in the role of Facilitator?</inlineHelpText>
+        <label>Facilitator</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Fingerprints__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>

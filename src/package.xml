@@ -18,6 +18,8 @@
         <members>TrainingService_TEST</members>
         <members>TriggerHandler</members>
         <members>TriggerHandler_Test</members>
+        <members>VTATriggerHandler_TEST</members>
+        <members>VTTriggerHandler_TEST</members>
         <members>VolTrainingAttendanceTriggerHandler</members>
         <members>VolunteerHoursViewModel</members>
         <members>VolunteerRegistrationController</members>
@@ -32,8 +34,6 @@
         <members>VolunteerShiftSignupCtrl_TEST</members>
         <members>VolunteerTrainingTriggerHandler</members>
         <members>VolunteerViewModel</members>
-        <members>VTATriggerHandler_TEST</members>
-        <members>VTTriggerHandler_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -68,6 +68,7 @@
         <members>Contact.Emergency_Contact_Phone__c</members>
         <members>Contact.Emergency_Contact_Relationship__c</members>
         <members>Contact.Ethics_Agreement__c</members>
+        <members>Contact.Facilitator__c</members>
         <members>Contact.Fingerprints__c</members>
         <members>Contact.Last_Volunteer_Training__c</members>
         <members>Contact.Legal_First_Name__c</members>
@@ -107,8 +108,8 @@
         <members>Encircle_Volunteer_Settings__c.Unplanned_Volunteering_Job_Id__c</members>
         <members>Volunteer_Training_Attendance__c.Completed_Training__c</members>
         <members>Volunteer_Training_Attendance__c.StartDateTime__c</members>
-        <members>Volunteer_Training_Attendance__c.Volunteer__c</members>
         <members>Volunteer_Training_Attendance__c.Volunteer_Training__c</members>
+        <members>Volunteer_Training_Attendance__c.Volunteer__c</members>
         <members>Volunteer_Training__c.Description__c</members>
         <members>Volunteer_Training__c.EndDateTime__c</members>
         <members>Volunteer_Training__c.Location__c</members>
@@ -146,11 +147,10 @@
     <types>
         <members>Encircle_Volunteer_Management</members>
         <name>PermissionSet</name>
-      </types>
+    </types>
     <types>
         <members>DoorSurveyAssets</members>
         <name>StaticResource</name>
     </types>
     <version>41.0</version>
 </Package>
-
