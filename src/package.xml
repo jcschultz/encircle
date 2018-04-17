@@ -5,6 +5,10 @@
         <members>CalendarRowViewModel</members>
         <members>CalendarShiftViewModel</members>
         <members>CalendarVolunteerViewModel</members>
+        <members>DSFacilitatorSigninController</members>
+        <members>DSFacilitatorSigninController_TEST</members>
+        <members>DSVolunteerSigninController</members>
+        <members>DSVolunteerSigninController_TEST</members>
         <members>DoorActivityService</members>
         <members>DoorActivityService_TEST</members>
         <members>DoorSurveyController</members>
@@ -44,6 +48,8 @@
     <types>
         <members>BlankLayout</members>
         <members>DoorSurvey</members>
+        <members>DoorSurveyFacilitatorSignIn</members>
+        <members>DoorSurveyVolunteerSignIn</members>
         <members>MyShiftRow</members>
         <members>MyShiftRowEvent</members>
         <members>MyVolunteerProfile</members>
