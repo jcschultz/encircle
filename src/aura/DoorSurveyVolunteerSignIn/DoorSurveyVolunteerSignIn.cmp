@@ -1,1 +1,157 @@
-<aura:component ></aura:component>
+<aura:component controller="DSVolunteerSigninController">
+    <aura:attribute name="nameInput" type="String" access="private" default="" />
+    <aura:attribute name="volunteerResults" access="private" type="Object[]" />
+    <aura:attribute name="timer" access="private" type="Object" default="" />
+    <aura:attribute name="chosenVolunteer" access="private" type="Object" default="" />
+    <aura:attribute name="showSearchQuestion" access="private" type="Boolean" default="false" />
+    <aura:attribute name="showNoShiftsAvailable" access="private" type="Boolean" default="false" />
+    <aura:attribute name="showShiftSelection" access="private" type="Boolean" default="false" />
+    <aura:attribute name="availableShifts" access="private" type="Object[]" default="" />
+    <aura:attribute name="selectedShiftsCount" access="private" type="Integer" default="0" />
+    <aura:attribute name="showOtherSignIn" access="private" type="Boolean" default="false" />
+    <aura:attribute name="otherHours" access="private" type="Integer" default="1" />
+
+    <aura:handler name="typeAheadEvent" event="c:VolunteerNameTypeAheadEvent" action="{!c.handleTypeAheadEvent}" />
+    <aura:registerEvent name="dsActionEvent" type="c:DoorSurveyActionEvent" />
+    
+    <div>
+        <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-p-vertical_small">
+            <lightning:button iconName="utility:chevronleft" iconPosition="left"
+                label="Back" onclick="{!c.cancelVolunteerSignIn}"
+                class="encircle-btn back-btn" />
+        </div>
+        <div class="slds-size_1-of-1 slds-p-bottom_large">
+            <div class="welcome-title slds-text-align_center">
+                Volunteer Sign In
+            </div>
+        </div>
+
+        <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label">
+            Your Name
+        </div>
+
+        <aura:if isTrue="{!v.chosenVolunteer == ''}">
+            <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
+                <c:VolunteerNameTypeAhead volunteerResults="{!v.volunteerResults}" />
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!v.chosenVolunteer != ''}">
+            <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
+                <div class="chosen-volunteer">
+                    <span class="slds-text-heading_medium">
+                        {!v.chosenVolunteer.name}
+                    </span>
+                    <lightning:button class="slds-button_destructive"
+                            iconName="utility:clear" iconPosition="left"
+                            label="Change Volunteer"
+                            onclick="{!c.changeVolunteerClick}" />
+                </div>
+            </div>
+
+            <aura:if isTrue="{!v.chosenVolunteer.shifts.length > 0}">
+                <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label slds-p-top_large">
+                    Your Volunteer Shifts Today
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
+                    <table class="slds-table slds-table_bordered">
+                        <thead>
+                            <tr>
+                                <th>Shift Name</th>
+                                <th>Start Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.chosenVolunteer.shifts}" var="shift">
+                                <tr>
+                                    <td>{!shift.shiftName}</td>
+                                    <td>{!shift.startTime}</td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slds-size_1-of-1 slds-text-align_center slds-m-top_large">
+                    <lightning:button class="encircle-btn" label="Sign In"
+                        onclick="{!c.volunteerSignIn}" />
+                </div>
+            </aura:if>
+
+            <aura:if isTrue="{!v.showSearchQuestion}">
+                <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label slds-p-top_large">
+                    You have not signed up for any volunteer shifts for
+                    today. Would you like to sign up for one now?
+                </div>
+
+                <div class="slds-size_1-of-1 slds-text-align_center slds-m-top_large">
+                    <lightning:button class="search-now-buttons encircle-btn"
+                            iconPosition="left" iconName="utility:back"
+                            label="No thanks"
+                            onclick="{!c.cancelVolunteerSignIn}" />
+                    <lightning:button class="search-now-buttons encircle-btn"
+                            iconPosition="left" iconName="utility:success"
+                            label="Yes, please"
+                            onclick="{!c.handleShiftSearchClick}" />
+                </div>
+            </aura:if>
+
+            <aura:if isTrue="{!v.showNoShiftsAvailable}">
+                <div class="slds-text-color_error slds-p-horizontal_x-large slds-text-align_center">
+                    There are no available volunteer shifts for today.
+                    But you can still sign in below.
+                </div>
+            </aura:if>
+
+            <aura:if isTrue="{!v.showShiftSelection}">
+                <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label slds-p-top_large">
+                    Available Shifts
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
+                    <table class="slds-table slds-table_bordered slds-no-cell-focus slds-no-row-hover available-shifts-table">
+                        <thead>
+                            <tr>
+                                <th>Shift Name</th>
+                                <th>Start Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.availableShifts}" var="shift" indexVar="idx">
+                                <tr data-idx="{!idx}" onclick="{!c.toggleShift}" class="{!'clickable-shift ' + if(shift.selected, 'selected')}">
+                                    <td data-idx="{!idx}">{!shift.shiftName}</td>
+                                    <td data-idx="{!idx}">{!shift.startTime}</td>
+                                </tr>
+                            </aura:iteration>
+                            <tr onclick="{!c.switchToOtherHours}" class="clickable-shift">
+                                <td colspan="2">None of these. Other...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <aura:if isTrue="{!v.selectedShiftsCount > 0}">
+                    <div class="slds-size_1-of-1 slds-p-top_large slds-text-align_center">
+                        <lightning:button class="encircle-btn" label="Sign Up"
+                            onclick="{!c.signUpAndSignIn}" />
+                    </div>
+                </aura:if>
+
+
+            </aura:if>
+
+            <aura:if isTrue="{!v.showOtherSignIn}">
+                <div class="slds-p-horizontal_x-large slds-size_1-of-1 fieldset-label slds-p-top_large">
+                    How many hours do you plan on volunteering today?
+                </div>
+                <div class="slds-p-horizontal_x-large slds-size_1-of-1">
+                    <lightning:input type="number" name="otherHours"
+                        label="Other hours" class="no-label"
+                        min="1" step="1" value="{!v.otherHours}" />
+                </div>
+                <div class="slds-size_1-of-1 slds-p-top_large slds-text-align_center">
+                    <lightning:button class="encircle-btn" label="Sign Up"
+                            onclick="{!c.signUpForOtherHours}" />
+                </div>
+            </aura:if>
+        </aura:if>
+    </div>
+</aura:component>

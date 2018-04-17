@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Event for child components to request actions from app" >
+    <aura:attribute name="action" type="String" description="TOGGLE_SPINNER, RESET_APP" />
+    <aura:attribute name="message" type="String" description="Additional info to pass in event." />
+</aura:event>

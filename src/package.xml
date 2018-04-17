@@ -48,6 +48,7 @@
     <types>
         <members>BlankLayout</members>
         <members>DoorSurvey</members>
+        <members>DoorSurveyActionEvent</members>
         <members>DoorSurveyFacilitatorSignIn</members>
         <members>DoorSurveyVolunteerSignIn</members>
         <members>MyShiftRow</members>
