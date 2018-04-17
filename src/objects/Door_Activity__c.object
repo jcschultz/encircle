@@ -97,6 +97,11 @@
                     <default>false</default>
                     <label>Trained Volunteer</label>
                 </value>
+                <value>
+                    <fullName>Facilitator</fullName>
+                    <default>false</default>
+                    <label>Facilitator</label>
+                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>
