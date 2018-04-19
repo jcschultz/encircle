@@ -1,4 +1,5 @@
 ({
+    FACILITATOR : 'Facilitator',
     TRAINED_VOLUNTEER : 'Trained Volunteer',
     
     getVisitorTypes : function(cmp) {
@@ -37,7 +38,7 @@
             this.toggleSpinner(cmp, 'HIDE');
         
             if ('SUCCESS' === state) {
-                if (label !== this.TRAINED_VOLUNTEER) {
+                if (label !== this.TRAINED_VOLUNTEER && label !== this.FACILITATOR) {
                     this.showToast(cmp, 'success', 'Thanks!', 'Your visit has been recorded. Thanks for visiting us today.');
                 }
             }
@@ -53,6 +54,9 @@
         
         if (label === this.TRAINED_VOLUNTEER) {
             this.switchToVolunteerView(cmp);
+        }
+        if (label === this.FACILITATOR) {
+            this.switchToFacilitatorView(cmp);
         }
         else {
             this.toggleSpinner(cmp, 'SHOW');
@@ -87,6 +91,10 @@
         });
         
         toastEvent.fire();
+    },
+    
+    switchToFacilitatorView : function(cmp) {
+        cmp.set('v.step', 'facilitator');
     },
     
     switchToVolunteerView : function(cmp) {

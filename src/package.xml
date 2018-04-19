@@ -112,6 +112,7 @@
         <members>Door_Activity__c.X7__c</members>
         <members>Door_Activity__c.X8__c</members>
         <members>Door_Activity__c.X9__c</members>
+        <members>Encircle_Volunteer_Settings__c.Facilitator_Job_Id__c</members>
         <members>Encircle_Volunteer_Settings__c.Unplanned_Volunteering_Job_Id__c</members>
         <members>Volunteer_Training_Attendance__c.Completed_Training__c</members>
         <members>Volunteer_Training_Attendance__c.StartDateTime__c</members>

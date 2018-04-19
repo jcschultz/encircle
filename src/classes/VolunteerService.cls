@@ -6,8 +6,10 @@
  */
 public class VolunteerService {
     
+    private enum ContactType {ALL, VOLUNTEER, FACILTATOR}
+    
     /**
-     * @description Method for registering a new volunteer and setting them up
+     * Method for registering a new volunteer and setting them up
      * with a training attendance.
      *
      * @param con
@@ -43,7 +45,7 @@ public class VolunteerService {
     }
     
     /**
-     * @description Retrieves contact by phone number.
+     * Retrieves contact by phone number.
      *
      * @param phone
      *
@@ -68,37 +70,69 @@ public class VolunteerService {
     }
     
     /**
-     * @description Retrieves contact by fuzzy search on names
+     * Retrieves contact by fuzzy search on names
      *
      * @param searchTerm: A string of words, separated by spaces
      *
      * @return List of contacts
      */
-    public static List<Contact> findByFuzzyNameSearch(String searchTerm) {
+    public static List<Contact> findContactByFuzzyNameSearch(String searchTerm) {
+        return searchContacts(searchTerm, ContactType.VOLUNTEER);
+    }
+    
+    /**
+     * Retrieves facilitator contacts by fuzzy search on names.
+     *
+     * @param searchTerm: A string of words, separated by spaces
+     *
+     * @return List of contacts
+     */
+    public static List<Contact> findFacilitatorByFuzzyNameSearch(String searchTerm) {
+        return searchContacts(searchTerm, ContactType.FACILTATOR);
+    }
+    
+    
+    /**
+     * Retrieves a list of contacts based on fuzzy name match and contact type.
+     *
+     * @param searchTerm: A string of words, separated by spaces
+     * @param ct: ContactType enum
+     *
+     * @return List of contacts
+     */
+    private static List<Contact> searchContacts(String searchTerm, ContactType ct) {
         List<Contact> contacts;
         List<String> terms = new List<String>();
-        
+    
         if (String.isNotBlank(searchTerm)) {
             for (String s : searchTerm.split(' ')) {
                 terms.add('%' + s + '%');
             }
             
-            contacts = [
-                SELECT
-                    Id,
-                    Name
-                FROM Contact
-                WHERE Volunteer__c = true
-                AND Allowed_to_Volunteer__c = true
-                AND (
-                    FirstName LIKE :terms
-                    OR LastName LIKE :terms
-                    OR Legal_First_Name__c LIKE :terms
-                )
-                ORDER BY FirstName
-            ];
-        }
+            String q = '';
+            q += 'SELECT ';
+            q += '  Id, ';
+            q += '  Name ';
+            q += 'FROM Contact ';
+            q += 'WHERE ( ';
+            q += '  FirstName LIKE :terms ';
+            q += '  OR LastName LIKE :terms ';
+            q += '  OR Legal_First_Name__c LIKE :terms ';
+            q += ') ';
+            
+            if (ct == ContactType.VOLUNTEER) {
+                q += ' AND Allowed_to_Volunteer__c = true ';
+                q += ' AND Volunteer__c = true ';
+            }
+            else if (ct == ContactType.FACILTATOR) {
+                q += ' AND Facilitator__c = true ';
+            }
+            
+            q += 'ORDER BY FirstName ';
         
+            contacts = Database.query(q);
+        }
+    
         return contacts;
     }
 }

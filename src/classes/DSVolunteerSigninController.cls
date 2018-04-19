@@ -19,7 +19,7 @@ public without sharing class DSVolunteerSigninController {
         List<String> contactIds = new List<String>();
         
         // first find matching contacts who are allowed to volunteer.
-        List<Contact> contacts = VolunteerService.findByFuzzyNameSearch(nameInput);
+        List<Contact> contacts = VolunteerService.findContactByFuzzyNameSearch(nameInput);
         
         // if any contacts are found, find any shifts that they signed up for
         // that match today's date.

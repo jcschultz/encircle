@@ -2,6 +2,7 @@
 private class VolunteerService_TEST {
     
     private static Contact con;
+    private static Contact facilitator;
     private static String phone;
     
     static {
@@ -13,6 +14,13 @@ private class VolunteerService_TEST {
             Phone = phone,
             Allowed_to_Volunteer__c = true,
             Volunteer__c = true
+        );
+        
+        facilitator = new Contact(
+            FirstName = 'Facilitator',
+            LastName = 'Facilitator',
+            Phone = '6064848658',
+            Facilitator__c = true
         );
     }
     
@@ -86,17 +94,19 @@ private class VolunteerService_TEST {
     }
     
     static testMethod void testFuzzySearch() {
-        insert con;
+        insert new List<Contact>{con, facilitator};
         
         Test.startTest();
         
         // testing for no results
-        List<Contact> noResults = VolunteerService.findByFuzzyNameSearch('xxxx');
+        List<Contact> noResults = VolunteerService.findContactByFuzzyNameSearch('xxxx');
         System.assertEquals(0, noResults.size());
         
         // testing for positive results
-        List<Contact> hasResults = VolunteerService.findByFuzzyNameSearch('tes las');
+        List<Contact> hasResults = VolunteerService.findContactByFuzzyNameSearch('tes las');
         System.assertEquals(1, hasResults.size());
+        List<Contact> facilitators = VolunteerService.findFacilitatorByFuzzyNameSearch('Facilitator');
+        System.assertEquals(1, facilitators.size());
         
         Test.stopTest();
     }

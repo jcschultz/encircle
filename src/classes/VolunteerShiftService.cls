@@ -7,6 +7,8 @@
  */
 public class VolunteerShiftService {
     
+    private enum UnplannedType {VOLUNTEER, FACILITATOR}
+    
     public static final List<String> SIGNED_UP_STATUSES;
     public static final String COMPLETED_STATUS;
     
@@ -160,7 +162,7 @@ public class VolunteerShiftService {
     }
     
     /**
-     * Signs a volunteer into the unplanned shift/job/campaign.
+     * Signs a volunteer into the unplanned volunteer shift/job/campaign.
      *
      * @param contactId
      * @param duration
@@ -168,14 +170,37 @@ public class VolunteerShiftService {
      * @return Volunteer_Hours__c
      */
     public static GW_Volunteers__Volunteer_Hours__c signInToUnplannedShift(String contactId, Decimal duration) {
+        return signInToUnplannedShift(contactId, duration, UnplannedType.VOLUNTEER);
+    }
+    
+    /**
+     * Signs a facilitator into the facilitator shift/job/campaign.
+     *
+     * @param contactId
+     * @param duration
+     *
+     * @return Volunteer_Hours__c
+     */
+    public static GW_Volunteers__Volunteer_Hours__c signInToFacilitatorShift(String contactId, Decimal duration) {
+        return signInToUnplannedShift(contactId, duration, UnplannedType.FACILITATOR);
+    }
+    
+    private static GW_Volunteers__Volunteer_Hours__c signInToUnplannedShift(String contactId, Decimal duration, UnplannedType upt) {
         Encircle_Volunteer_Settings__c settings = Encircle_Volunteer_Settings__c.getOrgDefaults();
-        String unplannedId = settings.Unplanned_Volunteering_Job_Id__c;
+        String jobId;
+        
+        if (upt == UnplannedType.VOLUNTEER) {
+            jobId = settings.Unplanned_Volunteering_Job_Id__c;
+        }
+        else if (upt == UnplannedType.FACILITATOR) {
+            jobId = settings.Facilitator_Job_Id__c;
+        }
         
         GW_Volunteers__Volunteer_Job__c job = [
             SELECT
                 GW_Volunteers__Campaign__c
             FROM GW_Volunteers__Volunteer_Job__c
-            WHERE Id = :unplannedId
+            WHERE Id = :jobId
             LIMIT 1
         ];
         
@@ -185,7 +210,7 @@ public class VolunteerShiftService {
             GW_Volunteers__Number_of_Volunteers__c = 1,
             GW_Volunteers__Start_Date__c = Date.today(),
             GW_Volunteers__Status__c = COMPLETED_STATUS,
-            GW_Volunteers__Volunteer_Job__c = unplannedId
+            GW_Volunteers__Volunteer_Job__c = jobId
         );
         
         insert hours;

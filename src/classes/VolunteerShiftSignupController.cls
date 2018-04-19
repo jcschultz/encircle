@@ -15,7 +15,7 @@ public class VolunteerShiftSignupController {
     @AuraEnabled
     public static List<VolunteerViewModel> searchContacts(String nameInput) {
         List<VolunteerViewModel> results = new List<VolunteerViewModel>();
-        List<Contact> contacts = VolunteerService.findByFuzzyNameSearch(nameInput);
+        List<Contact> contacts = VolunteerService.findContactByFuzzyNameSearch(nameInput);
         
         for (Contact c : contacts) {
             results.add(new VolunteerViewModel(c));

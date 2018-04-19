@@ -4,6 +4,18 @@
     <description>Holds settings for the Encircle volunteering project.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>Facilitator_Job_Id__c</fullName>
+        <description>ID of the volunteer job that facilitator hours will be logged against.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>ID of the volunteer job that facilitator hours will be logged against.</inlineHelpText>
+        <label>Facilitator Job Id</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Unplanned_Volunteering_Job_Id__c</fullName>
         <description>ID of the volunteering job used for volunteers to sign into if they haven&apos;t previously signed up for a volunteering shift and don&apos;t want to sign into one of the available drop in options.</description>
         <externalId>false</externalId>

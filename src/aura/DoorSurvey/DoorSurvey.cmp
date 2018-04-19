@@ -13,10 +13,10 @@
             <img src="{!$Resource.DoorSurveyAssets + '/img/logo-white.png'}" />
         </div>
 
-        <div class="main-stage slds-size_1-of-1 slds-p-top_x-large">
+        <div class="main-stage slds-size_1-of-1 slds-p-top_medium">
             <aura:if isTrue="{!v.step == 'welcome'}">
                 <div class="buttons-container step-container slds-grid slds-wrap">
-                    <div class="slds-size_1-of-1 slds-p-top_x-large">
+                    <div class="slds-size_1-of-1">
                         <div class="welcome-title slds-text-align_center">
                             Welcome!
                         </div>
@@ -28,10 +28,16 @@
                             <span class="bold">Responses are completely anonymous.</span>
                         </div>
                     </div>
-                    <div class="slds-size_1-of-1 slds-p-top_medium slds-m-bottom_large">
+                    <div class="slds-size_1-of-1 slds-p-top_medium">
                         <div class="welcome-volunteer-tagline slds-text-align_center">
                             If you are a trained volunteer, who is here to begin your shift,
                             please touch the <span class="bold">Trained Volunteer button</span>.
+                        </div>
+                    </div>
+                    <div class="slds-size_1-of-1 slds-p-top_medium slds-m-bottom_large">
+                        <div class="welcome-volunteer-tagline slds-text-align_center">
+                            If you are a facilitator, who is here to begin your shift,
+                            please touch the <span class="bold">Facilitator button</span>.
                         </div>
                     </div>
 
@@ -49,12 +55,14 @@
                     <c:DoorSurveyVolunteerSignIn />
                 </div>
             </aura:if>
-
+            
+            <aura:if isTrue="{!v.step == 'facilitator'}">
+                <div class="facilitator-container step-container slds-grid slds-wrap">
+                    <c:DoorSurveyFacilitatorSignIn />
+                </div>
+            </aura:if>
         </div>
-
-
-
-
+        
         <aura:if isTrue="{!v.showSpinner}">
             <lightning:spinner variant="brand" size="large" alternativeText="Waiting for server response..." />
         </aura:if>
