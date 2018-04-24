@@ -2,6 +2,7 @@
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>npe4__Relationships_Viewer</customButtons>
     <excludeButtons>Clone</excludeButtons>
+    <excludeButtons>DataDotComClean</excludeButtons>
     <excludeButtons>DisableCustomerPortal</excludeButtons>
     <excludeButtons>DisablePartnerPortal</excludeButtons>
     <excludeButtons>DisablePrmSuperUser</excludeButtons>
@@ -9,7 +10,6 @@
     <excludeButtons>EnablePrmSuperUser</excludeButtons>
     <excludeButtons>EnableSelfService</excludeButtons>
     <excludeButtons>RequestUpdate</excludeButtons>
-    <excludeButtons>RequestUseSfdc</excludeButtons>
     <excludeButtons>Share</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
     <excludeButtons>ViewPartnerPortalUser</excludeButtons>
@@ -66,9 +66,6 @@
                 <field>Donor_Type__c</field>
             </layoutItems>
             <layoutItems>
-                <emptySpace>true</emptySpace>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Board_Member__c</field>
             </layoutItems>
@@ -91,17 +88,12 @@
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
-                <emptySpace>true</emptySpace>
-            </layoutItems>
-            <layoutItems>
-                <emptySpace>true</emptySpace>
+                <behavior>Edit</behavior>
+                <field>Title</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Volunteer_Position__c</field>
-            </layoutItems>
-            <layoutItems>
-                <emptySpace>true</emptySpace>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -118,9 +110,6 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Background_Check_Expiration__c</field>
-            </layoutItems>
-            <layoutItems>
-                <emptySpace>true</emptySpace>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
