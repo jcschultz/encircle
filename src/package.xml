@@ -147,6 +147,11 @@
         <name>FlexiPage</name>
     </types>
     <types>
+        <members>Friendship_Circle_Options</members>
+        <members>Program_Options</members>
+        <name>GlobalValueSet</name>
+    </types>
+    <types>
         <members>Contact-Contact Lightning Layout</members>
         <members>Volunteer_Training_Attendance__c-Volunteer Training Attendance Layout</members>
         <members>Volunteer_Training__c-Volunteer Training Layout</members>

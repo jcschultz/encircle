@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Adult Trans</fullName>
+        <default>false</default>
+        <label>Adult Trans</label>
+    </customValue>
+    <customValue>
+        <fullName>Asexual/Aromantic</fullName>
+        <default>false</default>
+        <label>Asexual/Aromantic</label>
+    </customValue>
+    <customValue>
+        <fullName>Bisexual</fullName>
+        <default>false</default>
+        <label>Bisexual</label>
+    </customValue>
+    <customValue>
+        <fullName>Gay Males</fullName>
+        <default>false</default>
+        <label>Gay Males</label>
+    </customValue>
+    <customValue>
+        <fullName>Lesbian</fullName>
+        <default>false</default>
+        <label>Lesbian</label>
+    </customValue>
+    <customValue>
+        <fullName>Parent</fullName>
+        <default>false</default>
+        <label>Parent</label>
+    </customValue>
+    <customValue>
+        <fullName>Spirituality &amp; Sexuality</fullName>
+        <default>false</default>
+        <label>Spirituality &amp; Sexuality</label>
+    </customValue>
+    <customValue>
+        <fullName>Teen</fullName>
+        <default>false</default>
+        <label>Teen</label>
+    </customValue>
+    <customValue>
+        <fullName>Therapist</fullName>
+        <default>false</default>
+        <label>Therapist</label>
+    </customValue>
+    <customValue>
+        <fullName>Wavelength</fullName>
+        <default>false</default>
+        <label>Wavelength</label>
+    </customValue>
+    <customValue>
+        <fullName>Young Adult</fullName>
+        <default>false</default>
+        <label>Young Adult</label>
+    </customValue>
+    <description>List of Friendship Circle options to be used in various picklists.</description>
+    <masterLabel>Friendship Circle Options</masterLabel>
+    <sorted>true</sorted>
+</GlobalValueSet>

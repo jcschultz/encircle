@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>BECOMING</fullName>
+        <default>false</default>
+        <label>BECOMING</label>
+    </customValue>
+    <customValue>
+        <fullName>BEYOND</fullName>
+        <default>false</default>
+        <label>BEYOND</label>
+    </customValue>
+    <customValue>
+        <fullName>Blue Sky</fullName>
+        <default>false</default>
+        <label>Blue Sky</label>
+    </customValue>
+    <customValue>
+        <fullName>Elevate</fullName>
+        <default>false</default>
+        <label>Elevate</label>
+    </customValue>
+    <customValue>
+        <fullName>Love Louder</fullName>
+        <default>false</default>
+        <label>Love Louder</label>
+    </customValue>
+    <customValue>
+        <fullName>Lunch with Lisa</fullName>
+        <default>false</default>
+        <label>Lunch with Lisa</label>
+    </customValue>
+    <customValue>
+        <fullName>Rainbow Mutual</fullName>
+        <default>false</default>
+        <label>Rainbow Mutual</label>
+    </customValue>
+    <customValue>
+        <fullName>Safe Dates</fullName>
+        <default>false</default>
+        <label>Safe Dates</label>
+    </customValue>
+    <customValue>
+        <fullName>SERVE</fullName>
+        <default>false</default>
+        <label>SERVE</label>
+    </customValue>
+    <customValue>
+        <fullName>Tools to Thrive</fullName>
+        <default>false</default>
+        <label>Tools to Thrive</label>
+    </customValue>
+    <description>List of Program options to be used in various picklists.</description>
+    <masterLabel>Program Options</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>
