@@ -86,6 +86,7 @@
         <members>Contact.Program__c</members>
         <members>Contact.Pronouns__c</members>
         <members>Contact.Screening_Authorization__c</members>
+        <members>Contact.Staff__c</members>
         <members>Contact.Statement_of_Confidentiality__c</members>
         <members>Contact.Suicide_Prevention_Training__c</members>
         <members>Contact.Volunteer_Acknowledgement__c</members>

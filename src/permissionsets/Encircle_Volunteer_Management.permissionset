@@ -326,6 +326,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Contact.Staff__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Contact.Statement_of_Confidentiality__c</field>
         <readable>true</readable>
     </fieldPermissions>

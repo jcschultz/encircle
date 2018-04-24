@@ -201,6 +201,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Staff__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Is this person a current member of Encircle&apos;s staff?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Is this person a current member of Encircle&apos;s staff?</inlineHelpText>
+        <label>Staff</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Statement_of_Confidentiality__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
