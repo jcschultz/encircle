@@ -75,11 +75,15 @@
         <members>Contact.Emergency_Contact_Phone__c</members>
         <members>Contact.Emergency_Contact_Relationship__c</members>
         <members>Contact.Ethics_Agreement__c</members>
+        <members>Contact.FBI_NGI_Rap_Back_Privacy_Statement__c</members>
+        <members>Contact.Facilitator_Schedule__c</members>
         <members>Contact.Facilitator__c</members>
         <members>Contact.Fingerprints__c</members>
+        <members>Contact.Friendship_Circle__c</members>
         <members>Contact.Last_Volunteer_Training__c</members>
         <members>Contact.Legal_First_Name__c</members>
         <members>Contact.Notify_of_Upcoming_Trainings__c</members>
+        <members>Contact.Program__c</members>
         <members>Contact.Pronouns__c</members>
         <members>Contact.Screening_Authorization__c</members>
         <members>Contact.Statement_of_Confidentiality__c</members>

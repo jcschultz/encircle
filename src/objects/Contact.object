@@ -52,9 +52,29 @@
         <fullName>Ethics_Agreement__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
-        <label>Ethics Agreement</label>
+        <label>Ethics Agreement: Non-therapeutic</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>FBI_NGI_Rap_Back_Privacy_Statement__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>FBI NGI Rap Back Privacy Statement</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Facilitator_Schedule__c</fullName>
+        <description>Times and days that facilitator works at Encircle.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Times and days that facilitator works at Encircle.</inlineHelpText>
+        <label>Facilitator Schedule</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Facilitator__c</fullName>
@@ -73,6 +93,19 @@
         <label>Fingerprints</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Friendship_Circle__c</fullName>
+        <externalId>false</externalId>
+        <label>Friendship Circle</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>MultiselectPicklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetName>Friendship_Circle_Options</valueSetName>
+        </valueSet>
+        <visibleLines>4</visibleLines>
     </fields>
     <fields>
         <fullName>Last_Volunteer_Training__c</fullName>
@@ -107,6 +140,19 @@
         <label>Notify of Upcoming Trainings</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Program__c</fullName>
+        <externalId>false</externalId>
+        <label>Program</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>MultiselectPicklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetName>Program_Options</valueSetName>
+        </valueSet>
+        <visibleLines>4</visibleLines>
     </fields>
     <fields>
         <fullName>Pronouns__c</fullName>
@@ -174,7 +220,7 @@
         <fullName>Volunteer_Acknowledgement__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
-        <label>Volunteer Acknowledgement</label>
+        <label>Volunteer Acknowledgement of Receipt</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
     </fields>
