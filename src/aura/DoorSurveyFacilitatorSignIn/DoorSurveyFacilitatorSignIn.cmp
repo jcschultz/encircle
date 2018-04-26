@@ -53,7 +53,7 @@
             </div>
             <div class="slds-size_1-of-1 slds-p-top_large slds-text-align_center">
                 <lightning:button class="encircle-btn" label="Sign In"
-                        onclick="{!c.signIn}" />
+                        onclick="{!c.handleSignInClick}" />
             </div>
         </aura:if>
     </div>

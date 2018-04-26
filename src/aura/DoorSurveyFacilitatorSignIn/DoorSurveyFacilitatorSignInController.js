@@ -11,7 +11,7 @@
         helper.handleTypeAheadEvent(cmp, event);
     },
     
-    signIn : function(cmp, event, helper) {
+    handleSignInClick : function(cmp, event, helper) {
         helper.signIn(cmp);
     },
     
