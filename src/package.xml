@@ -26,6 +26,8 @@
         <members>VTTriggerHandler_TEST</members>
         <members>VolTrainingAttendanceTriggerHandler</members>
         <members>VolunteerHoursViewModel</members>
+        <members>VolunteerRecordFinderCtrl</members>
+        <members>VolunteerRecordFinderCtrl_TEST</members>
         <members>VolunteerRegistrationController</members>
         <members>VolunteerRegistrationController_TEST</members>
         <members>VolunteerService</members>
@@ -56,6 +58,8 @@
         <members>MyVolunteerProfile</members>
         <members>VolunteerNameTypeAhead</members>
         <members>VolunteerNameTypeAheadEvent</members>
+        <members>VolunteerRecordFinder</members>
+        <members>VolunteerRecordFinderEvent</members>
         <members>VolunteerRegistrationApp</members>
         <members>VolunteerRegistrationForm</members>
         <members>VolunteerRegistrationLtngOut</members>
