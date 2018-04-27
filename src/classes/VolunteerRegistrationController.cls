@@ -12,6 +12,7 @@ public class VolunteerRegistrationController {
      */
     @AuraEnabled
     public static void registerVolunteer(Map<String, Object> volunteerInfo) {
+        VolunteerService service = VolunteerService.getInstance();
         Contact c = new Contact();
         
         c.Legal_First_Name__c = (String)volunteerInfo.get('firstName');
@@ -39,7 +40,7 @@ public class VolunteerRegistrationController {
         c.Volunteering_Reason__c = (String)volunteerInfo.get('reason');
         c.Volunteer__c = true;
         
-        VolunteerService.registerNewVolunteer(c, (String)volunteerInfo.get('training'));
+        service.registerNewVolunteer(c, (String)volunteerInfo.get('training'));
     }
     
     /**
@@ -49,7 +50,8 @@ public class VolunteerRegistrationController {
      */
     @AuraEnabled
     public static List<TrainingModel> getTrainings() {
-        return TrainingService.getUpcomingTrainings();
+        TrainingService tService = TrainingService.getInstance();
+        return tService.getUpcomingTrainings();
     }
     
     /**

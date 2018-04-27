@@ -28,6 +28,7 @@ public class VolTrainingAttendanceTriggerHandler extends TriggerHandler {
      * updated to match the current parent training record.
      */
     private void updateStartDate() {
+        TrainingService tService = TrainingService.getInstance();
         Map<Id, Volunteer_Training__c> trainings;
         Set<String> trainingIds = new Set<String>();
         List<Volunteer_Training_Attendance__c> vtasToUpdate =
@@ -48,7 +49,7 @@ public class VolTrainingAttendanceTriggerHandler extends TriggerHandler {
         // get the parent training records.
         if (!trainingIds.isEmpty() && !vtasToUpdate.isEmpty()) {
             trainings = new Map<Id, Volunteer_Training__c>(
-                TrainingService.getTrainingsById(trainingIds)
+                tService.getTrainingsById(trainingIds)
             );
         }
         

@@ -25,7 +25,7 @@ private class VolunteerService_TEST {
     }
     
     static testMethod void testRegistration() {
-        
+        VolunteerService service = VolunteerService.getInstance();
         Volunteer_Training__c training = new Volunteer_Training__c(
             StartDateTime__c = Datetime.now()
         );
@@ -34,7 +34,7 @@ private class VolunteerService_TEST {
         
         Test.startTest();
         
-        VolunteerService.registerNewVolunteer(con, null);
+        service.registerNewVolunteer(con, null);
         
         Contact conTest1 = [
             SELECT
@@ -52,7 +52,7 @@ private class VolunteerService_TEST {
         
         // testing update on existing
         con.FirstName = 'newFirst';
-        VolunteerService.registerNewVolunteer(con, 'X');
+        service.registerNewVolunteer(con, 'X');
     
         Contact conTest2 = [
             SELECT
@@ -67,7 +67,7 @@ private class VolunteerService_TEST {
         System.assertEquals(true, conTest2.Notify_of_Upcoming_Trainings__c);
         
         // testing update on existing with training attendance
-        VolunteerService.registerNewVolunteer(con, training.Id);
+        service.registerNewVolunteer(con, training.Id);
         
         Contact conTest3 = [
             SELECT
@@ -94,18 +94,19 @@ private class VolunteerService_TEST {
     }
     
     static testMethod void testFuzzySearch() {
+        VolunteerService service = VolunteerService.getInstance();
         insert new List<Contact>{con, facilitator};
         
         Test.startTest();
         
         // testing for no results
-        List<Contact> noResults = VolunteerService.findContactByFuzzyNameSearch('xxxx');
+        List<Contact> noResults = service.findContactByFuzzyNameSearch('xxxx');
         System.assertEquals(0, noResults.size());
         
         // testing for positive results
-        List<Contact> hasResults = VolunteerService.findContactByFuzzyNameSearch('tes las');
+        List<Contact> hasResults = service.findContactByFuzzyNameSearch('tes las');
         System.assertEquals(1, hasResults.size());
-        List<Contact> facilitators = VolunteerService.findFacilitatorByFuzzyNameSearch('Facilitator');
+        List<Contact> facilitators = service.findFacilitatorByFuzzyNameSearch('Facilitator');
         System.assertEquals(1, facilitators.size());
         
         Test.stopTest();

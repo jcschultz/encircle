@@ -16,8 +16,9 @@ public without sharing class DSFacilitatorSigninController {
     @AuraEnabled
     public static List<DoorSurveyVolunteerViewModel> searchContacts(String nameInput) {
         List<DoorSurveyVolunteerViewModel> results = new List<DoorSurveyVolunteerViewModel>();
+        VolunteerService service = VolunteerService.getInstance();
     
-        List<Contact> contacts = VolunteerService.findFacilitatorByFuzzyNameSearch(nameInput);
+        List<Contact> contacts = service.findFacilitatorByFuzzyNameSearch(nameInput);
         
         if (contacts != null && !contacts.isEmpty()) {
             for (Contact c : contacts) {
@@ -36,7 +37,8 @@ public without sharing class DSFacilitatorSigninController {
      */
     @AuraEnabled
     public static void signIn(String contactId, Decimal hours) {
-        VolunteerShiftService.signInToFacilitatorShift(contactId, hours);
+        VolunteerShiftService vsService = VolunteerShiftService.getInstance();
+        vsService.signInToFacilitatorShift(contactId, hours);
     }
 
 }

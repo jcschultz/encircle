@@ -4,9 +4,23 @@
  *
  * @description Service layer for working with volunteers (contacts)
  */
-public class VolunteerService {
+public virtual class VolunteerService {
     
     private enum ContactType {ALL, VOLUNTEER, FACILTATOR}
+    
+    @TestVisible
+    private static VolunteerService instance;
+
+    protected VolunteerService() { }
+
+    public static VolunteerService getInstance() {
+        if (instance != null) {
+            return instance;
+        }
+
+        instance = new VolunteerService();
+        return instance;
+    }
     
     /**
      * Method for registering a new volunteer and setting them up
@@ -15,7 +29,7 @@ public class VolunteerService {
      * @param con
      * @param trainingId
      */
-    public static void registerNewVolunteer(Contact con, String trainingId) {
+    public virtual void registerNewVolunteer(Contact con, String trainingId) {
         Contact existingContact;
         Volunteer_Training_Attendance__c vta;
         
@@ -51,7 +65,7 @@ public class VolunteerService {
      *
      * @return Contact
      */
-    public static Contact findByPhone(String phone) {
+    public virtual Contact findByPhone(String phone) {
         Contact c;
         
         List<Contact> results = new List<Contact>([
@@ -76,7 +90,7 @@ public class VolunteerService {
      *
      * @return List of contacts
      */
-    public static List<Contact> findContactByFuzzyNameSearch(String searchTerm) {
+    public virtual List<Contact> findContactByFuzzyNameSearch(String searchTerm) {
         return searchContacts(searchTerm, ContactType.VOLUNTEER);
     }
     
@@ -87,7 +101,7 @@ public class VolunteerService {
      *
      * @return List of contacts
      */
-    public static List<Contact> findFacilitatorByFuzzyNameSearch(String searchTerm) {
+    public virtual List<Contact> findFacilitatorByFuzzyNameSearch(String searchTerm) {
         return searchContacts(searchTerm, ContactType.FACILTATOR);
     }
     
@@ -100,7 +114,7 @@ public class VolunteerService {
      *
      * @return List of contacts
      */
-    private static List<Contact> searchContacts(String searchTerm, ContactType ct) {
+    private List<Contact> searchContacts(String searchTerm, ContactType ct) {
         List<Contact> contacts;
         List<String> terms = new List<String>();
     

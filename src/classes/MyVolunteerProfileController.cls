@@ -13,7 +13,8 @@ public class MyVolunteerProfileController {
     @AuraEnabled
     public static List<VolunteerViewModel> searchContacts(String nameInput) {
         List<VolunteerViewModel> results = new List<VolunteerViewModel>();
-        List<Contact> contacts = VolunteerService.findContactByFuzzyNameSearch(nameInput);
+        VolunteerService service = VolunteerService.getInstance();
+        List<Contact> contacts = service.findContactByFuzzyNameSearch(nameInput);
         
         for (Contact c : contacts) {
             results.add(new VolunteerViewModel(c));
@@ -26,8 +27,9 @@ public class MyVolunteerProfileController {
     @AuraEnabled
     public static List<VolunteerHoursViewModel> getUpcomingShifts(Id contactId) {
         List<VolunteerHoursViewModel> hours = new List<VolunteerHoursViewModel>();
+        VolunteerShiftService vsService = VolunteerShiftService.getInstance();
         
-        List<GW_Volunteers__Volunteer_Hours__c> records = VolunteerShiftService.findHoursByContactAndDate(
+        List<GW_Volunteers__Volunteer_Hours__c> records = vsService.findHoursByContactAndDate(
             new List<String>{contactId}, 
             Date.today(), 
             Date.today().addYears(5)

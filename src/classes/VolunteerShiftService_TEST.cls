@@ -65,10 +65,11 @@ private class VolunteerShiftService_TEST {
     }
     
     static testMethod void testNoSignups() {
+        VolunteerShiftService vsService = VolunteerShiftService.getInstance();
         Test.startTest();
         
         // testing without any sign ups.
-        List<GW_Volunteers__Volunteer_Shift__c> shifts = VolunteerShiftService.getShiftsBetweenDates(startDate, endDate);
+        List<GW_Volunteers__Volunteer_Shift__c> shifts = vsService.getShiftsBetweenDates(startDate, endDate);
         System.assertEquals(1, shifts.size());
         System.assertEquals(0, shifts[0].GW_Volunteers__Volunteer_Hours__r.size());
         
@@ -76,22 +77,23 @@ private class VolunteerShiftService_TEST {
     }
     
     static testMethod void testSignUpAndCompletion() {
+        VolunteerShiftService vsService = VolunteerShiftService.getInstance();
         Test.startTest();
         
         // testing signup.
-        List<GW_Volunteers__Volunteer_Hours__c> hours = VolunteerShiftService.signContactUpForHours(con.Id, new List<String>{shift.Id}, 'Confirmed');
+        List<GW_Volunteers__Volunteer_Hours__c> hours = vsService.signContactUpForHours(con.Id, new List<String>{shift.Id}, 'Confirmed');
         System.assertEquals(1, hours.size());
-        List<GW_Volunteers__Volunteer_Shift__c> shifts = VolunteerShiftService.getShiftsBetweenDates(startDate, endDate);
+        List<GW_Volunteers__Volunteer_Shift__c> shifts = vsService.getShiftsBetweenDates(startDate, endDate);
         System.assertEquals(1, shifts.size());
         System.assertEquals(1, shifts[0].GW_Volunteers__Volunteer_Hours__r.size());
         System.assertEquals(con.Id, shifts[0].GW_Volunteers__Volunteer_Hours__r[0].GW_Volunteers__Contact__c);
         
         // testing finding hours
-        List<GW_Volunteers__Volunteer_Hours__c> hours2 = VolunteerShiftService.findHoursByContactAndDate(new List<String>{con.Id}, startDate, endDate);
+        List<GW_Volunteers__Volunteer_Hours__c> hours2 = vsService.findHoursByContactAndDate(new List<String>{con.Id}, startDate, endDate);
         System.assertEquals(1, hours2.size());
         
         // test completing hours
-        VolunteerShiftService.completeHoursById(new List<String>{hours2[0].Id});
+        vsService.completeHoursById(new List<String>{hours2[0].Id});
         GW_Volunteers__Volunteer_Hours__c hours3 = [SELECT GW_Volunteers__Status__c FROM GW_Volunteers__Volunteer_Hours__c WHERE Id = :hours2[0].Id LIMIT 1];
         System.assertEquals(VolunteerShiftService.COMPLETED_STATUS, hours3.GW_Volunteers__Status__c);
         
@@ -99,9 +101,10 @@ private class VolunteerShiftService_TEST {
     }
     
     static testMethod void testUnPlanned() {
+        VolunteerShiftService vsService = VolunteerShiftService.getInstance();
         Test.startTest();
     
-        GW_Volunteers__Volunteer_Hours__c hours = VolunteerShiftService.signInToUnplannedShift(con.Id, 2.0);
+        GW_Volunteers__Volunteer_Hours__c hours = vsService.signInToUnplannedShift(con.Id, 2.0);
         System.assertEquals(unplannedJob.Id, hours.GW_Volunteers__Volunteer_Job__c);
     
         GW_Volunteers__Volunteer_Hours__c testHour = [SELECT GW_Volunteers__Status__c FROM GW_Volunteers__Volunteer_Hours__c WHERE Id = :hours.Id LIMIT 1];

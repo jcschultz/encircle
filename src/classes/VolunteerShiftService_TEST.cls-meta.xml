@@ -3,7 +3,7 @@
     <apiVersion>41.0</apiVersion>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>101</minorNumber>
+        <minorNumber>105</minorNumber>
         <namespace>GW_Volunteers</namespace>
     </packageVersions>
     <status>Active</status>

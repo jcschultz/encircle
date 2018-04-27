@@ -59,6 +59,7 @@ public without sharing class VolunteerShiftCalendarController {
     public static CalendarDataViewModel getCalendarFromDates(Date startDate, Date endDate) {
         Map<Date, List<GW_Volunteers__Volunteer_Shift__c>> dates = new Map<Date, List<GW_Volunteers__Volunteer_Shift__c>>();
         CalendarDataViewModel cdvm = new CalendarDataViewModel();
+        VolunteerShiftService vsService = VolunteerShiftService.getInstance();
         Integer daysBetween = startDate.daysBetween(endDate);
         String lastMonth = '';
         
@@ -71,7 +72,7 @@ public without sharing class VolunteerShiftCalendarController {
         cdvm.nextEndDate = cdvm.nextStartDate.addMonths(1);
         
         // inject volunteer shifts and sign-ups into the calendar.
-        for (GW_Volunteers__Volunteer_Shift__c vs : VolunteerShiftService.getShiftsBetweenDates(startDate, endDate)) {
+        for (GW_Volunteers__Volunteer_Shift__c vs : vsService.getShiftsBetweenDates(startDate, endDate)) {
             Date d = vs.GW_Volunteers__Start_Date_Time__c.date();
             
             if (dates.containsKey(d)) {

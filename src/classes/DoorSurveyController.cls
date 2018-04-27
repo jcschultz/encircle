@@ -33,7 +33,8 @@ public without sharing class DoorSurveyController {
      */
     @AuraEnabled
     public static void saveActivity(String visitorType, String activityDate, String hour) {
-        DoorActivityService.saveDoorActivity(Date.valueOf(activityDate), hour, visitorType);
+        DoorActivityService daService = DoorActivityService.getInstance();
+        daService.saveDoorActivity(Date.valueOf(activityDate), hour, visitorType);
     }
     
 }

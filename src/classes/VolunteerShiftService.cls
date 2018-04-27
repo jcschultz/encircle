@@ -5,7 +5,7 @@
  * @author John Schultz
  * @date 2017-11-10
  */
-public class VolunteerShiftService {
+public virtual class VolunteerShiftService {
     
     private enum UnplannedType {VOLUNTEER, FACILITATOR}
     
@@ -22,6 +22,20 @@ public class VolunteerShiftService {
         COMPLETED_STATUS = 'Completed';
     }
     
+    @TestVisible
+    private static VolunteerShiftService instance;
+
+    protected VolunteerShiftService() { }
+
+    public static VolunteerShiftService getInstance() {
+        if (instance != null) {
+            return instance;
+        }
+
+        instance = new VolunteerShiftService();
+        return instance;
+    }
+    
     /**
      * Retrieves the volunteer shifts and any related sign-ups/hours.
      *
@@ -30,7 +44,7 @@ public class VolunteerShiftService {
      *
      * @return List of volunteer shifts
      */
-    public static List<GW_Volunteers__Volunteer_Shift__c> getShiftsBetweenDates(Date startDate, Date endDate) {
+    public virtual List<GW_Volunteers__Volunteer_Shift__c> getShiftsBetweenDates(Date startDate, Date endDate) {
         Datetime startDateTime = Datetime.newInstance(startDate, Time.newInstance(0,0,0,0));
         Datetime endDateTime = Datetime.newInstance(endDate, Time.newInstance(0,0,0,0));
         return [
@@ -81,7 +95,7 @@ public class VolunteerShiftService {
      *
      * @return List of volunteer hours
      */
-    public static List<GW_Volunteers__Volunteer_Hours__c> signContactUpForHours(String contactId, String[] shiftIds, String status) {
+    public virtual List<GW_Volunteers__Volunteer_Hours__c> signContactUpForHours(String contactId, String[] shiftIds, String status) {
         List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>();
         
         for (GW_Volunteers__Volunteer_Shift__c vs : [
@@ -119,7 +133,7 @@ public class VolunteerShiftService {
      *
      * @return List of volunteer hour records.
      */
-    public static List<GW_Volunteers__Volunteer_Hours__c> findHoursByContactAndDate(String[] contactIds, Date startDate, Date endDate) {
+    public virtual List<GW_Volunteers__Volunteer_Hours__c> findHoursByContactAndDate(String[] contactIds, Date startDate, Date endDate) {
         List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>([
             SELECT
                 GW_Volunteers__Contact__c,
@@ -146,7 +160,7 @@ public class VolunteerShiftService {
      *
      * @return List of completed hours.
      */
-    public static List<GW_Volunteers__Volunteer_Hours__c> completeHoursById(String[] hourIds) {
+    public virtual List<GW_Volunteers__Volunteer_Hours__c> completeHoursById(String[] hourIds) {
         List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>();
         
         for (String h : hourIds) {
@@ -169,7 +183,7 @@ public class VolunteerShiftService {
      *
      * @return Volunteer_Hours__c
      */
-    public static GW_Volunteers__Volunteer_Hours__c signInToUnplannedShift(String contactId, Decimal duration) {
+    public virtual GW_Volunteers__Volunteer_Hours__c signInToUnplannedShift(String contactId, Decimal duration) {
         return signInToUnplannedShift(contactId, duration, UnplannedType.VOLUNTEER);
     }
     
@@ -181,11 +195,11 @@ public class VolunteerShiftService {
      *
      * @return Volunteer_Hours__c
      */
-    public static GW_Volunteers__Volunteer_Hours__c signInToFacilitatorShift(String contactId, Decimal duration) {
+    public virtual GW_Volunteers__Volunteer_Hours__c signInToFacilitatorShift(String contactId, Decimal duration) {
         return signInToUnplannedShift(contactId, duration, UnplannedType.FACILITATOR);
     }
     
-    private static GW_Volunteers__Volunteer_Hours__c signInToUnplannedShift(String contactId, Decimal duration, UnplannedType upt) {
+    private GW_Volunteers__Volunteer_Hours__c signInToUnplannedShift(String contactId, Decimal duration, UnplannedType upt) {
         Encircle_Volunteer_Settings__c settings = Encircle_Volunteer_Settings__c.getOrgDefaults();
         String jobId;
         

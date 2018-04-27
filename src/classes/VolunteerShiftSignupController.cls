@@ -15,7 +15,8 @@ public class VolunteerShiftSignupController {
     @AuraEnabled
     public static List<VolunteerViewModel> searchContacts(String nameInput) {
         List<VolunteerViewModel> results = new List<VolunteerViewModel>();
-        List<Contact> contacts = VolunteerService.findContactByFuzzyNameSearch(nameInput);
+        VolunteerService service = VolunteerService.getInstance();
+        List<Contact> contacts = service.findContactByFuzzyNameSearch(nameInput);
         
         for (Contact c : contacts) {
             results.add(new VolunteerViewModel(c));
@@ -31,7 +32,8 @@ public class VolunteerShiftSignupController {
      */
     @AuraEnabled
     public static List<GW_Volunteers__Volunteer_Hours__c> signUpContactForShifts(String contactId, String[] shiftIds) {
-        return VolunteerShiftService.signContactUpForHours(contactId, shiftIds, SIGNUP_STATUS);
+        VolunteerShiftService vsService = VolunteerShiftService.getInstance();
+        return vsService.signContactUpForHours(contactId, shiftIds, SIGNUP_STATUS);
     }
     
 }

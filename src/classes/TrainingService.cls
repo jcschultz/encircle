@@ -3,14 +3,28 @@
  * @date 2017-11-08
  * @description Service layer for Volunteer_Training__c object
  */
-public class TrainingService {
+public virtual class TrainingService {
+    
+    @TestVisible
+    private static TrainingService instance;
+
+    protected TrainingService() { }
+
+    public static TrainingService getInstance() {
+        if (instance != null) {
+            return instance;
+        }
+
+        instance = new TrainingService();
+        return instance;
+    }
     
     /**
      * @description Retrieves the upcoming trainings.
      *
      * @return List of trainings
      */
-    public static List<TrainingModel> getUpcomingTrainings() {
+    public virtual List<TrainingModel> getUpcomingTrainings() {
         List<TrainingModel> trainings = new List<TrainingModel>();
         Datetime dtNow = Datetime.now();
         
@@ -32,7 +46,7 @@ public class TrainingService {
      *
      * @return List of Volunteer_Training__c records.
      */
-    public static List<Volunteer_Training__c> getTrainingsById(Set<String> ids) {
+    public virtual List<Volunteer_Training__c> getTrainingsById(Set<String> ids) {
         String q = getQueryString();
         q += 'WHERE Id IN :ids ';
         
@@ -44,7 +58,7 @@ public class TrainingService {
      *
      * @return The query string.
      */
-    private static String getQueryString() {
+    private String getQueryString() {
         String q = '';
         
         q += 'SELECT ';

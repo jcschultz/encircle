@@ -4,7 +4,21 @@
  * @author John Schultz
  * @date 2017-11-11
  */
-public class DoorActivityService {
+public virtual class DoorActivityService {
+    
+    @TestVisible
+    private static DoorActivityService instance;
+
+    protected DoorActivityService() { }
+
+    public static DoorActivityService getInstance() {
+        if (instance != null) {
+            return instance;
+        }
+
+        instance = new DoorActivityService();
+        return instance;
+    }
     
     /**
      * @description Saves a new or udpates an existing door activity record based
@@ -17,7 +31,7 @@ public class DoorActivityService {
      *
      * @return door activity record
      */
-    public static Door_Activity__c saveDoorActivity(Date activityDate, String hour, String visitorType) {
+    public virtual Door_Activity__c saveDoorActivity(Date activityDate, String hour, String visitorType) {
         String hourField;
         Decimal hourSum = 1;
         String queryString;
