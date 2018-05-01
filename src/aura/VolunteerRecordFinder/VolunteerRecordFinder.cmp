@@ -1,3 +1,69 @@
-<aura:component description="Multi-step contact record finder for volunteers to find their records in the community pages.">
+<aura:component controller="VolunteerRecordFinderCtrl"
+    description="Multi-step contact record finder for volunteers to find their records in the community pages.">
+    
+    <aura:attribute name="showSpinner" type="Boolean" access="private" default="false" />
+    <aura:attribute name="phoneEmailInput" type="String" access="private" default="" />
+    <aura:attribute name="lastNameInput" type="String" access="private" default="" />
+    <aura:attribute name="matchingContacts" type="Object[]" access="private" default="" />
+    <aura:attribute name="showMatchingContacts" type="Boolean" access="private" default="false" />
+    <aura:attribute name="showLastNameVerification" type="Boolean" access="private" default="false" />
+    <aura:attribute name="selectedVolunteerId" type="String" access="private" default="" />
+    
+    <aura:handler name="volunteerRecordFinderEvent" event="c:VolunteerRecordFinderEvent" 
+        action="{!c.handleVolunteerRecordFinderEvent}" />
+    <aura:registerEvent name="volunteerRecordFinderEvent" type="c:VolunteerRecordFinderEvent" />
+    
+    <div class="volunteer-record-finder">
+        
+        <div class="slds-form-element slds-m-vertical_medium">
+            <div>
+                To find your volunteer record, start by entering your phone number or email address.
+            </div>
+            <div class="slds-grid slds-grid_vertical-align-center">
+                <div class="slds-size_3-of-4">
+                    <lightning:input type="search" variant="label-hidden" 
+                        label="Type your phone number or email address." value="{!v.phoneEmailInput}"
+                        placeholder="Phone number or email address" class="finder-input-field" />
+                </div>
+                <div class="slds-size_1-of-4">
+                    <lightning:button variant="brand" label="Search" onclick="{!c.handleSearchClick}"
+                        class="encircle-brand-button" />
+                </div>
+            </div>
+        </div>
+        
+        <aura:if isTrue="{!v.showMatchingContacts}">
+            <aura:iteration items="{#v.matchingContacts}" var="mc">
+                <c:VolunteerRecordFinderRow contact="{#mc}" />
+            </aura:iteration>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.showLastNameVerification}">
+            <div class="slds-form-element slds-m-vertical_medium">
+                <div>
+                    To confirm your identity, please enter you last name.
+                </div>
+                <div class="slds-grid slds-grid_vertical-align-center">
+                    <div class="slds-size_3-of-4">
+                        <lightning:input type="text" variant="label-hidden" 
+                            label="Type your last name." value="{!v.lastNameInput}"
+                            placeholder="Last name" class="finder-input-field" />
+                    </div>
+                    <div class="slds-size_1-of-8">
+                        <lightning:button variant="brand" label="Verify" onclick="{!c.handleVerifyClick}"
+                            class="encircle-brand-button" />
+                    </div>
+                    <div class="slds-size_1-of-8">
+                        <lightning:button variant="neutral" label="Cancel" onclick="{!c.handleCancelClick}"
+                            class="encircle-neutral-button" />
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner alternativeText="Searching" size="large" />
+        </aura:if>
+    </div>
     
 </aura:component>

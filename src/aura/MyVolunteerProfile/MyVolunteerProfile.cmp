@@ -7,21 +7,16 @@
     <aura:attribute name="noUpcomingShifts" type="Boolean" access="private" default="false" />
     <aura:attribute name="showSpinner" type="Boolean" access="private" default="false" />
 
-    <aura:handler name="typeAheadEvent" event="c:VolunteerNameTypeAheadEvent" action="{!c.handleTypeAheadEvent}" />
+    <aura:handler name="volunteerRecordFinderEvent" event="c:VolunteerRecordFinderEvent" 
+        action="{!c.handleVolunteerRecordFinderEvent}" />
     <aura:handler name="myShiftRowEvent" event="c:MyShiftRowEvent" action="{!c.handleShiftRowEvent}" />
     
     <div class="slds">
         <div class="form-section-title">Find Your Volunteer Record</div>
 
         <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                Your Name
-            </div>
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-form-element__label">
-                <span>Start typing your name below to find your volunteer record.</span>
-            </div>
             <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <c:VolunteerNameTypeAhead volunteerResults="{!v.volunteerResults}" />
+                <c:VolunteerRecordFinder />
             </div>
 
         </div>

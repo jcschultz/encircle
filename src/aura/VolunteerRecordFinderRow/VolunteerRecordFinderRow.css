@@ -1,0 +1,12 @@
+.THIS {}
+
+.THIS .slds-box {
+    margin: .5rem;
+    border-radius: 0;
+    border: 1px solid #1f1f1f;
+}
+
+.THIS .matched-contact-name {
+    display: block;
+    font-size: 1.25rem;
+}

@@ -1,31 +1,7 @@
 ({
     
-    choseVolunteer : function(cmp, chosenVolunteer) {
+    chooseVolunteer : function(cmp, chosenVolunteer) {
         cmp.set('v.chosenVolunteer', chosenVolunteer);
-    },
-    
-    doNameSearch : function(cmp, nameInput) {
-        var action = cmp.get('c.searchContacts');
-        
-        this.resetChosenVolunteer(cmp);
-        
-        action.setParams({
-            'nameInput' : nameInput
-        });
-    
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-        
-            if ('SUCCESS' === state) {
-                cmp.set('v.volunteerResults', response.getReturnValue());
-            }
-            else if ('ERROR' === state) {
-                cmp.set('v.volunteerResults', []);
-                console.error('error searching volunteers', response.getError());
-            }
-        });
-    
-        $A.enqueueAction(action);
     },
     
     findShiftInList : function(cmp, shiftId) {
@@ -44,16 +20,13 @@
         return index;
     },
     
-    handleTypeAheadEvent : function(cmp, event) {
-        var actionType = event.getParam('action');
+    handleVolunteerRecordFinderEvent : function(cmp, event) {
+        var eventType = event.getParam('eventType');
+        var volunteerId = event.getParam('volunteerId');
         
-        if ('USER_INPUT' === actionType) {
-            // do search and return results to typeahead.
-            this.doNameSearch(cmp, event.getParam('userInput'));
-        }
-        else if ('SELECTION' === actionType) {
+        if ('VOLUNTEER_VERIFIED' === eventType) {
             // store chosen volunteer
-            this.choseVolunteer(cmp, event.getParam('selectedObject'));
+            this.chooseVolunteer(cmp, event.getParam('volunteerId'));
         }
     },
     
@@ -80,7 +53,7 @@
     
     signUp : function(cmp) {
         var shifts = cmp.get('v.selectedShifts');
-        var volunteer = cmp.get('v.chosenVolunteer');
+        var volunteerId = cmp.get('v.chosenVolunteer');
         var action = cmp.get('c.signUpContactForShifts');
         var isSubmitting = cmp.get('v.isSubmitting');
         var shiftIds = [];
@@ -96,7 +69,7 @@
         }
     
         action.setParams({
-            'contactId' : volunteer.id,
+            'contactId' : volunteerId,
             'shiftIds' : shiftIds
         });
     

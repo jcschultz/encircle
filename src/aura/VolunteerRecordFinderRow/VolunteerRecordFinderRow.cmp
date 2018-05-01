@@ -1,0 +1,22 @@
+<aura:component >
+    
+    <aura:attribute name="contact" type="Object" access="public" default="" 
+        description="Volunteer record details" />
+    
+    <aura:registerEvent name="volunteerRecordFinderEvent" type="c:VolunteerRecordFinderEvent" />
+    
+    <div class="volunteer-record-finder-row">
+        <div class="slds-box">
+            <div class="slds-grid">
+                <div class="slds-size_3-of-4">
+                    <lightning:formattedRichText value="{#v.contact.name}" class="matched-contact-name" />
+                    <lightning:formattedRichText value="{#v.contact.secondaryInfo}" class="matched-contact-phone" />
+                </div>
+                <div class="slds-size_1-of-4">
+                    <lightning:button variant="neutral" class="encircle-neutral-button" 
+                        label="Select" onclick="{!c.handleVolunteerClick}" />
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

@@ -4,10 +4,8 @@
         var volunteers = cmp.get('v.volunteerResults');
         var idx = event.getSource().get('v.value');
         var chosenVolunteer = volunteers[idx];
-        console.log('chosenVolunteer', chosenVolunteer);
         
         cmp.set('v.chosenVolunteer', chosenVolunteer);
-        // cmp.set('v.userNameInput', '');
     
         this.resetVolunteerSearch(cmp);
         

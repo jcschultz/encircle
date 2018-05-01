@@ -58,3 +58,47 @@
 .THIS .contact-search {
     padding-left: 2rem;
 }
+
+.THIS .encircle-brand-button,
+.THIS .encircle-brand-button:hover,
+.THIS .encircle-brand-button:active,
+.THIS .encircle-brand-button:focus {
+    background-color: #1f1f1f;
+    border-color: #1f1f1f;
+    color: #fff;
+    padding: .5rem 2rem;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.THIS .encircle-brand-button[disabled],
+.THIS .encircle-brand-button[disabled]:hover,
+.THIS .encircle-brand-button[disabled]:active,
+.THIS .encircle-brand-button[disabled]:focus {
+    background-color: #555;
+}
+
+.THIS .encircle-neutral-button,
+.THIS .encircle-neutral-button:hover,
+.THIS .encircle-neutral-button:active,
+.THIS .encircle-neutral-button:focus {
+    background-color: #fff;
+    border-color: #1f1f1f;
+    color: #1f1f1f;
+    padding: .5rem 2rem;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.THIS .encircle-destructive-button,
+.THIS .encircle-destructive-button:hover,
+.THIS .encircle-destructive-button:active,
+.THIS .encircle-destructive-button:focus {
+    padding: .5rem 2rem;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.THIS .volunteer-record-finder {
+    width: 100%;
+}

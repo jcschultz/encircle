@@ -28,6 +28,7 @@
         <members>VolunteerHoursViewModel</members>
         <members>VolunteerRecordFinderCtrl</members>
         <members>VolunteerRecordFinderCtrl_TEST</members>
+        <members>VolunteerRecordFinderViewModel</members>
         <members>VolunteerRegistrationController</members>
         <members>VolunteerRegistrationController_TEST</members>
         <members>VolunteerService</members>
@@ -60,6 +61,7 @@
         <members>VolunteerNameTypeAheadEvent</members>
         <members>VolunteerRecordFinder</members>
         <members>VolunteerRecordFinderEvent</members>
+        <members>VolunteerRecordFinderRow</members>
         <members>VolunteerRegistrationApp</members>
         <members>VolunteerRegistrationForm</members>
         <members>VolunteerRegistrationLtngOut</members>

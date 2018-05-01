@@ -8,8 +8,8 @@
         helper.signUp(cmp);
     },
     
-    handleTypeAheadEvent : function(cmp, event, helper) {
-        helper.handleTypeAheadEvent(cmp, event);
+    handleVolunteerRecordFinderEvent : function(cmp, event, helper) {
+        helper.handleVolunteerRecordFinderEvent(cmp, event);
     },
     
     

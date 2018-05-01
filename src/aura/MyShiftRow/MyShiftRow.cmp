@@ -9,7 +9,8 @@
         <td title="Time">{!v.shift.startTime}</td>
         <td title="Duration">{!v.shift.duration + ' hours'}</td>
         <td title="Action">
-            <lightning:button label="Remove" variant="destructive" title="Cancel My Shift" onclick="{!c.removeShift}" />
+            <lightning:button label="Remove" variant="destructive" title="Cancel My Shift" onclick="{!c.removeShift}"
+                class="encircle-destructive-button" />
         </td>
     </tr>
 </aura:component>

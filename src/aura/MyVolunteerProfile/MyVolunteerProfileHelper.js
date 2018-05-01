@@ -10,12 +10,12 @@
     
     deleteShift : function(cmp, hourId) {
         var action = cmp.get('c.deleteShift');
-        var chosenVolunteer = cmp.get('v.chosenVolunteer');
+        var volunteerId = cmp.get('v.chosenVolunteer');
         
         cmp.set('v.showSpinner', true);
         
         action.setParams({
-            'contactId' : chosenVolunteer.id,
+            'contactId' : volunteerId,
             'hourId' : hourId
         });
         
@@ -32,30 +32,6 @@
         $A.enqueueAction(action);
     },
     
-    doNameSearch : function(cmp, nameInput) {
-        var action = cmp.get('c.searchContacts');
-        
-        this.resetChosenVolunteer(cmp);
-        
-        action.setParams({
-            'nameInput' : nameInput
-        });
-    
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-        
-            if ('SUCCESS' === state) {
-                cmp.set('v.volunteerResults', response.getReturnValue());
-            }
-            else if ('ERROR' === state) {
-                cmp.set('v.volunteerResults', []);
-                console.error('error searching volunteers', response.getError());
-            }
-        });
-    
-        $A.enqueueAction(action);
-    },
-    
     handleShiftRowEvent : function(cmp, event) {
         var actionType = event.getParam('action');
         
@@ -64,24 +40,24 @@
         }
     },
     
-    handleTypeAheadEvent : function(cmp, event) {
-        var actionType = event.getParam('action');
+    handleVolunteerRecordFinderEvent : function(cmp, event) {
+        var eventType = event.getParam('eventType');
+        var volunteerId = event.getParam('volunteerId');
         
-        if ('USER_INPUT' === actionType) {
-            // do search and return results to typeahead.
-            this.doNameSearch(cmp, event.getParam('userInput'));
-        }
-        else if ('SELECTION' === actionType) {
+        if ('VOLUNTEER_VERIFIED' === eventType) {
             // store chosen volunteer
-            this.chooseVolunteer(cmp, event.getParam('selectedObject'));
+            this.chooseVolunteer(cmp, event.getParam('volunteerId'));
+        }
+        else if ('SEARCHING' === eventType) {
+            this.resetChosenVolunteer(cmp);
         }
     },
     
     loadUpcomingShifts : function(cmp) {
-        var chosenVolunteer = cmp.get('v.chosenVolunteer');
+        var volunteerId = cmp.get('v.chosenVolunteer');
         var action = cmp.get('c.getUpcomingShifts');
         
-        if (!chosenVolunteer) {
+        if (!volunteerId) {
             return;
         }
         
@@ -89,7 +65,7 @@
         cmp.set('v.showSpinner', true);
         
         action.setParams({
-            'contactId' : chosenVolunteer.id
+            'contactId' : volunteerId
         });
         
         action.setCallback(this, function(response){

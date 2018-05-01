@@ -149,4 +149,89 @@ public virtual class VolunteerService {
     
         return contacts;
     }
+    
+    
+    public virtual List<Contact> findApprovedVolunteersByEmailOrPhone(String input) {
+        List<Contact> contacts;
+        
+        if (isValidEmail(input) || isValidPhone(input)) {
+            contacts = new List<Contact>();
+            String escapedInputForEmail = escapeInputForSosl(input);
+            String cleanedPhone = cleanPhone(input);
+            String searchTerms = String.isNotBlank(escapedInputForEmail) ? escapedInputForEmail : '';
+            
+            if (String.isNotBlank(searchTerms) && String.isNotBlank(cleanedPhone)) {
+                searchTerms += ' OR ';
+            }
+            
+            searchTerms += String.isNotBlank(cleanedPhone) ? cleanedPhone : '';
+            
+            System.debug('searchTerms: ' + JSON.serialize(searchTerms));
+            
+            if (String.isNotBlank(searchTerms)) {
+                List<List<SObject>> results = [
+                    FIND :searchTerms 
+                    IN ALL FIELDS
+                    RETURNING Contact
+                    (
+                        Id, 
+                        FirstName, 
+                        LastName,
+                        Phone
+                        WHERE Allowed_to_Volunteer__c = TRUE
+                        AND Volunteer__c = TRUE
+                    )
+                ];
+                
+                if (results != null && !results.isEmpty() && results[0] != null && !results[0].isEmpty()) {
+                    for (SObject s : results[0]) {
+                        contacts.add((Contact)s);
+                    }
+                }
+            }
+        }
+        
+        return contacts;
+    }
+    
+    private Boolean isValidEmail(String input) {
+        return String.isNotBlank(input) && 
+            input.indexOf('@') > 0 && 
+            input.indexOf('.') > -1 &&
+            input.countMatches('@') == 1;
+    }
+    
+    private Boolean isValidPhone(String input) {
+        String cleaned = cleanPhone(input);
+        
+        return String.isNotBlank(cleaned) &&
+            cleaned.length() == 10;
+    }
+    
+    private String cleanPhone(String input) {
+        String dirtyInput = String.isNotBlank(input) ? input : '';
+        Pattern nonNumeric = Pattern.compile('[^0-9]');
+        Matcher matcher = nonNumeric.matcher(dirtyInput);
+        
+        return matcher.replaceAll('');
+    }
+    
+    private String escapeInputForSosl(String input) {
+        String escapedText = String.escapeSingleQuotes(input);
+
+        // remove reserved logical operators
+        escapedText = escapedText.replaceAll('(?i)( AND NOT | AND | OR )', ' ');
+
+        // match special characters to escape
+        Pattern myPattern = Pattern.compile('(\\?|\\&|\\||\\!|\\{|\\}|\\[|\\]|\\(|\\)|\\^|\\~|\\*|\\:|\\"|\\+|\\-)');
+        Matcher myMatcher = myPattern.matcher(escapedText);
+
+        // escape special characters
+        escapedText = myMatcher.replaceAll('\\\\\\\\$1');
+
+        // collapse extra whitespace
+        escapedText = escapedText.replaceAll('( )+', ' ').trim();
+
+        return escapedText;
+    }
 }

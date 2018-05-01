@@ -13,7 +13,8 @@
     <aura:attribute name="errorHeading" access="private" type="String" default="" />
 
     <aura:handler name="shiftToggleEvent" event="c:VolunteerShiftToggleEvent" action="{!c.handleShiftToggle}" />
-    <aura:handler name="typeAheadEvent" event="c:VolunteerNameTypeAheadEvent" action="{!c.handleTypeAheadEvent}" />
+    <aura:handler name="volunteerRecordFinderEvent" event="c:VolunteerRecordFinderEvent" 
+        action="{!c.handleVolunteerRecordFinderEvent}" />
 
     <div class="slds">
         <aura:if isTrue="{!v.didSuccessfullySave}">
@@ -30,18 +31,7 @@
                         toastDetails="{!v.errorMsg}" />
             </aura:if>
 
-            <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
-                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                    Your Name
-                </div>
-                <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-form-element__label">
-                    <span>Start typing your name below to find your volunteer record.</span>
-                </div>
-                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                    <c:VolunteerNameTypeAhead volunteerResults="{!v.volunteerResults}" />
-                </div>
-
-            </div>
+            <c:VolunteerRecordFinder />
 
             <aura:if isTrue="{! not(empty(v.chosenVolunteer))}">
                 <div class="form-section-title">Choose Your Volunteering Shifts</div>

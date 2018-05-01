@@ -1,1 +1,5 @@
-<aura:event type="APPLICATION" description="Event template" />
+<aura:event type="COMPONENT" description="Volunteer record finder event for notifying of volunteer selection">
+    <aura:attribute name="eventType" type="String" 
+        description="Options: SEARCHING, VOLUNTEER_SELECTED, VOLUNTEER_VERIFIED" />
+    <aura:attribute name="volunteerId" type="String" description="ID of volunteer record." />
+</aura:event>
