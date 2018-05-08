@@ -11,6 +11,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Currently_Homeless__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Is the volunteer applicant currently homeless?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Is the volunteer applicant currently homeless?</inlineHelpText>
+        <label>Currently Homeless</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Emergency_Contact_First_Name__c</fullName>
         <externalId>false</externalId>
         <label>Emergency Contact First Name</label>
@@ -108,6 +118,27 @@
         <visibleLines>4</visibleLines>
     </fields>
     <fields>
+        <fullName>Hospitalization_Explanation__c</fullName>
+        <description>Explanation for why the volunteer applicant was hospitalized in the last 6 months.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Explanation for why the volunteer applicant was hospitalized in the last 6 months.</inlineHelpText>
+        <label>Hospitalization Explanation</label>
+        <length>5000</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Hospitalized_in_the_Last_6_Months__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Has the volunteer applicant been hospitalized within the last 6 months for a suicide attempt or other mental health problem?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Has the volunteer applicant been hospitalized within the last 6 months for a suicide attempt or other mental health problem?</inlineHelpText>
+        <label>Hospitalized in the Last 6 Months</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Last_Volunteer_Training__c</fullName>
         <externalId>false</externalId>
         <label>Last Volunteer Training</label>
@@ -140,6 +171,18 @@
         <label>Notify of Upcoming Trainings</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Planned_Length_for_School_Comm_Service__c</fullName>
+        <description>How long does the volunteer applicant plan on volunteering for school credit or community service?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>How long does the volunteer applicant plan on volunteering for school credit or community service?</inlineHelpText>
+        <label>Planned Length for School/Comm. Service</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Program__c</fullName>
@@ -242,5 +285,15 @@
         <trackFeedHistory>false</trackFeedHistory>
         <type>LongTextArea</type>
         <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Volunteering_for_School_Comm_Service__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Is the volunteer applicant volunteering to receive community service hours or school credit/hours?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Is the volunteer applicant volunteering to receive community service hours or school credit/hours?</inlineHelpText>
+        <label>Volunteering for School/Comm. Service</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
     </fields>
 </CustomObject>

@@ -1,11 +1,11 @@
 ({
     
     
-    doInit : function(component, event, helper) {
-        helper.loadPicklistValues(component);
+    doInit : function(cmp, event, helper) {
+        helper.loadPicklistValues(cmp);
     },
     
-    submitForm : function(component, event, helper) {
-        helper.submitForm(component);
+    submitForm : function(cmp, event, helper) {
+        helper.submitForm(cmp);
     },
 })

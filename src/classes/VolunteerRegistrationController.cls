@@ -39,6 +39,11 @@ public class VolunteerRegistrationController {
             (String)volunteerInfo.get('ecPhone2') + (String)volunteerInfo.get('ecPhone3');
         c.Volunteering_Reason__c = (String)volunteerInfo.get('reason');
         c.Volunteer__c = true;
+        c.Currently_Homeless__c = Boolean.valueOf((String)volunteerInfo.get('homeless'));
+        c.Hospitalized_in_the_Last_6_Months__c = Boolean.valueOf((String)volunteerInfo.get('hospitalized'));
+        c.Hospitalization_Explanation__c = (String)volunteerInfo.get('hospitalizationExplanation');
+        c.Volunteering_for_School_Comm_Service__c = Boolean.valueOf((String)volunteerInfo.get('volunteeringForSchool'));
+        c.Planned_Length_for_School_Comm_Service__c = (String)volunteerInfo.get('volunteeringForSchoolLength');
         
         service.registerNewVolunteer(c, (String)volunteerInfo.get('training'));
     }

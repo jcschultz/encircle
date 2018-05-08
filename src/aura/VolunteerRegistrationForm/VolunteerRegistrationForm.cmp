@@ -18,6 +18,11 @@
     <aura:attribute name="dobMonth" access="private" type="Integer" default="" />
     <aura:attribute name="dobDay" access="private" type="Integer" default="" />
     <aura:attribute name="dobYear" access="private" type="Integer" default="" />
+    <aura:attribute name="homeless" type="String" access="private" default="false" />
+    <aura:attribute name="hospitalized" type="String" access="private" default="false" />
+    <aura:attribute name="hospitalizationExplanation" type="String" access="private" default="" />
+    <aura:attribute name="volunteeringForSchool" type="String" access="private" default="false" />
+    <aura:attribute name="volunteeringForSchoolLength" type="String" access="private" default="" />
     <aura:attribute name="ecFirstName" access="private" type="String" default="" />
     <aura:attribute name="ecLastName" access="private" type="String" default="" />
     <aura:attribute name="ecRelationship" access="private" type="String" default="" />
@@ -173,6 +178,66 @@
                                 value="{!v.dobYear}" class="label-below"
                                 maxlength="4" minlength="4" pattern="[0-9]{4}"
                                 aura:id="required" />
+                    </div>
+                </div>
+                
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Are you currently homeless? *
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:select name="homeless" value="{!v.homeless}"
+                            label="Are you currently homeless?" class="no-label">
+                        <option value="false" text="No" />
+                        <option value="true" text="Yes" />
+                    </lightning:select>
+                </div>
+                
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Have you been hospitalized within the last 6 months for a 
+                    suicide attempt or other mental health problem? *
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:select name="hospitalized" value="{!v.hospitalized}"
+                            label="Have you been hospitalized in the last 6 months?" class="no-label">
+                        <option value="false" text="No" />
+                        <option value="true" text="Yes" />
+                    </lightning:select>
+                </div>
+                <div class="{!if(v.hospitalized == 'true', 'slds-show', 'slds-hide') + ' slds-size_1-of-1'}">
+                    <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-form-element__label">
+                        <span>Please explain below. *</span>
+                    </div>
+                    <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                        <lightning:textarea name="hospitalizationExplanation"
+                                aura:id="conditionallyRequired" 
+                                label="Hospitalization explanation"
+                                class="no-label" maxlength="2000" 
+                                value="{!v.hospitalizationExplanation}"
+                                required="{!v.hospitalized == 'true'}" />
+                    </div>
+                </div>
+                
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                    Are you volunteering to receive community service hours or 
+                    school credit/hours? *
+                </div>
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <lightning:select name="volunteeringForSchool" value="{!v.volunteeringForSchool}"
+                            label="Volunteering for school or community service?" class="no-label">
+                        <option value="false" text="No" />
+                        <option value="true" text="Yes" />
+                    </lightning:select>
+                </div>
+                <div class="{!if(v.volunteeringForSchool == 'true', 'slds-show', 'slds-hide') + ' slds-size_1-of-1'}">
+                    <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-form-element__label">
+                        <span>How long do you plan on volunteering? *</span>
+                    </div>
+                    <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                        <lightning:input name="volunteeringForSchoolLength" 
+                                aura:id="conditionallyRequired"
+                                label="How long do you plan on volunteering?"
+                                type="text" value="{!v.volunteeringForSchoolLength}"
+                                class="no-label" required="{!v.volunteeringForSchool == 'true'}" />
                     </div>
                 </div>
             </div>

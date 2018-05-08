@@ -31,7 +31,12 @@ private class VolunteerRegistrationController_TEST {
             'ecPhone2' => '848',
             'ecPhone3' => '4608',
             'reason' => 'my reason',
-            'training' => training.Id
+            'training' => training.Id,
+            'homeless' => 'false',
+            'hospitalized' => 'true',
+            'hospitalizationExplanation' => 'dfdf',
+            'volunteeringForSchool' => 'true',
+            'volunteeringForSchoolLength' => '1 month'
         };
         
         Test.startTest();

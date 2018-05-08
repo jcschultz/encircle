@@ -76,6 +76,7 @@
     </types>
     <types>
         <members>Contact.Allowed_to_Volunteer__c</members>
+        <members>Contact.Currently_Homeless__c</members>
         <members>Contact.Emergency_Contact_First_Name__c</members>
         <members>Contact.Emergency_Contact_Last_Name__c</members>
         <members>Contact.Emergency_Contact_Phone__c</members>
@@ -86,9 +87,12 @@
         <members>Contact.Facilitator__c</members>
         <members>Contact.Fingerprints__c</members>
         <members>Contact.Friendship_Circle__c</members>
+        <members>Contact.Hospitalization_Explanation__c</members>
+        <members>Contact.Hospitalized_in_the_Last_6_Months__c</members>
         <members>Contact.Last_Volunteer_Training__c</members>
         <members>Contact.Legal_First_Name__c</members>
         <members>Contact.Notify_of_Upcoming_Trainings__c</members>
+        <members>Contact.Planned_Length_for_School_Comm_Service__c</members>
         <members>Contact.Program__c</members>
         <members>Contact.Pronouns__c</members>
         <members>Contact.Screening_Authorization__c</members>
@@ -97,6 +101,7 @@
         <members>Contact.Suicide_Prevention_Training__c</members>
         <members>Contact.Volunteer_Acknowledgement__c</members>
         <members>Contact.Volunteering_Reason__c</members>
+        <members>Contact.Volunteering_for_School_Comm_Service__c</members>
         <members>Door_Activity__c.Date__c</members>
         <members>Door_Activity__c.Visitor_Type__c</members>
         <members>Door_Activity__c.X0__c</members>
