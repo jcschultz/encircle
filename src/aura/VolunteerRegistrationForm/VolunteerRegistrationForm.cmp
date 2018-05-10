@@ -300,18 +300,20 @@
                     <lightning:textarea name="reason" label="Reason"
                             class="no-label" maxlength="2500" value="{!v.reason}" />
                 </div>
-                <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                    Which Volunteer Training will you attend? *
-                </div>
-                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                    <lightning:select name="training" value="{!v.training}"
-                            label="training" class="no-label">
-                        <aura:iteration items="{!v.trainingOptions}" var="o">
-                            <option value="{!o.id}" text="{!o.detailedName}" />
-                        </aura:iteration>
-                        <option value="X">Notify me of other trainings</option>
-                    </lightning:select>
-                </div>
+                <aura:if isTrue="{!and(not(v.homeless == 'true'), not(v.hospitalized == 'true'))}">
+                    <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
+                        Which Volunteer Training will you attend? *
+                    </div>
+                    <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                        <lightning:select name="training" value="{!v.training}"
+                                label="training" class="no-label">
+                            <aura:iteration items="{!v.trainingOptions}" var="o">
+                                <option value="{!o.id}" text="{!o.detailedName}" />
+                            </aura:iteration>
+                            <option value="X">Notify me of other trainings</option>
+                        </lightning:select>
+                    </div>
+                </aura:if>
             </div>
 
             <aura:if isTrue="{!v.showError}">

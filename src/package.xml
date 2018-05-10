@@ -153,6 +153,16 @@
         <name>CustomTab</name>
     </types>
     <types>
+        <members>Letterhead_Logos</members>
+        <members>Letterhead_Logos/Logo_375x95.png</members>
+        <name>Document</name>
+    </types>
+    <types>
+        <members>Encircle_Volunteer_Templates</members>
+        <members>Encircle_Volunteer_Templates/Registration_Homeless_Hospitalized</members>
+        <name>EmailTemplate</name>
+    </types>
+    <types>
         <members>Contact_Record_Page</members>
         <members>Contact_Record_Page1</members>
         <members>Volunteer_Training_Record_Page</members>
@@ -170,6 +180,10 @@
         <name>Layout</name>
     </types>
     <types>
+        <members>Encircle_Simple_Letterhead</members>
+        <name>Letterhead</name>
+    </types>
+    <types>
         <members>Volunteer_Training__c.All</members>
         <name>ListView</name>
     </types>
@@ -180,6 +194,14 @@
     <types>
         <members>DoorSurveyAssets</members>
         <name>StaticResource</name>
+    </types>
+    <types>
+        <members>Contact.Volunteer_Registration_Homeless_Hospitalized</members>
+        <name>WorkflowAlert</name>
+    </types>
+    <types>
+        <members>Contact.Volunteer Registration%3A Homeless%2FHospitalized</members>
+        <name>WorkflowRule</name>
     </types>
     <version>41.0</version>
 </Package>

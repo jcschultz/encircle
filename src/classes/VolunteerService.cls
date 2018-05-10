@@ -40,8 +40,7 @@ public virtual class VolunteerService {
             con.Id = existingContact.Id;
         }
         
-        con.Notify_of_Upcoming_Trainings__c = (String.isBlank(trainingId) ||
-            trainingId == 'X');
+        con.Notify_of_Upcoming_Trainings__c = (trainingId == 'X');
         
         // upsert contact and details
         upsert con;

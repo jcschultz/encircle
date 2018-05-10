@@ -1,0 +1,6 @@
+<table border="0" cellpadding="5" width="550" cellspacing="5" height="400" >
+<tr valign="top" height="400" >
+<td tEditID="c1r1" style=" background-color:#FFFFFF; bEditID:r3st1; color:#000000; bLabel:main; font-size:12pt; font-family:arial;" aEditID="c1r1" locked="0" >
+<![CDATA[<font face="Arial, sans-serif" style="">Hi&nbsp;{!Contact.FirstName},</font><div style=""><font face="Arial, sans-serif"><br></font></div><div style=""><span style="color: rgb(34, 34, 34); background-color: rgb(255, 255, 255);"><font face="Arial, sans-serif" style="">Thank you for applying to be an Encircle volunteer. We would like to speak with you about your responses over the phone. Please email&nbsp;<font color="#1155cc"><a href="mailto:volunteer@encircletogether.org">volunteer@encircletogether.org</a></font>&nbsp;to schedule a date and time.</font></span></div>]]></td>
+</tr>
+</table>

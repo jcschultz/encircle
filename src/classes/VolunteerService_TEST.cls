@@ -48,7 +48,7 @@ private class VolunteerService_TEST {
     
         System.assertEquals(con.FirstName, conTest1.FirstName);
         System.assertEquals(con.LastName, conTest1.LastName);
-        System.assertEquals(true, conTest1.Notify_of_Upcoming_Trainings__c);
+        System.assertEquals(false, conTest1.Notify_of_Upcoming_Trainings__c);
         
         // testing update on existing
         con.FirstName = 'newFirst';

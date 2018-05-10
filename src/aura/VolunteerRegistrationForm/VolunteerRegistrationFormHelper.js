@@ -84,7 +84,7 @@
             'ecPhone2' : cmp.get('v.ecPhone2'),
             'ecPhone3' : cmp.get('v.ecPhone3'),
             'reason' : cmp.get('v.reason'),
-            'training' : cmp.get('v.training')
+            'training' : (cmp.get('v.hospitalized') !== 'true' && cmp.get('v.homeless') !== 'true') ? cmp.get('v.training') : ''
         };
         
         action.setParams({'volunteerInfo' : volunteerInfo});

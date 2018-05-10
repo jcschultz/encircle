@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Automated volunteer registration response for application who are homeless or hospitalized</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Encircle_Simple_Letterhead</letterhead>
+    <name>Registration: Homeless/Hospitalized</name>
+    <style>freeForm</style>
+    <subject>Encircle Volunteer Registration Follow-Up</subject>
+    <textOnly>Hi {!Contact.FirstName}!
+
+Thank you for applying to be an Encircle volunteer. We would like to speak with you about your responses over the phone. Please email volunteer@encircletogether.org to schedule a date and time.</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
