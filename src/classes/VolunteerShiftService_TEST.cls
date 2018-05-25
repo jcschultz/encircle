@@ -40,7 +40,11 @@ private class VolunteerShiftService_TEST {
         job = new GW_Volunteers__Volunteer_Job__c(
             Name = 'VolunteerShiftService_TEST Job',
             GW_Volunteers__Campaign__c = cmp.Id,
-            GW_Volunteers__Display_on_Website__c = true
+            GW_Volunteers__Display_on_Website__c = true,
+            GW_Volunteers__Location_City__c = 'myCity',
+            GW_Volunteers__Location__c = 'UT',
+            GW_Volunteers__Location_Street__c = '123 Street',
+            GW_Volunteers__Location_Zip_Postal_Code__c = '12345'
         );
         unplannedJob = new GW_Volunteers__Volunteer_Job__c(
             Name = 'Unplanned Job',
@@ -87,6 +91,9 @@ private class VolunteerShiftService_TEST {
         System.assertEquals(1, shifts.size());
         System.assertEquals(1, shifts[0].GW_Volunteers__Volunteer_Hours__r.size());
         System.assertEquals(con.Id, shifts[0].GW_Volunteers__Volunteer_Hours__r[0].GW_Volunteers__Contact__c);
+        
+        // check that email was sent
+        System.assertEquals(1, Limits.getEmailInvocations());
         
         // testing finding hours
         List<GW_Volunteers__Volunteer_Hours__c> hours2 = vsService.findHoursByContactAndDate(new List<String>{con.Id}, startDate, endDate);

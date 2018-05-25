@@ -11,6 +11,7 @@ public virtual class VolunteerShiftService {
     
     public static final List<String> SIGNED_UP_STATUSES;
     public static final String COMPLETED_STATUS;
+    public static final String ORG_WIDE_EMAIL_VOLUNTEER_MANAGER;
     
     static {
         SIGNED_UP_STATUSES = new List<String>{
@@ -20,6 +21,7 @@ public virtual class VolunteerShiftService {
         };
         
         COMPLETED_STATUS = 'Completed';
+        ORG_WIDE_EMAIL_VOLUNTEER_MANAGER = 'Encircle Volunteer Manager';
     }
     
     @TestVisible
@@ -119,9 +121,119 @@ public virtual class VolunteerShiftService {
             ));
         }
         
-        insert hours;
+        
+        if (!hours.isEmpty()) {
+            insert hours;
+            
+            Set<Id> hoursIds = (new Map<Id, GW_Volunteers__Volunteer_Hours__c>(hours)).keySet();
+            sendSignedUpConfirmationEmails(hoursIds);
+        }
         
         return hours;
+    }
+    
+    public virtual void sendSignedUpConfirmationEmails(Set<Id> hoursIds) {
+        Set<Id> contactIds = new Set<Id>();
+        EmailService eService = EmailService.getInstance();
+        Id orgWideEmailAddressId;
+        
+        if (hoursIds == null || hoursIds.isEmpty()) {
+            return;
+        }
+        
+        List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>([
+            SELECT
+                Id,
+                GW_Volunteers__Contact__c,
+                GW_Volunteers__Contact__r.FirstName,
+                GW_Volunteers__Volunteer_Job__c,
+                GW_Volunteers__Volunteer_Job__r.Name,
+                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_City__c,
+                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location__c,
+                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_Street__c,
+                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_Zip_Postal_Code__c,
+                GW_Volunteers__Volunteer_Shift__c,
+                GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Start_Date_Time__c,
+                GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c
+            FROM GW_Volunteers__Volunteer_Hours__c
+            WHERE Id IN :hoursIds
+                AND GW_Volunteers__Status__c IN :SIGNED_UP_STATUSES // only non-completed hours
+                AND GW_Volunteers__Contact__c != null
+                AND GW_Volunteers__Contact__r.Email != null
+                AND GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Start_Date_Time__c != null
+        ]);
+        
+        // get org wide email address to use as sender address on email.
+        List<OrgWideEmailAddress> orgWideAddresses = new List<OrgWideEmailAddress>([
+            SELECT Id, DisplayName FROM OrgWideEmailAddress
+        ]);
+        for (OrgWideEmailAddress owea : orgWideAddresses) {
+            orgWideEmailAddressId = owea.Id;
+            if (owea.DisplayName == ORG_WIDE_EMAIL_VOLUNTEER_MANAGER) {
+                break;
+            }
+        }
+        
+        // if none of the email addresses match the volunteer manager display
+        // name, just take the first one.
+        if (orgWideEmailAddressId == null && !orgWideAddresses.isEmpty()) {
+            orgWideEmailAddressId = orgWideAddresses[0].Id;
+        }
+        
+        for (GW_Volunteers__Volunteer_Hours__c h : hours) {
+            EmailService.EmailInfo info = new EmailService.EmailInfo();
+            
+            // duration in hours
+            Decimal duration = h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c != null &&
+                h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c > 0 ?
+                h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c : 1;
+            
+            // set values used in invite attachment and email
+            info.uids = h.Id + '-' + h.GW_Volunteers__Volunteer_Shift__c;
+            info.startDatetime = h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Start_Date_Time__c;
+            info.endDatetime = info.startDatetime.addMinutes(Integer.valueOf(duration * 60));
+            info.location = locationBuilder(
+                h.GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_Street__c,
+                h.GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_City__c,
+                h.GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location__c,
+                h.GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_Zip_Postal_Code__c
+            );
+            info.inviteSummary = h.GW_Volunteers__Volunteer_Job__r.Name;
+            info.subject = 'Encircle Volunteering Sign-Up Confirmation: ' + h.GW_Volunteers__Volunteer_Job__r.Name;
+            info.orgWideEmailAddressId = orgWideEmailAddressId;
+            info.recipientId = h.GW_Volunteers__Contact__c;
+            
+            String emailBody = '' +
+            'Hi {0},\n' +
+            '\n' +
+            'Thank you for signing up to volunteer at Encircle! Below, you will '+
+            'find the details for your volunteering shift. If you are not able ' +
+            'to attend your shift, please remove the shift, so that others may ' +
+            'sign up for it, by visiting: https://encircletogether.org/manage/\n' +
+            '\n' +
+            'Shift Name: {1}\n' +
+            'Date and Time: {2}\n' +
+            'Duration: {3} hour(s)\n' +
+            'Location: {4}\n' +
+            '\n' +
+            'Sincerely,\n' +
+            'Encircle';
+            
+            info.emailBody = String.format(
+                emailBody,
+                new String[] {
+                    h.GW_Volunteers__Contact__r.FirstName,
+                    h.GW_Volunteers__Volunteer_Job__r.Name,
+                    h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Start_Date_Time__c.format('h:mm a, EEEE, MMMM d, yyyy'),
+                    String.valueOf(duration),
+                    info.location
+                }
+            );
+            
+            eService.buildEmailWithAttachment(info);
+        }
+        
+        eService.sendEmails();
     }
     
     /**
@@ -230,6 +342,31 @@ public virtual class VolunteerShiftService {
         insert hours;
         
         return hours;
+    }
+    
+    private String locationBuilder(String street, String city, String state, String zip) {
+        String location = '';
+        
+        if (String.isNotBlank(street)) {
+            location += street;
+            
+            if (String.isNotBlank(city)) {
+                location += ', ';
+            }
+        }
+        
+        if (String.isNotBlank(city)) {
+            location += city;
+            
+            if (String.isNotBlank(state)) {
+                location += ', ';
+            }
+        }
+        
+        location += String.isNotBlank(state) ? state + ' ' : '';
+        location += String.isNotBlank(zip) ? zip : '';
+        
+        return location;
     }
     
 }
