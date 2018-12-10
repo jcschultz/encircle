@@ -174,8 +174,6 @@
         <name>EmailTemplate</name>
     </types>
     <types>
-        <members>Contact_Record_Page</members>
-        <members>Contact_Record_Page1</members>
         <members>Volunteer_Training_Record_Page</members>
         <name>FlexiPage</name>
     </types>
@@ -185,7 +183,6 @@
         <name>GlobalValueSet</name>
     </types>
     <types>
-        <members>Contact-Contact Lightning Layout</members>
         <members>Volunteer_Training_Attendance__c-Volunteer Training Attendance Layout</members>
         <members>Volunteer_Training__c-Volunteer Training Layout</members>
         <name>Layout</name>
@@ -214,5 +211,5 @@
         <members>Contact.Volunteer Registration%3A Homeless%2FHospitalized</members>
         <name>WorkflowRule</name>
     </types>
-    <version>41.0</version>
+    <version>44.0</version>
 </Package>
