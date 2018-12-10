@@ -3746,6 +3746,80 @@
         <trackFeedHistory>false</trackFeedHistory>
     </fields>
     <fields>
+        <fullName>BackgroundCheckAlerts__c</fullName>
+        <externalId>false</externalId>
+        <label>Background Check Alerts</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>BackgroundCheckConsentTimestamp__c</fullName>
+        <externalId>false</externalId>
+        <label>Background Check Consent Timestamp</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>BackgroundCheckPaymentId__c</fullName>
+        <externalId>false</externalId>
+        <label>Background Check Payment Id</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>BackgroundCheckPaymentTimestamp__c</fullName>
+        <externalId>false</externalId>
+        <label>Background Check Payment Timestamp</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>BackgroundCheckReportId__c</fullName>
+        <externalId>false</externalId>
+        <label>Background Check Report Id</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>BackgroundCheckReportURL__c</fullName>
+        <externalId>false</externalId>
+        <label>Background Check Report URL</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>BackgroundCheckStatusDetails__c</fullName>
+        <externalId>false</externalId>
+        <label>Background Check Status Details</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>BackgroundCheckStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Background Check Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Background_Check_Expiration__c</fullName>
         <externalId>false</externalId>
         <label>Background Check Expiration</label>
@@ -4598,6 +4672,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>StatementOfConfidentialityTimestamp__c</fullName>
+        <description>Date and time when the volunteer agreed to the Statement of Confidentiality and other contracts.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Date and time when the volunteer agreed to the Statement of Confidentiality and other contracts.</inlineHelpText>
+        <label>Statement of Confidentiality Timestamp</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
         <fullName>Statement_of_Confidentiality__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
@@ -4702,20 +4786,20 @@
         <deprecated>false</deprecated>
         <description>Formula: Uses primary address type field to determine Home Address from Mailing or Other address.</description>
         <externalId>false</externalId>
-        <formula>if(
+        <formula>IF(
   ISPICKVAL(npe01__Primary_Address_Type__c,&quot;Home&quot;),
-  if(LEN(MailingStreet)&gt;0, MailingStreet &amp; &quot;, &quot; , &quot;&quot; ) &amp; 
-  if(LEN(MailingCity)&gt;0, MailingCity &amp; &quot;, &quot; , &quot;&quot; )&amp; 
-  if(LEN(MailingState)&gt;0, MailingState &amp; &quot; &quot; , &quot;&quot; )&amp; 
-  if(LEN(MailingPostalCode)&gt;0, MailingPostalCode,&quot;&quot;) &amp; 
-  If(LEN( MailingCountry ) &gt;0, &quot;, &quot; &amp;MailingCountry,&quot;&quot;)
+  IF(ISBLANK(MailingStreet), &quot;&quot;, MailingStreet &amp; &quot;, &quot;) &amp; 
+  IF(ISBLANK(MailingCity), &quot;&quot;, MailingCity &amp; &quot;, &quot;)&amp; 
+  IF(ISBLANK(MailingState), &quot;&quot;, MailingState &amp; &quot; &quot;)&amp; 
+  IF(ISBLANK(MailingPostalCode), &quot;&quot;, MailingPostalCode) &amp; 
+  IF(ISBLANK(MailingCountry), &quot;&quot;, &quot;, &quot; &amp;MailingCountry)
 ,
-if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Home&quot;),
-  if(LEN(OtherStreet)&gt;0, OtherStreet &amp; &quot;, &quot; , &quot;&quot; ) &amp; 
-  if(LEN(OtherCity)&gt;0, OtherCity &amp; &quot;, &quot; , &quot;&quot; )&amp; 
-  if(LEN(OtherState)&gt;0, OtherState &amp; &quot; &quot; , &quot;&quot; )&amp; 
-  if(LEN(OtherPostalCode)&gt;0, OtherPostalCode,&quot;&quot;) &amp; 
-  If(LEN(OtherCountry ) &gt;0, &quot;, &quot; &amp; OtherCountry,&quot;&quot;)
+IF(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Home&quot;),
+  IF(ISBLANK(OtherStreet), &quot;&quot;, OtherStreet &amp; &quot;, &quot;) &amp; 
+  IF(ISBLANK(OtherCity), &quot;&quot;, OtherCity &amp; &quot;, &quot;)&amp; 
+  IF(ISBLANK(OtherState), &quot;&quot;, OtherState &amp; &quot; &quot;)&amp; 
+  IF(ISBLANK(OtherPostalCode), &quot;&quot;, OtherPostalCode) &amp; 
+  IF(ISBLANK(OtherCountry), &quot;&quot;, &quot;, &quot; &amp; OtherCountry)
   ,&quot;&quot;
 )
 )</formula>
@@ -4775,20 +4859,20 @@ null
         <deprecated>false</deprecated>
         <description>Formula: If the Primary Address Type is Other, the Mailing Address.  If the Secondary Address Type is Other, the Other Address.</description>
         <externalId>false</externalId>
-        <formula>if(
+        <formula>IF(
   ISPICKVAL(npe01__Primary_Address_Type__c,&quot;Other&quot;),
-  if(LEN(MailingStreet)&gt;0, MailingStreet &amp; &quot;, &quot; , &quot;&quot; ) &amp; 
-  if(LEN(MailingCity)&gt;0, MailingCity &amp; &quot;, &quot; , &quot;&quot; )&amp; 
-  if(LEN(MailingState)&gt;0, MailingState &amp; &quot; &quot; , &quot;&quot; )&amp; 
-  if(LEN(MailingPostalCode)&gt;0, MailingPostalCode,&quot;&quot;) &amp; 
-  If(LEN( MailingCountry ) &gt;0, &quot;, &quot; &amp;MailingCountry,&quot;&quot;)
+  IF(ISBLANK(MailingStreet), &quot;&quot;, MailingStreet &amp; &quot;, &quot;) &amp; 
+  IF(ISBLANK(MailingCity), &quot;&quot;, MailingCity &amp; &quot;, &quot;)&amp; 
+  IF(ISBLANK(MailingState), &quot;&quot;, MailingState &amp; &quot; &quot;)&amp; 
+  IF(ISBLANK(MailingPostalCode), &quot;&quot;, MailingPostalCode) &amp; 
+  IF(ISBLANK(MailingCountry), &quot;&quot;, &quot;, &quot; &amp;MailingCountry)
 ,
-if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Other&quot;),
-  if(LEN(OtherStreet)&gt;0, OtherStreet &amp; &quot;, &quot; , &quot;&quot; ) &amp; 
-  if(LEN(OtherCity)&gt;0, OtherCity &amp; &quot;, &quot; , &quot;&quot; )&amp; 
-  if(LEN(OtherState)&gt;0, OtherState &amp; &quot; &quot; , &quot;&quot; )&amp; 
-  if(LEN(OtherPostalCode)&gt;0, OtherPostalCode,&quot;&quot;) &amp; 
-  If(LEN(OtherCountry ) &gt;0, &quot;, &quot; &amp; OtherCountry,&quot;&quot;)
+IF(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Other&quot;),
+  IF(ISBLANK(OtherStreet), &quot;&quot;, OtherStreet &amp; &quot;, &quot;) &amp; 
+  IF(ISBLANK(OtherCity), &quot;&quot;, OtherCity &amp; &quot;, &quot;)&amp; 
+  IF(ISBLANK(OtherState), &quot;&quot;, OtherState &amp; &quot; &quot;)&amp; 
+  IF(ISBLANK(OtherPostalCode), &quot;&quot;, OtherPostalCode) &amp; 
+  IF(ISBLANK(OtherCountry), &quot;&quot;, &quot;, &quot; &amp; OtherCountry)
   ,&quot;&quot;
 )
 )</formula>
@@ -5017,20 +5101,20 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Other&quot;),
         <deprecated>false</deprecated>
         <description>Formula: If the Primary Address Type is Work, the Mailing Address.  If the Secondary Address Type is Work, the Other Address.</description>
         <externalId>false</externalId>
-        <formula>if(
+        <formula>IF(
   ISPICKVAL(npe01__Primary_Address_Type__c,&quot;Work&quot;),
-  if(LEN(MailingStreet)&gt;0, MailingStreet &amp; &quot;, &quot; , &quot;&quot; ) &amp; 
-  if(LEN(MailingCity)&gt;0, MailingCity &amp; &quot;, &quot; , &quot;&quot; )&amp; 
-  if(LEN(MailingState)&gt;0, MailingState &amp; &quot; &quot; , &quot;&quot; )&amp; 
-  if(LEN(MailingPostalCode)&gt;0, MailingPostalCode,&quot;&quot;) &amp; 
-  If(LEN( MailingCountry ) &gt;0, &quot;, &quot; &amp;MailingCountry,&quot;&quot;)
+  IF(ISBLANK(MailingStreet), &quot;&quot;, MailingStreet &amp; &quot;, &quot;) &amp; 
+  IF(ISBLANK(MailingCity), &quot;&quot;, MailingCity &amp; &quot;, &quot;)&amp; 
+  IF(ISBLANK(MailingState), &quot;&quot;, MailingState &amp; &quot; &quot;)&amp; 
+  IF(ISBLANK(MailingPostalCode), &quot;&quot;, MailingPostalCode) &amp; 
+  IF(ISBLANK(MailingCountry), &quot;&quot;, &quot;, &quot; &amp;MailingCountry)
 ,
-if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
-  if(LEN(OtherStreet)&gt;0, OtherStreet &amp; &quot;, &quot; , &quot;&quot; ) &amp; 
-  if(LEN(OtherCity)&gt;0, OtherCity &amp; &quot;, &quot; , &quot;&quot; )&amp; 
-  if(LEN(OtherState)&gt;0, OtherState &amp; &quot; &quot; , &quot;&quot; )&amp; 
-  if(LEN(OtherPostalCode)&gt;0, OtherPostalCode,&quot;&quot;) &amp; 
-  If(LEN(OtherCountry ) &gt;0, &quot;, &quot; &amp; OtherCountry,&quot;&quot;)
+IF(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
+  IF(ISBLANK(OtherStreet), &quot;&quot;, OtherStreet &amp; &quot;, &quot;) &amp; 
+  IF(ISBLANK(OtherCity), &quot;&quot;, OtherCity &amp; &quot;, &quot;)&amp; 
+  IF(ISBLANK(OtherState), &quot;&quot;, OtherState &amp; &quot; &quot;)&amp; 
+  IF(ISBLANK(OtherPostalCode), &quot;&quot;, OtherPostalCode) &amp; 
+  IF(ISBLANK(OtherCountry), &quot;&quot;, &quot;, &quot; &amp; OtherCountry)
   ,&quot;&quot; 
 )
 )</formula>
@@ -5094,8 +5178,8 @@ if(ISPICKVAL(npe01__Secondary_Address_Type__c,&quot;Work&quot;),
         <formula>IF(npe01__Organization_Type__c == &apos;Household Account&apos;,
 
 Account.BillingStreet &amp; BR() &amp;
-Account.BillingCity &amp; IF(LEN(Account.BillingCity) &gt; 0, &quot;, &quot;, &quot;&quot;) &amp; Account.BillingState &amp; &quot; &quot; &amp; Account.BillingPostalCode 
-&amp; if (LEN(Account.BillingCountry)&gt;0,BR()&amp; Account.BillingCountry,&quot;&quot;) ,
+Account.BillingCity &amp; IF(ISBLANK(Account.BillingCity), &quot;&quot;, &quot;, &quot;) &amp; Account.BillingState &amp; &quot; &quot; &amp; Account.BillingPostalCode 
+&amp; IF(ISBLANK(Account.BillingCountry), &quot;&quot;, BR()&amp; Account.BillingCountry),
 
 npo02__Household__r.npo02__Formula_MailingAddress__c)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
@@ -5591,7 +5675,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Address_Verification_Status__c</fullName>
         <deprecated>false</deprecated>
-        <description>Verification status of the current address.</description>
+        <description>The verification status of the current Address. If this Address requires verification, navigate to the current Address record and select Verify Address.  Consult the Power of Us Hub documentation for more information on Address Verification..</description>
         <externalId>false</externalId>
         <formula>npsp__Current_Address__r.npsp__Verification_Status__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
@@ -5605,6 +5689,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__Batch__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <deprecated>false</deprecated>
+        <description>Lookup to the Batch that this Contact was created in.</description>
         <externalId>false</externalId>
         <inlineHelpText>lookup to the Batch that this contact was created in.</inlineHelpText>
         <label>Batch</label>
@@ -5619,7 +5704,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__Current_Address__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <deprecated>false</deprecated>
-        <description>The current Address that the Contact&apos;s mailing fields are filled with.</description>
+        <description>Lookup to the current Address record for this Contact. NPSP populates the Contact&apos;s Mailing Address field with the street, city, state, and postal code from the current Address record.</description>
         <externalId>false</externalId>
         <inlineHelpText>The current Address that the Contact&apos;s mailing fields are filled with.</inlineHelpText>
         <label>Current Address</label>
@@ -5644,7 +5729,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__Deceased__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
-        <description>When selected, this option marks the contact as deceased, and excludes them from household naming, emails, and phone calls.</description>
+        <description>Indicates the Contact is deceased. When selected, NPSP excludes this Contact from Household Naming (unless this Contact is the only one in the Household) and from standard email and phone lists.</description>
         <externalId>false</externalId>
         <inlineHelpText>When selected, this option marks the contact as deceased, and excludes them from household naming, emails, and phone calls.</inlineHelpText>
         <label>Deceased</label>
@@ -5655,7 +5740,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__Do_Not_Contact__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
-        <description>When selected, this option excludes the contact from emails and phone calls.</description>
+        <description>Indicates the Contact does not want your organization to call or email. Use this field to filter out Contacts in email and phone lists. When selected, NPSP excludes this Contact from Opportunity Acknowledgements.</description>
         <externalId>false</externalId>
         <inlineHelpText>When selected, this option excludes the contact from emails and phone calls.</inlineHelpText>
         <label>Do Not Contact</label>
@@ -5666,7 +5751,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__Exclude_from_Household_Formal_Greeting__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
-        <description>Checking this box will exclude this contact from the Household Formal Greeting.</description>
+        <description>When selected, NPSP excludes this Contact from the Household Formal Greeting (set in NPSP Settings | People | Households).</description>
         <externalId>false</externalId>
         <inlineHelpText>Checking this box will exclude this contact from the Household Formal Greeting.</inlineHelpText>
         <label>Exclude from Household Formal Greeting</label>
@@ -5677,7 +5762,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__Exclude_from_Household_Informal_Greeting__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
-        <description>Checking this box will exclude this contact from the Household Informal Greeting.</description>
+        <description>When selected, NPSP excludes this Contact from the Household Informal Greeting (set in NPSP Settings | People | Households).</description>
         <externalId>false</externalId>
         <inlineHelpText>Checking this box will exclude this contact from the Household Informal Greeting.</inlineHelpText>
         <label>Exclude from Household Informal Greeting</label>
@@ -5688,7 +5773,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__Exclude_from_Household_Name__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
-        <description>Checking this box will exclude this contact from the Household Name.</description>
+        <description>When selected, NPSP excludes this Contact from the Household Name (set in NPSP Settings | People | Households).</description>
         <externalId>false</externalId>
         <inlineHelpText>Checking this box will exclude this contact from the Household Name.</inlineHelpText>
         <label>Exclude from Household Name</label>
@@ -5698,7 +5783,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__First_Soft_Credit_Amount__c</fullName>
         <deprecated>false</deprecated>
-        <description>The amount of the earliest soft credit.</description>
+        <description>The amount of this Contact&apos;s earliest soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount of the earliest soft credit.</inlineHelpText>
         <label>First Soft Credit Amount</label>
@@ -5711,7 +5796,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__First_Soft_Credit_Date__c</fullName>
         <deprecated>false</deprecated>
-        <description>The date of the earliest soft credit.</description>
+        <description>The date of this Contact&apos;s earliest soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date of the earliest soft credit.</inlineHelpText>
         <label>First Soft Credit Date</label>
@@ -5722,6 +5807,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__HHId__c</fullName>
         <deprecated>false</deprecated>
+        <description>Holds the Id of the Household record (either Household Account, or Household object) this Contact is currently associated with (read only).</description>
         <externalId>false</externalId>
         <formula>if(Account.npe01__SYSTEM_AccountType__c==&apos;Household Account&apos;,CASESAFEID(AccountId),CASESAFEID(npo02__Household__c))</formula>
         <inlineHelpText>holds the ID of the current household, whether it is a Household Account, or a Household Object.</inlineHelpText>
@@ -5733,7 +5819,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Largest_Soft_Credit_Amount__c</fullName>
         <deprecated>false</deprecated>
-        <description>The amount of the largest soft credit.</description>
+        <description>The amount of this Contact&apos;s largest soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount of the largest soft credit.</inlineHelpText>
         <label>Largest Soft Credit Amount</label>
@@ -5746,7 +5832,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Largest_Soft_Credit_Date__c</fullName>
         <deprecated>false</deprecated>
-        <description>The date of the largest soft credit.</description>
+        <description>The date of this Contact&apos;s largest soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date of the largest soft credit.</inlineHelpText>
         <label>Largest Soft Credit Date</label>
@@ -5757,7 +5843,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Last_Soft_Credit_Amount__c</fullName>
         <deprecated>false</deprecated>
-        <description>The amount of the most recent soft credit.</description>
+        <description>The amount of this Contact&apos;s most recent soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount of the most recent soft credit.</inlineHelpText>
         <label>Last Soft Credit Amount</label>
@@ -5770,7 +5856,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Last_Soft_Credit_Date__c</fullName>
         <deprecated>false</deprecated>
-        <description>The date of the most recent soft credit.</description>
+        <description>The date of this Contact&apos;s most recent soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date of the most recent soft credit.</inlineHelpText>
         <label>Last Soft Credit Date</label>
@@ -5781,7 +5867,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Number_of_Soft_Credits_Last_N_Days__c</fullName>
         <deprecated>false</deprecated>
-        <description>Total amount for all soft credits that closed in the last N days. The value of N is defined in the NPSP Settings tab.</description>
+        <description>The number of soft credits attributed to this Contact that closed in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of soft credits, closed in the last number of days defined in NPSP Settings.</inlineHelpText>
         <label>Number of Soft Credits Last N Days</label>
@@ -5795,7 +5881,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Number_of_Soft_Credits_Last_Year__c</fullName>
         <deprecated>false</deprecated>
-        <description>The number of soft credits last year.</description>
+        <description>The number of soft credits attributed to this Contact in the previous calendar year.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of soft credits last year.</inlineHelpText>
         <label>Number of Soft Credits Last Year</label>
@@ -5809,7 +5895,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Number_of_Soft_Credits_This_Year__c</fullName>
         <deprecated>false</deprecated>
-        <description>The number of soft credits this year.</description>
+        <description>The number of soft credits attributed to this Contact this calendar year.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of soft credits this year.</inlineHelpText>
         <label>Number of Soft Credits This Year</label>
@@ -5823,7 +5909,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Number_of_Soft_Credits_Two_Years_Ago__c</fullName>
         <deprecated>false</deprecated>
-        <description>The number of soft credits 2 years ago.</description>
+        <description>The number of soft credits attributed to this Contact two calendar years ago.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of soft credits 2 years ago.</inlineHelpText>
         <label>Number of Soft Credits Two Years Ago</label>
@@ -5837,7 +5923,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Number_of_Soft_Credits__c</fullName>
         <deprecated>false</deprecated>
-        <description>The number of soft credits.</description>
+        <description>The total number of soft credits attributed to this Contact.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of soft credits.</inlineHelpText>
         <label>Number of Soft Credits</label>
@@ -5852,6 +5938,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__Primary_Affiliation__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <deprecated>false</deprecated>
+        <description>The Account marked as Primary in this Contact&apos;s list of Organization Affiliations.</description>
         <externalId>false</externalId>
         <inlineHelpText>Used to track the account of the contact&apos;s Organization Affiliation record that is marked primary.</inlineHelpText>
         <label>Primary Affiliation</label>
@@ -5865,7 +5952,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
     <fields>
         <fullName>npsp__Primary_Contact__c</fullName>
         <deprecated>false</deprecated>
-        <description>Automatically checked if the Contact is the Primary Contact on their Account.</description>
+        <description>Indicates if this Contact is designated as the Primary Contact on their Account (read only).</description>
         <externalId>false</externalId>
         <formula>Account.npe01__One2OneContact__c = Id</formula>
         <inlineHelpText>This is is checked if the user is the Primary Contact on their Account.  The Primary Contact can be edited on the Account.</inlineHelpText>
@@ -5876,7 +5963,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__Soft_Credit_Last_N_Days__c</fullName>
         <defaultValue>0</defaultValue>
         <deprecated>false</deprecated>
-        <description>The total amount of Soft Credit, closed in the last number of days defined in NPSP Settings.</description>
+        <description>The total amount of soft credit attributed to this Contact in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</description>
         <externalId>false</externalId>
         <inlineHelpText>The total amount of Soft Credit, closed in the last number of days defined in Household Settings.</inlineHelpText>
         <label>Soft Credit Last N Days</label>
@@ -5890,7 +5977,7 @@ npo02__Household__r.npo02__TotalOppAmount__c)</formula>
         <fullName>npsp__is_Address_Override__c</fullName>
         <defaultValue>false</defaultValue>
         <deprecated>false</deprecated>
-        <description>If checked, the Contact&apos;s Current Address lookup overrides the Household&apos;s default Address or seasonal Address.</description>
+        <description>When selected, NPSP will not sync this Contact&apos;s address with the Household Default or Seasonal Address. Use this to maintain a separate Mailing Address for this particular Contact.</description>
         <externalId>false</externalId>
         <inlineHelpText>If checked, the Contact&apos;s Current Address lookup overrides the Household&apos;s default Address or seasonal Address.</inlineHelpText>
         <label>Address Override</label>
@@ -6666,5 +6753,16 @@ window.location.href = &apos;/apex/MassManager__MassUpdate?selectedRecords=&apos
         <page>npsp__CON_ContactMerge</page>
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
+    </webLinks>
+    <webLinks>
+        <fullName>npsp__Recalculate_Rollups</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Recalculate Rollups</masterLabel>
+        <openType>sidebar</openType>
+        <page>npsp__CRLP_RollupContact_BTN</page>
+        <protected>false</protected>
     </webLinks>
 </CustomObject>

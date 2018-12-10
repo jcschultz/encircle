@@ -78,6 +78,14 @@
     </types>
     <types>
         <members>Contact.Allowed_to_Volunteer__c</members>
+        <members>Contact.BackgroundCheckAlerts__c</members>
+        <members>Contact.BackgroundCheckConsentTimestamp__c</members>
+        <members>Contact.BackgroundCheckPaymentId__c</members>
+        <members>Contact.BackgroundCheckPaymentTimestamp__c</members>
+        <members>Contact.BackgroundCheckReportId__c</members>
+        <members>Contact.BackgroundCheckReportURL__c</members>
+        <members>Contact.BackgroundCheckStatusDetails__c</members>
+        <members>Contact.BackgroundCheckStatus__c</members>
         <members>Contact.Currently_Homeless__c</members>
         <members>Contact.Emergency_Contact_First_Name__c</members>
         <members>Contact.Emergency_Contact_Last_Name__c</members>
@@ -99,6 +107,7 @@
         <members>Contact.Pronouns__c</members>
         <members>Contact.Screening_Authorization__c</members>
         <members>Contact.Staff__c</members>
+        <members>Contact.StatementOfConfidentialityTimestamp__c</members>
         <members>Contact.Statement_of_Confidentiality__c</members>
         <members>Contact.Suicide_Prevention_Training__c</members>
         <members>Contact.Volunteer_Acknowledgement__c</members>
