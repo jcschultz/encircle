@@ -5,7 +5,7 @@
         var evt = cmp.getEvent('myShiftRowEvent');
         
         evt.setParams({
-            'hourId' : shift.hoursId,
+            'hourId' : shift.id,
             'action' : 'DELETE'
         });
         

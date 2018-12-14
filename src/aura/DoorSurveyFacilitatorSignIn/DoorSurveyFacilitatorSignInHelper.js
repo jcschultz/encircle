@@ -1,35 +1,33 @@
 ({
     
-    chooseFacilitator : function(cmp, chosenFacilitator) {
-        cmp.set('v.chosenFacilitator', chosenFacilitator);
-    },
+    chooseFacilitator : function(cmp, volunteerId) {
+        let action = cmp.get('c.loadVolunteerData');
+        
+        action.setParams({'volunteerId' : volunteerId});
+        
+        action.setCallback(this, function(response){
+            let state = response.getState();
     
-    doNameSearch : function(cmp, nameInput) {
-        var action = cmp.get('c.searchContacts');
-        
-        this.resetChosenFacilitator(cmp);
-        
-        action.setParams({
-            'nameInput' : nameInput
-        });
-        
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            
+            this.hideSpinner(cmp);
+    
             if ('SUCCESS' === state) {
-                cmp.set('v.facilitatorResults', response.getReturnValue());
-            }
-            else if ('ERROR' === state) {
-                cmp.set('v.facilitatorResults', []);
-                console.error('error searching facilitators', response.getError());
+                cmp.set('v.chosenFacilitator', response.getReturnValue());
+            } else if ('ERROR' === state) {
+                let errors = response.getError();
+        
+                if (errors && errors[0]) {
+                    this.showToast(cmp, 'error', 'Error', 'There was an error loading your info.');
+                }
+                console.error('error loading volunteer', response);
             }
         });
         
+        this.showSpinner(cmp);
         $A.enqueueAction(action);
     },
     
     fireActionEvent : function(cmp, actionType, msg) {
-        var evt = cmp.getEvent('dsActionEvent');
+        let evt = cmp.getEvent('dsActionEvent');
         
         evt.setParams({
             'action' : actionType,
@@ -40,15 +38,17 @@
     },
     
     handleTypeAheadEvent : function(cmp, event) {
-        var actionType = event.getParam('action');
+        let actionType = event.getParam('action');
+        let volunteerId = event.getParam('selectedObject');
         
-        if ('USER_INPUT' === actionType) {
-            // do search and return results to typeahead.
-            this.doNameSearch(cmp, event.getParam('userInput'));
-        }
-        else if ('SELECTION' === actionType) {
-            // store chosen facilitator
-            this.chooseFacilitator(cmp, event.getParam('selectedObject'));
+        if ('SELECTION' === actionType) {
+            if (volunteerId) {
+                // store chosen facilitator
+                this.chooseFacilitator(cmp, volunteerId);
+            } else {
+                this.resetChosenFacilitator(cmp);
+            }
+            
         }
     },
     
@@ -70,7 +70,7 @@
     },
     
     showToast : function(cmp, severity, title, message) {
-        var toastEvent = $A.get('e.force:showToast');
+        let toastEvent = $A.get('e.force:showToast');
         
         toastEvent.setParams({
             'title': title,
@@ -82,17 +82,17 @@
     },
     
     signIn : function(cmp) {
-        var chosenFacilitator = cmp.get('v.chosenFacilitator');
-        var hours = cmp.get('v.hours');
-        var action = cmp.get('c.signIn');
+        let chosenFacilitator = cmp.get('v.chosenFacilitator');
+        let hours = cmp.get('v.hours');
+        let action = cmp.get('c.signIn');
         
         action.setParams({
-            'contactId' : chosenFacilitator.contactId,
+            'volunteerId' : chosenFacilitator.id,
             'hours' : hours
         });
         
         action.setCallback(this, function(response) {
-            var state = response.getState();
+            let state = response.getState();
             
             this.hideSpinner(cmp);
             
@@ -101,7 +101,7 @@
                 this.resetApp(cmp);
             }
             else if ('ERROR' === state) {
-                var errors = response.getError();
+                let errors = response.getError();
                 
                 if (errors && errors[0]) {
                     this.showToast(cmp, 'error', 'Error', 'There was an error signing you in.');

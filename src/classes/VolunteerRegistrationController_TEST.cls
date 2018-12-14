@@ -1,11 +1,8 @@
 @IsTest
 private class VolunteerRegistrationController_TEST {
     
-    static testMethod void testRegistration() {
-        Volunteer_Training__c training = new Volunteer_Training__c(
-            StartDateTime__c = Datetime.now()
-        );
-        insert training;
+    @IsTest
+    private static void testRegistration() {
         
         Map<String, String> volunteerInfo = new Map<String, String>{
             'firstName' => 'testFirst',
@@ -31,7 +28,6 @@ private class VolunteerRegistrationController_TEST {
             'ecPhone2' => '848',
             'ecPhone3' => '4608',
             'reason' => 'my reason',
-            'training' => training.Id,
             'homeless' => 'false',
             'hospitalized' => 'true',
             'hospitalizationExplanation' => 'dfdf',
@@ -39,43 +35,19 @@ private class VolunteerRegistrationController_TEST {
             'volunteeringForSchoolLength' => '1 month'
         };
         
-        Test.startTest();
-        
-        VolunteerRegistrationController.registerVolunteer(volunteerInfo);
-        
-        Test.stopTest();
-        
-        Contact testCon = [
-            SELECT
-                Id,
-                Legal_First_Name__c
-            FROM Contact
-            WHERE FirstName = :volunteerInfo.get('preferredName')
-            AND LastName = :volunteerInfo.get('lastName')
-            LIMIT 1
-        ];
-    
-        System.assertEquals(volunteerInfo.get('firstName'), testCon.Legal_First_Name__c);
+        VolunteerViewModel vvm = VolunteerRegistrationController.registerVolunteer(volunteerInfo);
+        System.assertNotEquals(null, vvm);
     }
     
-    static testMethod void testPicklists() {
-        Volunteer_Training__c training1 = new Volunteer_Training__c(
-            StartDateTime__c = Datetime.now().addDays(1)
-        );
-        Volunteer_Training__c training2 = new Volunteer_Training__c(
-            StartDateTime__c = Datetime.now().addDays(-1)
-        );
-        insert new List<Volunteer_Training__c>{training1, training2};
-        
-        Test.startTest();
-    
-        List<TrainingModel> trainings = VolunteerRegistrationController.getTrainings();
-        System.assertEquals(1, trainings.size());
-        System.assertEquals(training1.Id, trainings[0].id);
-    
+    @IsTest
+    private static void testPicklists() {
         System.assertNotEquals(null, VolunteerRegistrationController.getPronouns());
-        
-        Test.stopTest();
+    }
+    
+    private class VolunteerServiceStub extends VolunteerService {
+        public override VolunteerViewModel registerNewVolunteer(Map<String, Object> volunteerInfo) {
+            return new VolunteerViewModel();
+        }
     }
 
 }

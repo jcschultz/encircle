@@ -5,7 +5,7 @@
 }
 
 .THIS .finder-input-field .slds-form-element__control {
-    width: 98%;
+    
 }
 
 .THIS .finder-input-field .slds-input__icon-group.slds-input__icon-group_right {
@@ -13,5 +13,5 @@
 }
 
 .THIS button.slds-button {
-    width: 98%;
+    width: 100%;
 }

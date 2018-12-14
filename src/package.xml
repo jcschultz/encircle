@@ -26,8 +26,15 @@
         <members>TriggerHandler_Test</members>
         <members>VTATriggerHandler_TEST</members>
         <members>VTTriggerHandler_TEST</members>
+        <members>VolNameTypeAheadCtrl</members>
+        <members>VolNameTypeAheadCtrl_TEST</members>
+        <members>VolShiftCalService_TEST</members>
         <members>VolTrainingAttendanceTriggerHandler</members>
+        <members>VolunteerHourMapper</members>
+        <members>VolunteerHourMapper_TEST</members>
         <members>VolunteerHoursViewModel</members>
+        <members>VolunteerMapper</members>
+        <members>VolunteerMapper_TEST</members>
         <members>VolunteerRecordFinderCtrl</members>
         <members>VolunteerRecordFinderCtrl_TEST</members>
         <members>VolunteerRecordFinderViewModel</members>
@@ -37,10 +44,14 @@
         <members>VolunteerService_TEST</members>
         <members>VolunteerShiftCalendarController</members>
         <members>VolunteerShiftCalendarCtrl_TEST</members>
+        <members>VolunteerShiftCalendarService</members>
+        <members>VolunteerShiftMapper</members>
+        <members>VolunteerShiftMapper_TEST</members>
         <members>VolunteerShiftService</members>
         <members>VolunteerShiftService_TEST</members>
         <members>VolunteerShiftSignupController</members>
         <members>VolunteerShiftSignupCtrl_TEST</members>
+        <members>VolunteerShiftViewModel</members>
         <members>VolunteerTrainingTriggerHandler</members>
         <members>VolunteerViewModel</members>
         <name>ApexClass</name>
@@ -61,6 +72,7 @@
         <members>MyVolunteerProfile</members>
         <members>VolunteerNameTypeAhead</members>
         <members>VolunteerNameTypeAheadEvent</members>
+        <members>VolunteerPortalHome</members>
         <members>VolunteerRecordFinder</members>
         <members>VolunteerRecordFinderEvent</members>
         <members>VolunteerRecordFinderRow</members>
@@ -73,6 +85,7 @@
         <members>VolunteerShiftSignupForm</members>
         <members>VolunteerShiftSignupLtngOut</members>
         <members>VolunteerShiftToggleEvent</members>
+        <members>VolunteerSuper</members>
         <members>VolunteerToast</members>
         <name>AuraDefinitionBundle</name>
     </types>
@@ -201,6 +214,7 @@
     </types>
     <types>
         <members>DoorSurveyAssets</members>
+        <members>VolunteerPortalAssets</members>
         <name>StaticResource</name>
     </types>
     <types>

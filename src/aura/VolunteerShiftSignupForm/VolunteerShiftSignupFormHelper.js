@@ -1,15 +1,11 @@
 ({
     
-    chooseVolunteer : function(cmp, chosenVolunteer) {
-        cmp.set('v.chosenVolunteer', chosenVolunteer);
-    },
-    
     findShiftInList : function(cmp, shiftId) {
-        var selectedShifts = cmp.get('v.selectedShifts');
-        var index = -1;
+        let selectedShifts = cmp.get('v.selectedShifts');
+        let index = -1;
         
         if (selectedShifts && selectedShifts.length) {
-            for (var i = 0; i < selectedShifts.length; i++) {
+            for (let i = 0; i < selectedShifts.length; i++) {
                 if (shiftId === selectedShifts[i].shiftId) {
                     index = i;
                     break;
@@ -20,20 +16,10 @@
         return index;
     },
     
-    handleVolunteerRecordFinderEvent : function(cmp, event) {
-        var eventType = event.getParam('eventType');
-        var volunteerId = event.getParam('volunteerId');
-        
-        if ('VOLUNTEER_VERIFIED' === eventType) {
-            // store chosen volunteer
-            this.chooseVolunteer(cmp, event.getParam('volunteerId'));
-        }
-    },
-    
     parseShiftToggle : function(cmp, event) {
-        var shift = event.getParams();
-        var selectedShifts = cmp.get('v.selectedShifts');
-        var shiftIndex = this.findShiftInList(cmp, shift.shiftId);
+        let shift = event.getParams();
+        let selectedShifts = cmp.get('v.selectedShifts');
+        let shiftIndex = this.findShiftInList(cmp, shift.shiftId);
         
         if (shift.selected && shiftIndex === -1) {
             // add to selectedShifts list
@@ -46,17 +32,12 @@
         cmp.set('v.selectedShifts', selectedShifts);
     },
     
-    resetChosenVolunteer : function(cmp) {
-        cmp.set('v.chosenVolunteer', '');
-        cmp.set('v.selectedShifts', []);
-    },
-    
     signUp : function(cmp) {
-        var shifts = cmp.get('v.selectedShifts');
-        var volunteerId = cmp.get('v.chosenVolunteer');
-        var action = cmp.get('c.signUpContactForShifts');
-        var isSubmitting = cmp.get('v.isSubmitting');
-        var shiftIds = [];
+        let shifts = cmp.get('v.selectedShifts');
+        let volunteerId = cmp.get('v.volunteerId');
+        let action = cmp.get('c.signUpVolunteerForShifts');
+        let isSubmitting = cmp.get('v.isSubmitting');
+        let shiftIds = [];
         
         if (isSubmitting) {
             return;
@@ -64,24 +45,31 @@
         
         cmp.set('v.signupError', '');
         
-        for (var i = 0; i < shifts.length; i++) {
+        for (let i = 0; i < shifts.length; i++) {
             shiftIds.push(shifts[i].shiftId);
         }
     
         action.setParams({
-            'contactId' : volunteerId,
+            'volunteerId' : volunteerId,
             'shiftIds' : shiftIds
         });
     
         action.setCallback(this, function(response) {
-            var state = response.getState();
+            let state = response.getState();
     
             if ('SUCCESS' === state) {
-                cmp.set('v.showForm', false);
                 cmp.set('v.didSuccessfullySave', true);
+    
+                let navEvent = $A.get('e.force:navigateToURL');
+    
+                navEvent.setParams({
+                    'url' : '/volunteers/s/my-volunteer-profile'
+                });
+    
+                navEvent.fire();
             }
             else if ('ERROR' === state) {
-                var errors = response.getError();
+                let errors = response.getError();
     
                 cmp.set('v.showError', true);
                 
@@ -94,9 +82,11 @@
                 
                 console.error('error signing up', errors);
             }
+    
+            cmp.set('v.showSpinner', false);
         });
     
-        cmp.set('v.isSubmitting', true);
+        cmp.set('v.showSpinner', true);
         cmp.set('v.showError', false);
         cmp.set('v.didSuccessfullySave', false);
     

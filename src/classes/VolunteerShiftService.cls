@@ -10,6 +10,7 @@ public virtual class VolunteerShiftService {
     private enum UnplannedType {VOLUNTEER, FACILITATOR}
     
     public static final List<String> SIGNED_UP_STATUSES;
+    public static final String CONFIRMED_STATUS;
     public static final String COMPLETED_STATUS;
     public static final String ORG_WIDE_EMAIL_VOLUNTEER_MANAGER;
     
@@ -20,6 +21,7 @@ public virtual class VolunteerShiftService {
             'Web Sign Up'
         };
         
+        CONFIRMED_STATUS = 'Confirmed';
         COMPLETED_STATUS = 'Completed';
         ORG_WIDE_EMAIL_VOLUNTEER_MANAGER = 'Encircle Volunteer Manager';
     }
@@ -46,122 +48,76 @@ public virtual class VolunteerShiftService {
      *
      * @return List of volunteer shifts
      */
-    public virtual List<GW_Volunteers__Volunteer_Shift__c> getShiftsBetweenDates(Date startDate, Date endDate) {
-        Datetime startDateTime = Datetime.newInstance(startDate, Time.newInstance(0,0,0,0));
-        Datetime endDateTime = Datetime.newInstance(endDate, Time.newInstance(0,0,0,0));
-        return [
-            SELECT
-                Id,
-                GW_Volunteers__Description__c,
-                GW_Volunteers__Desired_Number_of_Volunteers__c,
-                GW_Volunteers__Duration__c,
-                GW_Volunteers__Job_Location_City__c,
-                GW_Volunteers__Job_Location_State_Province__c,
-                GW_Volunteers__Job_Location_Street__c,
-                GW_Volunteers__Job_Location_Zip_Postal_Code__c,
-                Name,
-                GW_Volunteers__Number_of_Volunteers_Still_Needed__c,
-                GW_Volunteers__Start_Date_Time__c,
-                GW_Volunteers__Total_Volunteers__c,
-                GW_Volunteers__Volunteer_Job__c,
-                GW_Volunteers__Volunteer_Job__r.Name,
-                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Volunteer_Website_Time_Zone__c,
-                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Campaign__r.GW_Volunteers__Volunteer_Website_Time_Zone__c,
-                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Campaign__c,
-                (
-                    SELECT
-                        Id,
-                        Name,
-                        GW_Volunteers__Contact__c,
-                        GW_Volunteers__Contact__r.FirstName,
-                        GW_Volunteers__Contact__r.LastName
-                    FROM GW_Volunteers__Volunteer_Hours__r
-                    WHERE GW_Volunteers__Status__c IN :SIGNED_UP_STATUSES
-                        OR GW_Volunteers__Status__c = :COMPLETED_STATUS
-                )
-            FROM GW_Volunteers__Volunteer_Shift__c
-            WHERE GW_Volunteers__Start_Date_Time__c >= :startDateTime
-            AND GW_Volunteers__Start_Date_Time__c < :endDateTime
-            AND GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Campaign__r.IsActive = true
-            AND GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Display_On_Website__c = true
-            ORDER BY GW_Volunteers__Start_Date_Time__c ASC
-        ];
+    public virtual List<VolunteerShiftViewModel> getShiftsBetweenDates(Date startDate, Date endDate) {
+        Map<Id, VolunteerShiftViewModel> shiftMap = new Map<Id, VolunteerShiftViewModel>();
+        VolunteerShiftMapper shiftMapper = VolunteerShiftMapper.getInstance();
+        VolunteerHourMapper hourMapper = VolunteerHourMapper.getInstance();
+        
+        List<VolunteerShiftViewModel> shifts = shiftMapper.getActiveShiftsBetweenDates(startDate, endDate);
+        
+        if (shifts == null || shifts.isEmpty()) {
+            return null;
+        }
+    
+        for (VolunteerShiftViewModel s : shifts) {
+            shiftMap.put(s.id, s);
+        }
+        
+        List<VolunteerHoursViewModel> hours = hourMapper.getHoursByShiftId(
+            new List<Id>(shiftMap.keySet())
+        );
+        
+        if (hours != null && !hours.isEmpty()) {
+            for (VolunteerHoursViewModel h : hours) {
+                if (shiftMap.get(h.shiftId).hours == null) {
+                    shiftMap.get(h.shiftId).hours = new List<VolunteerHoursViewModel>();
+                }
+                
+                shiftMap.get(h.shiftId).hours.add(h);
+            }
+        }
+        
+        return shifts;
     }
     
     /**
      * Creates volunteer hours (assigns volunteer to shift)
      *
-     * @param contactId
+     * @param volunteerId
      * @param shiftIds
      * @param status (Confirmed, Web Sign Up)
      *
      * @return List of volunteer hours
      */
-    public virtual List<GW_Volunteers__Volunteer_Hours__c> signContactUpForHours(String contactId, String[] shiftIds, String status) {
-        List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>();
+    public virtual List<VolunteerHoursViewModel> signVolunteerUpForHours(String volunteerId, String[] shiftIds, String status) {
+        List<VolunteerHoursViewModel> newHours = new List<VolunteerHoursViewModel>();
+        VolunteerShiftMapper shiftMapper = VolunteerShiftMapper.getInstance();
+        VolunteerHourMapper hourMapper = VolunteerHourMapper.getInstance();
         
-        for (GW_Volunteers__Volunteer_Shift__c vs : [
-            SELECT
-                Id,
-                GW_Volunteers__Duration__c,
-                GW_Volunteers__Start_Date_Time__c,
-                GW_Volunteers__Volunteer_Job__c
-            FROM GW_Volunteers__Volunteer_Shift__c
-            WHERE Id IN :shiftIds
-        ]) {
+        List<VolunteerShiftViewModel> shifts = shiftMapper.getShiftsByIds(shiftIds);
+        
+        for (VolunteerShiftViewModel s : shifts) {
+            VolunteerHoursViewModel h = new VolunteerHoursViewModel();
+            h.volunteerId = volunteerId;
+            h.duration = s.duration;
+            h.startDate = s.startDateTime.date();
+            h.status = status;
+            h.jobId = s.jobId;
+            h.shiftId = s.id;
             
-            hours.add(new GW_Volunteers__Volunteer_Hours__c(
-                GW_Volunteers__Contact__c = contactId,
-                GW_Volunteers__Hours_Worked__c = vs.GW_Volunteers__Duration__c,
-                GW_Volunteers__Number_of_Volunteers__c = 1,
-                GW_Volunteers__Start_Date__c = vs.GW_Volunteers__Start_Date_Time__c.date(),
-                GW_Volunteers__Status__c = status,
-                GW_Volunteers__Volunteer_Job__c = vs.GW_Volunteers__Volunteer_Job__c,
-                GW_Volunteers__Volunteer_Shift__c = vs.Id
-            ));
+            newHours.add(h);
         }
         
-        
-        if (!hours.isEmpty()) {
-            insert hours;
-            
-            Set<Id> hoursIds = (new Map<Id, GW_Volunteers__Volunteer_Hours__c>(hours)).keySet();
-            sendSignedUpConfirmationEmails(hoursIds);
-        }
+        List<VolunteerHoursViewModel> hours = hourMapper.saveNewHours(newHours);
+        sendSignedUpConfirmationEmails(hours);
         
         return hours;
+        
     }
     
-    public virtual void sendSignedUpConfirmationEmails(Set<Id> hoursIds) {
-        Set<Id> contactIds = new Set<Id>();
+    public virtual void sendSignedUpConfirmationEmails(List<VolunteerHoursViewModel> hours) {
         EmailService eService = EmailService.getInstance();
         Id orgWideEmailAddressId;
-        
-        if (hoursIds == null || hoursIds.isEmpty()) {
-            return;
-        }
-        
-        List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>([
-            SELECT
-                Id,
-                GW_Volunteers__Contact__c,
-                GW_Volunteers__Contact__r.FirstName,
-                GW_Volunteers__Volunteer_Job__c,
-                GW_Volunteers__Volunteer_Job__r.Name,
-                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_City__c,
-                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location__c,
-                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_Street__c,
-                GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_Zip_Postal_Code__c,
-                GW_Volunteers__Volunteer_Shift__c,
-                GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Start_Date_Time__c,
-                GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c
-            FROM GW_Volunteers__Volunteer_Hours__c
-            WHERE Id IN :hoursIds
-                AND GW_Volunteers__Status__c IN :SIGNED_UP_STATUSES // only non-completed hours
-                AND GW_Volunteers__Contact__c != null
-                AND GW_Volunteers__Contact__r.Email != null
-                AND GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Start_Date_Time__c != null
-        ]);
         
         // get org wide email address to use as sender address on email.
         List<OrgWideEmailAddress> orgWideAddresses = new List<OrgWideEmailAddress>([
@@ -180,28 +136,28 @@ public virtual class VolunteerShiftService {
             orgWideEmailAddressId = orgWideAddresses[0].Id;
         }
         
-        for (GW_Volunteers__Volunteer_Hours__c h : hours) {
+        for (VolunteerHoursViewModel h : hours) {
             EmailService.EmailInfo info = new EmailService.EmailInfo();
             
             // duration in hours
-            Decimal duration = h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c != null &&
-                h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c > 0 ?
-                h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c : 1;
+            Decimal duration = h.duration != null &&
+                h.duration > 0 ?
+                h.duration : 1;
             
             // set values used in invite attachment and email
-            info.uids = h.Id + '-' + h.GW_Volunteers__Volunteer_Shift__c;
-            info.startDatetime = h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Start_Date_Time__c;
+            info.uids = h.id + '-' + h.shiftId;
+            info.startDatetime = h.startDatetime;
             info.endDatetime = info.startDatetime.addMinutes(Integer.valueOf(duration * 60));
             info.location = locationBuilder(
-                h.GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_Street__c,
-                h.GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_City__c,
-                h.GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location__c,
-                h.GW_Volunteers__Volunteer_Job__r.GW_Volunteers__Location_Zip_Postal_Code__c
+                h.locationStreet,
+                h.locationCity,
+                h.locationState,
+                h.locationZip
             );
-            info.inviteSummary = h.GW_Volunteers__Volunteer_Job__r.Name;
-            info.subject = 'Encircle Volunteering Sign-Up Confirmation: ' + h.GW_Volunteers__Volunteer_Job__r.Name;
+            info.inviteSummary = h.jobName;
+            info.subject = 'Encircle Volunteering Sign-Up Confirmation: ' + h.jobName;
             info.orgWideEmailAddressId = orgWideEmailAddressId;
-            info.recipientId = h.GW_Volunteers__Contact__c;
+            info.recipientId = h.volunteerId;
             
             String emailBody = '' +
             'Hi {0},\n' +
@@ -222,9 +178,9 @@ public virtual class VolunteerShiftService {
             info.emailBody = String.format(
                 emailBody,
                 new String[] {
-                    h.GW_Volunteers__Contact__r.FirstName,
-                    h.GW_Volunteers__Volunteer_Job__r.Name,
-                    h.GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Start_Date_Time__c.format('h:mm a, EEEE, MMMM d, yyyy'),
+                    h.volunteerFirstName,
+                    h.jobName,
+                    h.startDatetime.format('h:mm a, EEEE, MMMM d, yyyy'),
                     String.valueOf(duration),
                     info.location
                 }
@@ -237,81 +193,43 @@ public virtual class VolunteerShiftService {
     }
     
     /**
-     * Finds volunteer shift hours for the contacts and date range.
-     *
-     * @param contactIds
-     * @param startDate
-     * @param endDate
-     *
-     * @return List of volunteer hour records.
-     */
-    public virtual List<GW_Volunteers__Volunteer_Hours__c> findHoursByContactAndDate(String[] contactIds, Date startDate, Date endDate) {
-        List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>([
-            SELECT
-                GW_Volunteers__Contact__c,
-                Id,
-                GW_Volunteers__Shift_Start_Date_Time__c,
-                GW_Volunteers__Volunteer_Job__c,
-                GW_Volunteers__Volunteer_Job__r.Name,
-                GW_Volunteers__Volunteer_Shift__c,
-                GW_Volunteers__Volunteer_Shift__r.GW_Volunteers__Duration__c
-            FROM GW_Volunteers__Volunteer_Hours__c
-            WHERE GW_Volunteers__Contact__c IN :contactIds
-            AND GW_Volunteers__Start_Date__c >= :startDate
-            AND GW_Volunteers__Start_Date__c < :endDate
-            ORDER BY GW_Volunteers__Shift_Start_Date_Time__c ASC
-        ]);
-        
-        return hours;
-    }
-    
-    /**
      * Mark the volunteer hours as completed.
      *
      * @param hourIds
      *
      * @return List of completed hours.
      */
-    public virtual List<GW_Volunteers__Volunteer_Hours__c> completeHoursById(String[] hourIds) {
-        List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>();
-        
-        for (String h : hourIds) {
-            hours.add(new GW_Volunteers__Volunteer_Hours__c(
-                Id = h,
-                GW_Volunteers__Status__c = COMPLETED_STATUS
-            ));
-        }
-        
-        update hours;
-        
-        return hours;
+    public virtual List<VolunteerHoursViewModel> completeHoursById(String[] hourIds) {
+        VolunteerHourMapper mapper = VolunteerHourMapper.getInstance();
+        return mapper.completeHours(hourIds);
     }
     
     /**
      * Signs a volunteer into the unplanned volunteer shift/job/campaign.
      *
-     * @param contactId
+     * @param volunteerId
      * @param duration
      *
      * @return Volunteer_Hours__c
      */
-    public virtual GW_Volunteers__Volunteer_Hours__c signInToUnplannedShift(String contactId, Decimal duration) {
-        return signInToUnplannedShift(contactId, duration, UnplannedType.VOLUNTEER);
+    public virtual VolunteerHoursViewModel signInToUnplannedShift(String volunteerId, Decimal duration) {
+        return signInToUnplannedShift(volunteerId, duration, UnplannedType.VOLUNTEER);
     }
     
     /**
      * Signs a facilitator into the facilitator shift/job/campaign.
      *
-     * @param contactId
+     * @param volunteerId
      * @param duration
      *
      * @return Volunteer_Hours__c
      */
-    public virtual GW_Volunteers__Volunteer_Hours__c signInToFacilitatorShift(String contactId, Decimal duration) {
-        return signInToUnplannedShift(contactId, duration, UnplannedType.FACILITATOR);
+    public virtual VolunteerHoursViewModel signInToFacilitatorShift(String volunteerId, Decimal duration) {
+        return signInToUnplannedShift(volunteerId, duration, UnplannedType.FACILITATOR);
     }
     
-    private GW_Volunteers__Volunteer_Hours__c signInToUnplannedShift(String contactId, Decimal duration, UnplannedType upt) {
+    private VolunteerHoursViewModel signInToUnplannedShift(String volunteerId, Decimal duration, UnplannedType upt) {
+        VolunteerHourMapper hourMapper = VolunteerHourMapper.getInstance();
         Encircle_Volunteer_Settings__c settings = Encircle_Volunteer_Settings__c.getOrgDefaults();
         String jobId;
         
@@ -321,27 +239,17 @@ public virtual class VolunteerShiftService {
         else if (upt == UnplannedType.FACILITATOR) {
             jobId = settings.Facilitator_Job_Id__c;
         }
+    
+        VolunteerHoursViewModel h = new VolunteerHoursViewModel();
+        h.volunteerId = volunteerId;
+        h.duration = duration;
+        h.startDate = Date.today();
+        h.status = COMPLETED_STATUS;
+        h.jobId = jobId;
+    
+        List<VolunteerHoursViewModel> hours = hourMapper.saveNewHours(new List<VolunteerHoursViewModel>{h});
         
-        GW_Volunteers__Volunteer_Job__c job = [
-            SELECT
-                GW_Volunteers__Campaign__c
-            FROM GW_Volunteers__Volunteer_Job__c
-            WHERE Id = :jobId
-            LIMIT 1
-        ];
-        
-        GW_Volunteers__Volunteer_Hours__c hours = new GW_Volunteers__Volunteer_Hours__c(
-            GW_Volunteers__Contact__c = contactId,
-            GW_Volunteers__Hours_Worked__c = duration,
-            GW_Volunteers__Number_of_Volunteers__c = 1,
-            GW_Volunteers__Start_Date__c = Date.today(),
-            GW_Volunteers__Status__c = COMPLETED_STATUS,
-            GW_Volunteers__Volunteer_Job__c = jobId
-        );
-        
-        insert hours;
-        
-        return hours;
+        return hours[0];
     }
     
     private String locationBuilder(String street, String city, String state, String zip) {

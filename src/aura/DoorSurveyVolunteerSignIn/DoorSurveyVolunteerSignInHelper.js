@@ -1,41 +1,40 @@
 ({
     
-    chooseVolunteer : function(cmp, chosenVolunteer) {
-        cmp.set('v.chosenVolunteer', chosenVolunteer);
-        cmp.set('v.showSearchQuestion', (!chosenVolunteer.shifts || chosenVolunteer.shifts.length < 1));
-    },
+    chooseVolunteer : function(cmp, volunteerId) {
+        let action = cmp.get('c.loadVolunteerData');
     
-    doNameSearch : function(cmp, nameInput) {
-        var action = cmp.get('c.searchContacts');
+        action.setParams({'volunteerId' : volunteerId});
     
-        this.resetChosenVolunteer(cmp);
-    
-        action.setParams({
-            'nameInput' : nameInput
-        });
-    
-        action.setCallback(this, function(response) {
-            var state = response.getState();
+        action.setCallback(this, function(response){
+            let state = response.getState();
+        
+            this.hideSpinner(cmp);
         
             if ('SUCCESS' === state) {
-                cmp.set('v.volunteerResults', response.getReturnValue());
-            }
-            else if ('ERROR' === state) {
-                cmp.set('v.volunteerResults', []);
-                console.error('error searching volunteers', response.getError());
+                let volunteer = response.getReturnValue();
+                cmp.set('v.chosenVolunteer', volunteer);
+                cmp.set('v.showSearchQuestion', (!volunteer.shifts || volunteer.shifts.length < 1));
+            } else if ('ERROR' === state) {
+                let errors = response.getError();
+            
+                if (errors && errors[0]) {
+                    this.showToast(cmp, 'error', 'Error', 'There was an error loading your info.');
+                }
+                console.error('error loading volunteer', response);
             }
         });
     
+        this.showSpinner(cmp);
         $A.enqueueAction(action);
     },
     
     doVolunteerSignIn : function(cmp) {
-        var action = cmp.get('c.signVolunteerInToHours');
-        var chosenVolunteer = cmp.get('v.chosenVolunteer');
-        var hourIds = [];
-        
+        let action = cmp.get('c.signVolunteerInToHours');
+        let chosenVolunteer = cmp.get('v.chosenVolunteer');
+        let hourIds = [];
+    
         if (chosenVolunteer.shifts.length) {
-            for (var i = 0; i < chosenVolunteer.shifts.length; i++) {
+            for (let i = 0; i < chosenVolunteer.shifts.length; i++) {
                 hourIds.push(chosenVolunteer.shifts[i].id);
             }
         }
@@ -45,7 +44,7 @@
         });
     
         action.setCallback(this, function(response) {
-            var state = response.getState();
+            let state = response.getState();
     
             this.hideSpinner(cmp);
         
@@ -54,7 +53,7 @@
                 this.resetApp(cmp);
             }
             else if ('ERROR' === state) {
-                var errors = response.getError();
+                let errors = response.getError();
     
                 if (errors && errors[0]) {
                     this.showToast(cmp, 'error', 'Error', 'There was an error signing you in.');
@@ -69,16 +68,16 @@
     },
     
     findAvailableShifts : function(cmp) {
-        var chosenVolunteer = cmp.get('v.chosenVolunteer');
-        var action = cmp.get('c.findAvailableShifts');
-        
+        let chosenVolunteer = cmp.get('v.chosenVolunteer');
+        let action = cmp.get('c.findAvailableShifts');
+    
         action.setCallback(this, function(response) {
-            var state = response.getState();
-            
+            let state = response.getState();
+    
             this.hideSpinner(cmp);
         
             if ('SUCCESS' === state) {
-                var shifts = response.getReturnValue();
+                let shifts = response.getReturnValue();
                 cmp.set('v.showSearchQuestion', false);
                 
                 if (shifts && shifts.length) {
@@ -91,7 +90,7 @@
                 }
             }
             else if ('ERROR' === state) {
-                var errors = response.getError();
+                let errors = response.getError();
     
                 if (errors && errors[0]) {
                     this.showToast(cmp, 'error', 'Error', 'There was an error finding available shifts.');
@@ -109,8 +108,8 @@
     },
     
     fireActionEvent : function(cmp, actionType, msg) {
-        var evt = cmp.getEvent('dsActionEvent');
-        
+        let evt = cmp.getEvent('dsActionEvent');
+    
         evt.setParams({
             'action' : actionType,
             'message' : msg
@@ -120,15 +119,16 @@
     },
     
     handleTypeAheadEvent : function(cmp, event) {
-        var actionType = event.getParam('action');
+        let actionType = event.getParam('action');
+        let volunteerId = event.getParam('selectedObject');
         
-        if ('USER_INPUT' === actionType) {
-            // do search and return results to typeahead.
-            this.doNameSearch(cmp, event.getParam('userInput'));
-        }
-        else if ('SELECTION' === actionType) {
-            // store chosen volunteer
-            this.chooseVolunteer(cmp, event.getParam('selectedObject'));
+        if ('SELECTION' === actionType) {
+            if (volunteerId) {
+                // store chosen volunteer
+                this.chooseVolunteer(cmp, volunteerId);
+            } else {
+                this.resetChosenVolunteer(cmp);
+            }
         }
     },
     
@@ -160,8 +160,8 @@
     },
     
     showToast : function(cmp, severity, title, message) {
-        var toastEvent = $A.get('e.force:showToast');
-        
+        let toastEvent = $A.get('e.force:showToast');
+    
         toastEvent.setParams({
             'title': title,
             'message': message,
@@ -172,25 +172,25 @@
     },
     
     signUpAndSignIn : function(cmp) {
-        var availableShifts = cmp.get('v.availableShifts');
-        var chosenVolunteer = cmp.get('v.chosenVolunteer');
-        var shiftIds = [];
-        var action = cmp.get('c.signVolunteerUpForShifts');
-        
-        for (var i = 0; i < availableShifts.length; i++) {
+        let availableShifts = cmp.get('v.availableShifts');
+        let chosenVolunteer = cmp.get('v.chosenVolunteer');
+        let shiftIds = [];
+        let action = cmp.get('c.signVolunteerUpForShifts');
+    
+        for (let i = 0; i < availableShifts.length; i++) {
             if (availableShifts[i].selected) {
                 shiftIds.push(availableShifts[i].id);
             }
         }
         
         action.setParams({
-            'contactId' : chosenVolunteer.contactId,
+            'volunteerId' : chosenVolunteer.id,
             'shiftIds' : shiftIds
         });
     
         action.setCallback(this, function(response) {
-            var state = response.getState();
-            
+            let state = response.getState();
+    
             this.hideSpinner(cmp);
         
             if ('SUCCESS' === state) {
@@ -198,7 +198,7 @@
                 this.resetApp(cmp);
             }
             else if ('ERROR' === state) {
-                var errors = response.getError();
+                let errors = response.getError();
     
                 if (errors && errors[0]) {
                     this.showToast(cmp, 'error', 'Error', 'There was an error signing you up for the selected shifts.');
@@ -213,17 +213,17 @@
     },
     
     signUpForOtherHours : function(cmp) {
-        var chosenVolunteer = cmp.get('v.chosenVolunteer');
-        var hours = cmp.get('v.otherHours');
-        var action = cmp.get('c.signVolunteerInForUnplannedShift');
+        let chosenVolunteer = cmp.get('v.chosenVolunteer');
+        let hours = cmp.get('v.otherHours');
+        let action = cmp.get('c.signVolunteerInForUnplannedShift');
     
         action.setParams({
-            'contactId' : chosenVolunteer.contactId,
+            'volunteerId' : chosenVolunteer.id,
             'hours' : hours
         });
     
         action.setCallback(this, function(response) {
-            var state = response.getState();
+            let state = response.getState();
     
             this.hideSpinner(cmp);
         
@@ -232,7 +232,7 @@
                 this.resetApp(cmp);
             }
             else if ('ERROR' === state) {
-                var errors = response.getError();
+                let errors = response.getError();
     
                 if (errors && errors[0]) {
                     this.showToast(cmp, 'error', 'Error', 'There was an error signing you up for the other shift.');
@@ -254,9 +254,9 @@
     },
     
     toggleShift : function(cmp, idx) {
-        var availableShifts = cmp.get('v.availableShifts');
-        var selectedShiftsCount = cmp.get('v.selectedShiftsCount');
-        
+        let availableShifts = cmp.get('v.availableShifts');
+        let selectedShiftsCount = cmp.get('v.selectedShiftsCount');
+    
         availableShifts[idx].selected = !availableShifts[idx].selected;
         
         if (availableShifts[idx].selected) {

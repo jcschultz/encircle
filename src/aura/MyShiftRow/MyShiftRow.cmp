@@ -4,10 +4,20 @@
     <aura:registerEvent name="myShiftRowEvent" type="c:MyShiftRowEvent" />
     
     <tr>
-        <td title="Job Name">{!v.shift.jobName}</td>
-        <td title="Date">{!v.shift.dayOfWeek + ', ' + v.shift.monthAbbreviation + ' ' + v.shift.dateOfMonth}</td>
-        <td title="Time">{!v.shift.startTime}</td>
-        <td title="Duration">{!v.shift.duration + ' hours'}</td>
+        <td title="Job Name">
+            <div class="slds-truncate" title="Job Name">{!v.shift.jobName}</div>
+        </td>
+        <td title="Date">
+            <div class="slds-truncate" title="Date">
+                {!v.shift.dayOfWeek + ', ' + v.shift.monthAbbreviation + ' ' + v.shift.dateOfMonth}
+            </div>
+        </td>
+        <td title="Time">
+            <div class="slds-truncate" title="Time">{!v.shift.startTime}</div>
+        </td>
+        <td title="Duration">
+            <div class="slds-truncate" title="Duration">{!v.shift.duration + ' hours'}</div>
+        </td>
         <td title="Action">
             <lightning:button label="Remove" variant="destructive" title="Cancel My Shift" onclick="{!c.removeShift}"
                 class="encircle-destructive-button" />

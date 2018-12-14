@@ -1,132 +1,101 @@
 @isTest
 private class DSVolunteerSigninController_TEST {
     
-    private static Account acc;
-    private static Contact con;
-    private static Campaign cmp;
-    private static Campaign unplannedCmp;
-    private static GW_Volunteers__Volunteer_Job__c job;
-    private static GW_Volunteers__Volunteer_Job__c unplannedJob;
-    private static GW_Volunteers__Volunteer_Shift__c shift;
-    private static GW_Volunteers__Volunteer_Hours__c hours;
-    private static Date startDate;
-    private static Date endDate;
+    private static Id hourId;
+    private static Id conId;
+    private static Id shiftId;
+    private static Id shift2Id;
+    private static Id jobId;
     
     static {
-        acc = new Account(
-            Name = 'VolunteerShiftService_TEST'
-        );
-        insert acc;
+        conId = '003000000000001';
+        hourId = '003W00000000001';
+        conId = '003000000000001';
+        shiftId = 'a0VW00000000001';
+        shift2Id = 'a0VW00000000002';
+        jobId = 'a0TW00000000001';
+    }
+    
+    @IsTest
+    private static void testLoadData() {
+        VolunteerService.instance = new VolunteerServiceStub();
         
-        con = new Contact(
-            AccountId = acc.Id,
-            FirstName = 'test',
-            LastName = 'VolunteerShiftService_TEST',
-            Email = 'VolunteerShiftService_TEST@example.com',
-            Volunteer__c = true,
-            Allowed_to_Volunteer__c = true
-        );
-        insert con;
+        DoorSurveyVolunteerViewModel ds = DSVolunteerSigninController.loadVolunteerData(conId);
         
-        cmp = new Campaign(
-            RecordTypeId = GW_Volunteers.VOL_SharedCode.recordtypeIdVolunteersCampaign,
-            Name = 'VolunteerShiftService_TEST Campaign',
-            IsActive = true
-        );
-        unplannedCmp = new Campaign(
-            RecordTypeId = GW_Volunteers.VOL_SharedCode.recordtypeIdVolunteersCampaign,
-            Name = 'Unplanned Campaign',
-            IsActive = true
-        );
-        insert new List<Campaign>{cmp, unplannedCmp};
+        System.assertEquals(conId, ds.id);
+        System.assertEquals(1, ds.shifts.size());
         
-        job = new GW_Volunteers__Volunteer_Job__c(
-            Name = 'VolunteerShiftService_TEST Job',
-            GW_Volunteers__Campaign__c = cmp.Id,
-            GW_Volunteers__Display_on_Website__c = true
-        );
-        unplannedJob = new GW_Volunteers__Volunteer_Job__c(
-            Name = 'Unplanned Job',
-            GW_Volunteers__Campaign__c = unplannedCmp.Id,
-            GW_Volunteers__Display_on_Website__c = false
-        );
-        insert new List<GW_Volunteers__Volunteer_Job__c>{job, unplannedJob};
+    }
+    
+    @IsTest
+    private static void testFindingShifts() {
+        VolunteerShiftService.instance = new VolunteerShiftServiceStub();
         
-        shift = new GW_Volunteers__Volunteer_Shift__c(
-            GW_Volunteers__Volunteer_Job__c = job.Id,
-            GW_Volunteers__Duration__c = 1,
-            GW_Volunteers__Start_Date_Time__c = Datetime.now(),
-            GW_Volunteers__Desired_Number_of_Volunteers__c = 1
-        );
-        insert shift;
+        List<DoorSurveyShiftViewModel> shifts = DSVolunteerSigninController.findAvailableShifts();
         
-        hours = new GW_Volunteers__Volunteer_Hours__c(
-            GW_Volunteers__Contact__c = con.Id,
-            GW_Volunteers__Hours_Worked__c = 1,
-            GW_Volunteers__Number_of_Volunteers__c = 1,
-            GW_Volunteers__Start_Date__c = shift.GW_Volunteers__Start_Date_Time__c.date(),
-            GW_Volunteers__Status__c = 'Confirmed',
-            GW_Volunteers__Volunteer_Job__c = job.Id,
-            GW_Volunteers__Volunteer_Shift__c = shift.Id
-        );
+        System.assertEquals(1, shifts.size());
+        System.assertEquals(shiftId, shifts[0].id);
+    }
+    
+    @IsTest
+    private static void testCoverage() {
+        VolunteerShiftService.instance = new VolunteerShiftServiceStub();
         
-        
-        Encircle_Volunteer_Settings__c settings = new Encircle_Volunteer_Settings__c();
-        settings.Unplanned_Volunteering_Job_Id__c = unplannedJob.Id;
-        insert settings;
-        
-        startDate = Date.newInstance(2020, 8, 14);
-        endDate = Date.newInstance(2020, 8, 17);
+        DSVolunteerSigninController.signVolunteerInToHours(new List<Id>{hourId});
+        DSVolunteerSigninController.signVolunteerUpForShifts(conId, new List<Id>{shiftId});
+        DSVolunteerSigninController.signVolunteerInForUnplannedShift(conId, 1);
     }
     
     
-    
-    static testMethod void testVolunteerSignIn() {
-        insert hours;
-        
-        Test.startTest();
-        
-        List<DoorSurveyVolunteerViewModel> results = DSVolunteerSigninController.searchContacts(con.FirstName);
-        System.assertEquals(1, results.size());
-        System.assertEquals(con.Id, results[0].contactId);
-        System.assertEquals(1, results[0].shifts.size());
-        System.assertEquals(hours.Id, results[0].shifts[0].id);
-        
-        DSVolunteerSigninController.signVolunteerInToHours(new List<String>{hours.Id});
-        GW_Volunteers__Volunteer_Hours__c hoursTest = [SELECT GW_Volunteers__Status__c FROM GW_Volunteers__Volunteer_Hours__c WHERE Id = :hours.Id LIMIT 1];
-        System.assertEquals(VolunteerShiftService.COMPLETED_STATUS, hoursTest.GW_Volunteers__Status__c);
-        
-        Test.stopTest();
+    private class VolunteerServiceStub extends VolunteerService {
+        public override VolunteerViewModel getVolunteerAndTodaysUpcomingShifts(Id volunteerId) {
+            VolunteerViewModel vvm = new VolunteerViewModel();
+            vvm.id = conId;
+            vvm.name = 'test name';
+            
+            VolunteerHoursViewModel hour = new VolunteerHoursViewModel();
+            hour.id = hourId;
+            hour.jobName = 'job name';
+            hour.startDatetime = Datetime.now();
+            
+            vvm.hours = new List<VolunteerHoursViewModel>();
+            vvm.hours.add(hour);
+            
+            return vvm;
+        }
     }
     
-    static testMethod void testSignUp() {
-        Test.startTest();
-        
-        List<DoorSurveyShiftViewModel> results = DSVolunteerSigninController.findAvailableShifts();
-        System.assertEquals(1, results.size());
-        System.assertEquals(shift.Id, results[0].id);
-        
-        DSVolunteerSigninController.signVolunteerUpForShifts(con.Id, new List<String>{shift.Id});
-        List<GW_Volunteers__Volunteer_Hours__c> hoursTest = [SELECT GW_Volunteers__Status__c FROM GW_Volunteers__Volunteer_Hours__c];
-        System.assertEquals(1, hoursTest.size());
-        System.assertEquals(VolunteerShiftService.COMPLETED_STATUS, hoursTest[0].GW_Volunteers__Status__c);
-        
-        Test.stopTest();
-    }
+    private class VolunteerShiftServiceStub extends VolunteerShiftService {
+        public override List<VolunteerHoursViewModel> completeHoursById(String[] hourIds) {
+            return null;
+        }
     
-    static testMethod void testUnplannedSignUp() {
-        Test.startTest();
-        
-        List<DoorSurveyVolunteerViewModel> results = DSVolunteerSigninController.searchContacts(con.FirstName);
-        System.assertEquals(1, results.size());
-        System.assertEquals(con.Id, results[0].contactId);
-        System.assertEquals(0, results[0].shifts.size());
-        
-        DSVolunteerSigninController.signVolunteerInForUnplannedShift(con.Id, 2.5);
-        List<GW_Volunteers__Volunteer_Hours__c> hoursTest = [SELECT GW_Volunteers__Status__c FROM GW_Volunteers__Volunteer_Hours__c];
-        System.assertEquals(1, hoursTest.size());
-        System.assertEquals(VolunteerShiftService.COMPLETED_STATUS, hoursTest[0].GW_Volunteers__Status__c);
-        
-        Test.stopTest();
+        public override List<VolunteerShiftViewModel> getShiftsBetweenDates(Date s, Date e) {
+            List<VolunteerShiftViewModel> shifts = new List<VolunteerShiftViewModel>();
+    
+            VolunteerShiftViewModel shift1 = new VolunteerShiftViewModel();
+            shift1.volunteersStillNeeded = 2;
+            shift1.id = shiftId;
+            shift1.jobName = 'job 1';
+            shift1.startDateTime = Datetime.now();
+            shifts.add(shift1);
+    
+            VolunteerShiftViewModel shift2 = new VolunteerShiftViewModel();
+            shift2.volunteersStillNeeded = 0;
+            shift2.id = shift2Id;
+            shift2.jobName = 'job 2';
+            shift2.startDateTime = Datetime.now();
+            shifts.add(shift2);
+            
+            return shifts;
+        }
+    
+        public override List<VolunteerHoursViewModel> signVolunteerUpForHours(String volunteerId, String[] shiftIds, String status) {
+            return null;
+        }
+    
+        public override VolunteerHoursViewModel signInToUnplannedShift(String volunteerId, Decimal duration) {
+            return null;
+        }
     }
 }

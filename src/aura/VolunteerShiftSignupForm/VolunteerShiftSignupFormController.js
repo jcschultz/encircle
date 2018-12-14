@@ -8,9 +8,5 @@
         helper.signUp(cmp);
     },
     
-    handleVolunteerRecordFinderEvent : function(cmp, event, helper) {
-        helper.handleVolunteerRecordFinderEvent(cmp, event);
-    },
-    
     
 })

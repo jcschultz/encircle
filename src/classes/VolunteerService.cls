@@ -4,7 +4,7 @@
  *
  * @description Service layer for working with volunteers (contacts)
  */
-public virtual class VolunteerService {
+public virtual without sharing class VolunteerService {
     
     private enum ContactType {ALL, VOLUNTEER, FACILTATOR}
     
@@ -22,215 +22,114 @@ public virtual class VolunteerService {
         return instance;
     }
     
-    /**
-     * Method for registering a new volunteer and setting them up
-     * with a training attendance.
-     *
-     * @param con
-     * @param trainingId
-     */
-    public virtual void registerNewVolunteer(Contact con, String trainingId) {
-        Contact existingContact;
-        Volunteer_Training_Attendance__c vta;
-        
-        // first check to see if a contact already exists with that phone number
-        existingContact = findByPhone(con.Phone);
-        
-        if (existingContact != null) {
-            con.Id = existingContact.Id;
-        }
-        
-        con.Notify_of_Upcoming_Trainings__c = (trainingId == 'X');
-        
-        // upsert contact and details
-        upsert con;
-        
-        // if a training id was provided, create a new corresponding training
-        // attendance record.
-        if (String.isNotBlank(trainingId) && trainingId != 'X') {
-            vta = new Volunteer_Training_Attendance__c(
-                Volunteer__c = con.Id,
-                Volunteer_Training__c = trainingId
-            );
-            
-            insert vta;
-        }
+    public virtual VolunteerViewModel getVolunteerById(Id volunteerId) {
+        VolunteerMapper mapper = VolunteerMapper.getInstance();
+        return mapper.findById(volunteerId);
     }
     
-    /**
-     * Retrieves contact by phone number.
-     *
-     * @param phone
-     *
-     * @return Contact
-     */
-    public virtual Contact findByPhone(String phone) {
-        Contact c;
-        
-        List<Contact> results = new List<Contact>([
-            SELECT
-                Id
-            FROM Contact
-            WHERE Phone = :phone
-            LIMIT 1
-        ]);
-        
-        if (!results.isEmpty()) {
-            c = results[0];
-        }
-        
-        return c;
+    public virtual VolunteerViewModel getVolunteerAndUpcomingShifts(Id volunteerId) {
+        return getVolunteerAndUpcomingShiftsByIdAndDate(
+            volunteerId,
+            Date.today(),
+            null
+        );
     }
     
-    /**
-     * Retrieves contact by fuzzy search on names
-     *
-     * @param searchTerm: A string of words, separated by spaces
-     *
-     * @return List of contacts
-     */
-    public virtual List<Contact> findContactByFuzzyNameSearch(String searchTerm) {
-        return searchContacts(searchTerm, ContactType.VOLUNTEER);
+    public virtual VolunteerViewModel getVolunteerAndTodaysUpcomingShifts(Id volunteerId) {
+        return getVolunteerAndUpcomingShiftsByIdAndDate(
+            volunteerId,
+            Date.today(),
+            Date.today().addDays(1)
+        );
     }
     
-    /**
-     * Retrieves facilitator contacts by fuzzy search on names.
-     *
-     * @param searchTerm: A string of words, separated by spaces
-     *
-     * @return List of contacts
-     */
-    public virtual List<Contact> findFacilitatorByFuzzyNameSearch(String searchTerm) {
-        return searchContacts(searchTerm, ContactType.FACILTATOR);
-    }
+    private VolunteerViewModel getVolunteerAndUpcomingShiftsByIdAndDate(Id volunteerId, Date startDate, Date endDate) {
+        VolunteerHourMapper hourMapper = VolunteerHourMapper.getInstance();
+        VolunteerViewModel vvm = getVolunteerById(volunteerId);
     
-    
-    /**
-     * Retrieves a list of contacts based on fuzzy name match and contact type.
-     *
-     * @param searchTerm: A string of words, separated by spaces
-     * @param ct: ContactType enum
-     *
-     * @return List of contacts
-     */
-    private List<Contact> searchContacts(String searchTerm, ContactType ct) {
-        List<Contact> contacts;
-        List<String> terms = new List<String>();
-    
-        if (String.isNotBlank(searchTerm)) {
-            for (String s : searchTerm.split(' ')) {
-                terms.add('%' + s + '%');
-            }
-            
-            String q = '';
-            q += 'SELECT ';
-            q += '  Id, ';
-            q += '  Name ';
-            q += 'FROM Contact ';
-            q += 'WHERE ( ';
-            q += '  FirstName LIKE :terms ';
-            q += '  OR LastName LIKE :terms ';
-            q += '  OR Legal_First_Name__c LIKE :terms ';
-            q += ') ';
-            
-            if (ct == ContactType.VOLUNTEER) {
-                q += ' AND Allowed_to_Volunteer__c = true ';
-                q += ' AND Volunteer__c = true ';
-            }
-            else if (ct == ContactType.FACILTATOR) {
-                q += ' AND Facilitator__c = true ';
-            }
-            
-            q += 'ORDER BY FirstName ';
-        
-            contacts = Database.query(q);
+        if (vvm == null) {
+            return null;
         }
     
-        return contacts;
-    }
-    
-    
-    public virtual List<Contact> findApprovedVolunteersByEmailOrPhone(String input) {
-        List<Contact> contacts;
+        List<VolunteerHoursViewModel> hours = hourMapper.getHoursByVolunteerIdsAndDate(
+            new List<Id>{vvm.id},
+            startDate,
+            endDate
+        );
         
-        if (isValidEmail(input) || isValidPhone(input)) {
-            contacts = new List<Contact>();
-            String escapedInputForEmail = escapeInputForSosl(input);
-            String cleanedPhone = cleanPhone(input);
-            String searchTerms = String.isNotBlank(escapedInputForEmail) ? escapedInputForEmail : '';
-            
-            if (String.isNotBlank(searchTerms) && String.isNotBlank(cleanedPhone)) {
-                searchTerms += ' OR ';
-            }
-            
-            searchTerms += String.isNotBlank(cleanedPhone) ? cleanedPhone : '';
-            
-            System.debug('searchTerms: ' + JSON.serialize(searchTerms));
-            
-            if (String.isNotBlank(searchTerms)) {
-                List<List<SObject>> results = [
-                    FIND :searchTerms 
-                    IN ALL FIELDS
-                    RETURNING Contact
-                    (
-                        Id, 
-                        FirstName, 
-                        LastName,
-                        Phone
-                        WHERE Allowed_to_Volunteer__c = TRUE
-                        AND Volunteer__c = TRUE
-                    )
-                ];
-                
-                if (results != null && !results.isEmpty() && results[0] != null && !results[0].isEmpty()) {
-                    for (SObject s : results[0]) {
-                        contacts.add((Contact)s);
+        if (hours != null && !hours.isEmpty()) {
+            for (VolunteerHoursViewModel h : hours) {
+                if (h.status != VolunteerHourMapper.COMPLETED_STATUS) {
+                    if (vvm.hours == null) {
+                        vvm.hours = new List<VolunteerHoursViewModel>();
                     }
+                    vvm.hours.add(h);
                 }
             }
         }
+    
+        return vvm;
+    }
+    
+    public virtual VolunteerViewModel registerNewVolunteer(Map<String, Object> volunteerInfo) {
+        VolunteerMapper mapper = VolunteerMapper.getInstance();
+        VolunteerViewModel newVol = new VolunteerViewModel();
+    
+        newVol.legalFirstName = (String)volunteerInfo.get('firstName');
+        newVol.lastName = (String)volunteerInfo.get('lastName');
+        newVol.firstName = String.isNotBlank((String)volunteerInfo.get('preferredName'))
+            ? (String)volunteerInfo.get('preferredName') : newVol.legalFirstName;
+        newVol.pronouns = (String)volunteerInfo.get('pronouns');
+        newVol.mailingStreet = (String)volunteerInfo.get('street');
+        newVol.mailingCity = (String)volunteerInfo.get('city');
+        newVol.mailingState = (String)volunteerInfo.get('state');
+        newVol.mailingPostalCode = (String)volunteerInfo.get('zip');
+        newVol.mailingCountry = (String)volunteerInfo.get('country');
+        newVol.email = (String)volunteerInfo.get('email');
+        newVol.phone = (String)volunteerInfo.get('phone1') +
+            (String)volunteerInfo.get('phone2') +
+            (String)volunteerInfo.get('phone3');
+        newVol.birthdate = Date.valueOf((String)volunteerInfo.get('dobYear') +
+            '-' + (String)volunteerInfo.get('dobMonth') +
+            '-' + volunteerInfo.get('dobDay'));
+        newVol.emergencyContactFirstName = (String)volunteerInfo.get('ecFirstName');
+        newVol.emergencyContactLastName = (String)volunteerInfo.get('ecLastName');
+        newVol.emergencyContactRelationship = (String)volunteerInfo.get('ecRelationship');
+        newVol.emergencyContactPhone = (String)volunteerInfo.get('ecPhone1') +
+            (String)volunteerInfo.get('ecPhone2') + (String)volunteerInfo.get('ecPhone3');
+        newVol.volunteeringReason = (String)volunteerInfo.get('reason');
+        newVol.isVolunteer = true;
+        newVol.isFacilitator = false;
+        newVol.allowedToVolunteer = false;
+        newVol.currentlyHomeless = Boolean.valueOf((String)volunteerInfo.get('homeless'));
+        newVol.hospitalizedintheLast6Months = Boolean.valueOf((String)volunteerInfo.get('hospitalized'));
+        newVol.hospitalizationExplanation = (String)volunteerInfo.get('hospitalizationExplanation');
+        newVol.volunteeringforSchoolCommService = Boolean.valueOf((String)volunteerInfo.get('volunteeringForSchool'));
+        newVol.plannedLengthforSchoolCommService = (String)volunteerInfo.get('volunteeringForSchoolLength');
         
-        return contacts;
+        return mapper.saveVolunteer(newVol);
     }
     
-    private Boolean isValidEmail(String input) {
-        return String.isNotBlank(input) && 
-            input.indexOf('@') > 0 && 
-            input.indexOf('.') > -1 &&
-            input.countMatches('@') == 1;
+    public virtual List<VolunteerViewModel> findVolunteerByFuzzyNameSearch(String searchTerm) {
+        VolunteerMapper mapper = VolunteerMapper.getInstance();
+        return mapper.findVolunteerByFuzzyNameSearch(searchTerm);
     }
     
-    private Boolean isValidPhone(String input) {
-        String cleaned = cleanPhone(input);
+    public virtual List<VolunteerViewModel> findFacilitatorByFuzzyNameSearch(String searchTerm) {
+        VolunteerMapper mapper = VolunteerMapper.getInstance();
+        return mapper.findFacilitatorByFuzzyNameSearch(searchTerm);
+    }
+    
+    public virtual Boolean isVolunteerMatched(Id volunteerId, String input) {
+        String normalizedInput = String.isNotBlank(input) ? input.normalizeSpace() : null;
+        VolunteerMapper mapper = VolunteerMapper.getInstance();
+        VolunteerViewModel volunteer = mapper.findById(volunteerId);
         
-        return String.isNotBlank(cleaned) &&
-            cleaned.length() == 10;
+        return volunteer.lastName.equalsIgnoreCase(normalizedInput);
     }
     
-    private String cleanPhone(String input) {
-        String dirtyInput = String.isNotBlank(input) ? input : '';
-        Pattern nonNumeric = Pattern.compile('[^0-9]');
-        Matcher matcher = nonNumeric.matcher(dirtyInput);
-        
-        return matcher.replaceAll('');
-    }
-    
-    private String escapeInputForSosl(String input) {
-        String escapedText = String.escapeSingleQuotes(input);
-
-        // remove reserved logical operators
-        escapedText = escapedText.replaceAll('(?i)( AND NOT | AND | OR )', ' ');
-
-        // match special characters to escape
-        Pattern myPattern = Pattern.compile('(\\?|\\&|\\||\\!|\\{|\\}|\\[|\\]|\\(|\\)|\\^|\\~|\\*|\\:|\\"|\\+|\\-)');
-        Matcher myMatcher = myPattern.matcher(escapedText);
-
-        // escape special characters
-        escapedText = myMatcher.replaceAll('\\\\\\\\$1');
-
-        // collapse extra whitespace
-        escapedText = escapedText.replaceAll('( )+', ' ').trim();
-
-        return escapedText;
+    public virtual List<VolunteerViewModel> findVolunteersByEmailOrPhone(String input) {
+        VolunteerMapper mapper = VolunteerMapper.getInstance();
+        return mapper.findVolunteersByEmailOrPhone(input);
     }
 }

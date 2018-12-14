@@ -1,29 +1,22 @@
 ({
     
-    chooseVolunteer : function(cmp, chosenVolunteer) {
-        cmp.set('v.chosenVolunteer', chosenVolunteer);
-        
-        if (chosenVolunteer) {
-            this.loadUpcomingShifts(cmp);
-        }
-    },
     
     deleteShift : function(cmp, hourId) {
-        var action = cmp.get('c.deleteShift');
-        var volunteerId = cmp.get('v.chosenVolunteer');
+        const action = cmp.get('c.deleteShift');
+        const volunteerId = cmp.get('v.chosenVolunteer');
         
         cmp.set('v.showSpinner', true);
         
         action.setParams({
-            'contactId' : volunteerId,
+            'volunteerId' : volunteerId,
             'hourId' : hourId
         });
         
         action.setCallback(this, function(response){
-            var state = response.getState();
+            const state = response.getState();
             
             if ('SUCCESS' === state) {
-                this.upcomingShiftsCallback(cmp, response.getReturnValue());
+                this.loadVolunteerDetails(cmp);
             }
             
             cmp.set('v.showSpinner', false);
@@ -33,67 +26,50 @@
     },
     
     handleShiftRowEvent : function(cmp, event) {
-        var actionType = event.getParam('action');
+        const actionType = event.getParam('action');
         
         if ('DELETE' === actionType) {
             this.deleteShift(cmp, event.getParam('hourId'));
         }
     },
     
-    handleVolunteerRecordFinderEvent : function(cmp, event) {
-        var eventType = event.getParam('eventType');
-        var volunteerId = event.getParam('volunteerId');
-        
-        if ('VOLUNTEER_VERIFIED' === eventType) {
-            // store chosen volunteer
-            this.chooseVolunteer(cmp, event.getParam('volunteerId'));
-        }
-        else if ('SEARCHING' === eventType) {
-            this.resetChosenVolunteer(cmp);
-        }
+    goToShiftSignUpPage : function() {
+        const navEvent = $A.get('e.force:navigateToURL');
+    
+        navEvent.setParams({
+            'url' : '/volunteers/s/volunteer-shift-signup'
+        });
+    
+        navEvent.fire();
     },
     
-    loadUpcomingShifts : function(cmp) {
-        var volunteerId = cmp.get('v.chosenVolunteer');
-        var action = cmp.get('c.getUpcomingShifts');
+    loadVolunteerDetails : function(cmp) {
+        const volunteerId = cmp.get('v.volunteerId');
         
         if (!volunteerId) {
+            cmp.set('v.volunteer', '');
             return;
         }
         
-        cmp.set('v.noUpcomingShifts', false);
         cmp.set('v.showSpinner', true);
         
+        const action = cmp.get('c.loadVolunteerViewModel');
+        
         action.setParams({
-            'contactId' : volunteerId
+            'volunteerId' : volunteerId
         });
         
         action.setCallback(this, function(response){
-            var state = response.getState();
+            const state = response.getState();
             
             if ('SUCCESS' === state) {
-                this.upcomingShiftsCallback(cmp, response.getReturnValue());
+                cmp.set('v.volunteer', response.getReturnValue());
             }
             
             cmp.set('v.showSpinner', false);
         });
         
         $A.enqueueAction(action);
-    },
-    
-    resetChosenVolunteer : function(cmp) {
-        cmp.set('v.chosenVolunteer', '');
-        cmp.set('v.upcomingShifts', []);
-        cmp.set('v.noUpcomingShifts', false);
-    },
-    
-    upcomingShiftsCallback : function(cmp, data) {
-        var upcomingShifts = data;
-        cmp.set('v.upcomingShifts', upcomingShifts);
-        
-        if (!upcomingShifts || upcomingShifts.length < 1) {
-            cmp.set('v.noUpcomingShifts', true);
-        }
     },
     
 });

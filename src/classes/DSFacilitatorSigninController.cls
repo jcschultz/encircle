@@ -6,39 +6,23 @@
  */
 public without sharing class DSFacilitatorSigninController {
     
-    /**
-     * Finds Facilitator contact
-     *
-     * @param nameInput
-     *
-     * @return List of contacts
-     */
     @AuraEnabled
-    public static List<DoorSurveyVolunteerViewModel> searchContacts(String nameInput) {
-        List<DoorSurveyVolunteerViewModel> results = new List<DoorSurveyVolunteerViewModel>();
+    public static DoorSurveyVolunteerViewModel loadVolunteerData(Id volunteerId) {
         VolunteerService service = VolunteerService.getInstance();
-    
-        List<Contact> contacts = service.findFacilitatorByFuzzyNameSearch(nameInput);
-        
-        if (contacts != null && !contacts.isEmpty()) {
-            for (Contact c : contacts) {
-                results.add(new DoorSurveyVolunteerViewModel(c));
-            }
-        }
-        
-        return results;
+        VolunteerViewModel vvm = service.getVolunteerById(volunteerId);
+        return new DoorSurveyVolunteerViewModel(vvm);
     }
     
     /**
      * Signs the facilitator into the facilitator shift/job/campaign
      *
-     * @param contactId
+     * @param volunteerId
      * @param hours
      */
     @AuraEnabled
-    public static void signIn(String contactId, Decimal hours) {
+    public static void signIn(String volunteerId, Decimal hours) {
         VolunteerShiftService vsService = VolunteerShiftService.getInstance();
-        vsService.signInToFacilitatorShift(contactId, hours);
+        vsService.signInToFacilitatorShift(volunteerId, hours);
     }
 
 }

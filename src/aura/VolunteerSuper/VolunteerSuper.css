@@ -1,0 +1,28 @@
+.THIS {
+    width: 100vw;
+    height: 100vh;
+    background: url('/sfsites/c/resource/VolunteerPortalAssets/img/encircle_house.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.THIS .header-logo-container {
+    width: 50%;
+    max-width: 20rem;
+}
+
+.THIS .header-logo-container .header-logo {
+    width: 100%;
+}
+
+.THIS .logout-btn-container button {
+    white-space: nowrap;
+}
+
+.THIS .super-main-container {
+    background-color: rgba(255, 255, 255, 0.9);
+}

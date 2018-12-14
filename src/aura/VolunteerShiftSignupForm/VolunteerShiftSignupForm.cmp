@@ -1,104 +1,95 @@
-<aura:component description="VolunteerShiftSignupForm" access="global"
+<aura:component description="VolunteerShiftSignupForm" access="global" extends="c:VolunteerSuper"
         implements="forceCommunity:availableForAllPageTypes"
         controller="VolunteerShiftSignupController">
 
-    <aura:attribute name="volunteerResults" access="private" type="Object[]" />
-    <aura:attribute name="chosenVolunteer" access="private" type="Object" default="" />
+    <aura:set attribute="requireAuthentication" value="true" />
+    <aura:set attribute="pageHeading" value="Sign Up for Volunteer Shifts" />
+
+    <aura:attribute name="volunteer" access="private" type="Object" default="" />
     <aura:attribute name="selectedShifts" access="private" type="Object[]" default="" />
-    <aura:attribute name="isSubmitting" access="private" type="Boolean" default="false" />
+    <aura:attribute name="showSpinner" access="private" type="Boolean" default="false" />
     <aura:attribute name="didSuccessfullySave" access="private" type="Boolean" default="false" />
-    <aura:attribute name="showForm" access="private" type="Boolean" default="true" />
     <aura:attribute name="showError" access="private" type="Boolean" default="false" />
     <aura:attribute name="errorMsg" access="private" type="String" default="" />
     <aura:attribute name="errorHeading" access="private" type="String" default="" />
 
     <aura:handler name="shiftToggleEvent" event="c:VolunteerShiftToggleEvent" action="{!c.handleShiftToggle}" />
-    <aura:handler name="volunteerRecordFinderEvent" event="c:VolunteerRecordFinderEvent" 
-        action="{!c.handleVolunteerRecordFinderEvent}" />
 
-    <div class="slds">
+    <div>
         <aura:if isTrue="{!v.didSuccessfullySave}">
             <c:VolunteerToast toastType="success" iconName="utility:success" isRelative="true"
                     toastHeading="Your volunteer shift selections have successfully been saved. Thank you for volunteering!" />
         </aura:if>
 
-        <aura:if isTrue="{!v.showForm}">
-            <div class="form-section-title">Find Your Volunteer Record</div>
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner variant="brand" alternativeText="Saving" size="large" />
+        </aura:if>
 
-            <aura:if isTrue="{!v.showError}">
-                <c:VolunteerToast toastType="error" iconName="utility:error" isRelative="true"
-                        toastHeading="{!v.errorHeading}"
-                        toastDetails="{!v.errorMsg}" />
-            </aura:if>
 
-            <c:VolunteerRecordFinder />
-
-            <aura:if isTrue="{! not(empty(v.chosenVolunteer))}">
-                <div class="form-section-title">Choose Your Volunteering Shifts</div>
-                <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-around--medium" role="status">
-                    <div class="slds-media__figure">
-                        <lightning:icon alternativeText="Information"
-                                iconName="utility:info" />
-                    </div>
-                    <div class="slds-media__body">
-                        <p>
-                            Scroll through the calendar below and make your selection
-                            by clicking on the shifts that still need volunteers.
-                            <span class="strong-text">Your selections
-                                are not saved until you scroll to the bottom of the page
-                                and click the &quot;Sign Up&quot; button.</span>
-                        </p>
-                    </div>
+        <h3 class="slds-border_bottom slds-text-heading_medium">Choose Your Volunteering Shifts</h3>
+        <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-around--medium" role="status">
+            <div class="slds-media__figure">
+                <lightning:icon alternativeText="Information"
+                        iconName="utility:info" />
+            </div>
+            <div class="slds-media__body">
+                <p>
+                    Scroll through the calendar below and make your selection
+                    by clicking on the shifts that still need volunteers.
+                    <span class="strong-text">Your selections
+                        are not saved until you scroll to the bottom of the page
+                        and click the &quot;Sign Up&quot; button.</span>
+                </p>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
+            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                <div class="calendar-list-container">
+                    <c:VolunteerShiftCalendar />
                 </div>
-                <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
-                    <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                        <div class="calendar-list-container">
-                            <c:VolunteerShiftCalendar />
-                        </div>
-                    </div>
-                </div>
-            </aura:if>
+            </div>
+        </div>
 
-            <aura:if isTrue="{!and(v.selectedShifts != '', v.selectedShifts.length > 0)}">
-                <div class="form-section-title">Selected Shifts</div>
-                <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
-                    <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table_stacked-horizontal selected-shifts-table">
-                            <thead>
-                            <tr class="slds-text-title_caps">
-                                <th>Job Name</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Duration</th>
+
+        <aura:if isTrue="{!and(v.selectedShifts != '', v.selectedShifts.length > 0)}">
+            <div class="form-section-title">Selected Shifts</div>
+            <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table_stacked-horizontal selected-shifts-table">
+                        <thead>
+                        <tr class="slds-text-title_caps">
+                            <th>Job Name</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Duration</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <aura:iteration items="{!v.selectedShifts}" var="shift">
+                            <tr>
+                                <td title="Job Name">{!shift.jobName}</td>
+                                <td title="Date">{!shift.dayOfWeek + ', ' + shift.monthAbbreviation + ' ' + shift.dateOfMonth}</td>
+                                <td title="Time">{!shift.startTime}</td>
+                                <td title="Duration">{!shift.duration + ' hours'}</td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            <aura:iteration items="{!v.selectedShifts}" var="shift">
-                                <tr>
-                                    <td title="Job Name">{!shift.jobName}</td>
-                                    <td title="Date">{!shift.dayOfWeek + ', ' + shift.monthAbbreviation + ' ' + shift.dateOfMonth}</td>
-                                    <td title="Time">{!shift.startTime}</td>
-                                    <td title="Duration">{!shift.duration + ' hours'}</td>
-                                </tr>
-                            </aura:iteration>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <aura:if isTrue="{!v.showError}">
-                        <c:VolunteerToast toastType="error" iconName="utility:error" isRelative="true"
-                                toastHeading="{!v.errorHeading}"
-                                toastDetails="{!v.errorMsg}" />
-                    </aura:if>
-
-                    <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-p-vertical_large slds-text-align_center">
-                        <lightning:button class="submit-button"
-                                label="{!if(v.isSubmitting, 'Saving... (this may take a second or two)', 'Sign Up')}"
-                                disabled="{!v.isSubmitting}"
-                                variant="brand" onclick="{!c.handleSignUpClick}" />
-                    </div>
+                        </aura:iteration>
+                        </tbody>
+                    </table>
                 </div>
-            </aura:if>
+
+                <aura:if isTrue="{!v.showError}">
+                    <c:VolunteerToast toastType="error" iconName="utility:error" isRelative="true"
+                            toastHeading="{!v.errorHeading}"
+                            toastDetails="{!v.errorMsg}" />
+                </aura:if>
+
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium slds-p-vertical_large slds-text-align_center">
+                    <lightning:button class="submit-button"
+                            label="{!if(v.isSubmitting, 'Saving... (this may take a second or two)', 'Sign Up')}"
+                            disabled="{!v.isSubmitting}"
+                            variant="brand" onclick="{!c.handleSignUpClick}" />
+                </div>
+            </div>
         </aura:if>
     </div>
     

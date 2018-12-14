@@ -1,0 +1,42 @@
+<aura:component extends="c:VolunteerSuper" access="global" implements="forceCommunity:availableForAllPageTypes">
+    <aura:set attribute="requireAuthentication" value="false" />
+    <aura:set attribute="pageHeading" value="Welcome to the Encircle Volunteer Portal" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
+
+    <div>
+        <div class="slds-grid slds-grid_align-center slds-wrap">
+            <div class="slds-medium-size_1-of-3 slds-size_1-of-1 slds-m-around_small slds-box slds-grid slds-wrap">
+                <h2 class="slds-text-heading_small slds-size_1-of-1 slds-align-top">Current Volunteers</h2>
+
+                <p class="slds-m-vertical_small slds-size_1-of-1 slds-align-middle">
+                    Sign in to sign up for volunteer shifts, view your current assignments, update your profile,
+                    and complete any in-progress registration tasks.
+                </p>
+
+                <lightning:button
+                    class="slds-size_1-of-1 slds-align-bottom"
+                    label="Sign In"
+                    variant="brand"
+                    onclick="{!c.handleSignInClick}"
+                />
+            </div>
+
+            <div class="slds-medium-size_1-of-3 slds-size_1-of-1 slds-m-around_small slds-box slds-grid slds-wrap">
+                <h2 class="slds-text-heading_small slds-size_1-of-1 slds-align-top">Volunteer Registration</h2>
+
+                <p class="slds-m-vertical_small slds-size_1-of-1 slds-align-middle">
+                    Volunteer responsibilities include welcoming visitors, baking cookies and other treats,
+                    playing games, helping with homework, and providing information.
+                </p>
+
+                <lightning:button
+                    class="slds-size_1-of-1 slds-align-bottom"
+                    label="Apply Today"
+                    variant="brand"
+                    onclick="{!c.handleRegistrationClick}"
+                />
+            </div>
+        </div>
+    </div>
+</aura:component>

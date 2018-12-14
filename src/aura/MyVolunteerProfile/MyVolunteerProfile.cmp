@@ -1,34 +1,38 @@
-<aura:component access="global" controller="MyVolunteerProfileController" 
+<aura:component access="global" controller="MyVolunteerProfileController" extends="c:VolunteerSuper"
     implements="forceCommunity:availableForAllPageTypes">
+
+    <aura:set attribute="requireAuthentication" value="true" />
+    <aura:set attribute="pageHeading" value="My Volunteer Profile" />
     
     <aura:attribute name="volunteerResults" access="private" type="Object[]" />
-    <aura:attribute name="chosenVolunteer" access="private" type="Object" default="" />
+    <aura:attribute name="volunteer" access="private" type="Object" default="" />
     <aura:attribute name="upcomingShifts" access="private" type="Object[]" default="" />
     <aura:attribute name="noUpcomingShifts" type="Boolean" access="private" default="false" />
     <aura:attribute name="showSpinner" type="Boolean" access="private" default="false" />
 
-    <aura:handler name="volunteerRecordFinderEvent" event="c:VolunteerRecordFinderEvent" 
-        action="{!c.handleVolunteerRecordFinderEvent}" />
     <aura:handler name="myShiftRowEvent" event="c:MyShiftRowEvent" action="{!c.handleShiftRowEvent}" />
+    <aura:handler name="change" value="{!v.volunteerId}" action="{!c.handleVolunteerIdChange}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     
-    <div class="slds">
-        <div class="form-section-title">Find Your Volunteer Record</div>
+    <div>
+        <aura:if isTrue="{! not(empty(v.volunteer))}">
+            <aura:if isTrue="{!v.volunteer.allowedToVolunteer}">
+                <div class="slds-text-align_center slds-m-bottom_x-large">
+                    <lightning:button
+                            variant="brand"
+                            label="Sign Up for More Shifts!"
+                            onclick="{!c.handleSignUpClick}"
+                    />
+                </div>
+            </aura:if>
 
-        <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <c:VolunteerRecordFinder />
-            </div>
-
-        </div>
-
-        <aura:if isTrue="{! not(empty(v.chosenVolunteer))}">
-            <div class="form-section-title">Your Upcoming Volunteering Shifts</div>
+            <h2 class="slds-text-heading_small">Your Upcoming Volunteering Shifts</h2>
             
-            <aura:if isTrue="{!v.noUpcomingShifts}">
+            <aura:if isTrue="{!empty(v.volunteer.hours)}">
                 <div class="no-shifts">You are not currently signed up for any upcoming shifts.</div>
             </aura:if>
             
-            <aura:if isTrue="{! not(empty(v.upcomingShifts))}">
+            <aura:if isTrue="{! not(empty(v.volunteer.hours))}">
                 <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
                     <div class="slds-size_1-of-1 slds-p-horizontal_medium">
                         <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table_stacked-horizontal selected-shifts-table">
@@ -42,7 +46,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <aura:iteration items="{!v.upcomingShifts}" var="shift">
+                                <aura:iteration items="{!v.volunteer.hours}" var="shift">
                                     <c:MyShiftRow shift="{#shift}" />
                                 </aura:iteration>
                             </tbody>
@@ -50,6 +54,7 @@
                     </div>
                 </div>
             </aura:if>
+
         </aura:if>
         
         <aura:if isTrue="{!v.showSpinner}">

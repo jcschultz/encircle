@@ -7,16 +7,16 @@ public without sharing class VolunteerRecordFinderCtrl {
         VolunteerRecordFinderViewModel model = new VolunteerRecordFinderViewModel();
         VolunteerService vService = VolunteerService.getInstance();
         
-        List<Contact> contacts = vService.findApprovedVolunteersByEmailOrPhone(input);
+        List<VolunteerViewModel> volunteers = vService.findVolunteersByEmailOrPhone(input);
         
-        if (contacts != null && !contacts.isEmpty()) {
+        if (volunteers != null && !volunteers.isEmpty()) {
             model.isSuccess = true;
             
-            for (Contact c : contacts) {
+            for (VolunteerViewModel v : volunteers) {
                 VolunteerViewModel vvm = new VolunteerViewModel();
-                vvm.name = hideText(c.FirstName) + ' ' + hideText(c.LastName);
-                vvm.id = c.Id;
-                vvm.secondaryInfo = c.Phone;
+                vvm.name = hideText(v.firstName) + ' ' + hideText(v.lastName);
+                vvm.id = v.id;
+                vvm.secondaryInfo = v.phone;
                 
                 model.records.add(vvm);
             }
@@ -31,12 +31,10 @@ public without sharing class VolunteerRecordFinderCtrl {
     
     @AuraEnabled
     public static VolunteerRecordFinderViewModel doSecurityCheck(Id volunteerId, String input) {
+        VolunteerService service = VolunteerService.getInstance();
         VolunteerRecordFinderViewModel model = new VolunteerRecordFinderViewModel();
-        String normalizedInput = String.isNotBlank(input) ? input.normalizeSpace() : null;
         
-        Contact c = [SELECT LastName FROM Contact WHERE Id = :volunteerId LIMIT 1];
-        
-        model.isSuccess = c.LastName.equalsIgnoreCase(normalizedInput);
+        model.isSuccess = service.isVolunteerMatched(volunteerId, input);
         
         return model;
     }

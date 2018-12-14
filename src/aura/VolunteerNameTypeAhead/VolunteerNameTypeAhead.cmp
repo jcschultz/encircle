@@ -1,14 +1,13 @@
-<aura:component description="Type-ahead input field for finding volunteers by name" >
+<aura:component description="Type-ahead input field for finding volunteers by name" controller="VolNameTypeAheadCtrl">
 
-    <aura:attribute name="volunteerResults" type="Object[]" access="public" description="List of results to be chosen from." />
-    <aura:attribute name="showNoVolunteers" access="private" type="Boolean" default="false" />
-    <aura:attribute name="showVolunteersPicklist" access="private" type="Boolean" default="false" />
+    <aura:attribute name="volunteerType" type="String" access="public" default="VOLUNTEER"
+            description="What type of volunteer should we search for: VOLUNTEER or FACILITATOR" />
+    <aura:attribute name="volunteers" type="Object[]" access="private" />
     <aura:attribute name="timer" access="private" type="Object" default="" />
     <aura:attribute name="chosenVolunteer" access="private" type="Object" default="" />
     <aura:attribute name="userNameInput" access="private" type="String" default="" />
 
     <aura:registerEvent name="typeAheadEvent" type="c:VolunteerNameTypeAheadEvent" />
-    <aura:handler name="change" value="{!v.volunteerResults}" action="{!c.handleVolunteerResultsChange}" />
 
     <div>
         <div class="slds-form-element">
@@ -27,9 +26,9 @@
             </div>
         </div>
 
-        <aura:if isTrue="{!v.showVolunteersPicklist}">
+        <aura:if isTrue="{!not(empty(v.volunteers))}">
             <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid volunteer-results">
-                <aura:iteration items="{!v.volunteerResults}" var="v" indexVar="idx">
+                <aura:iteration items="{!v.volunteers}" var="v" indexVar="idx">
                     <li class="slds-listbox__item">
                         <div class="slds-listbox__option slds-listbox__option_plain">
                             <lightning:button value="{!idx}" label="{!v.name}" onclick="{!c.choseVolunteer}"
@@ -40,7 +39,7 @@
             </ul>
         </aura:if>
 
-        <aura:if isTrue="{!and(v.showNoVolunteers, and(not(empty(v.userNameInput)), v.userNameInput.length > 2))}">
+        <aura:if isTrue="{!and(empty(v.volunteers), and(not(empty(v.userNameInput)), v.userNameInput.length > 2))}">
             <div class="slds-text-color_error">
                 Your information could not be found.
             </div>

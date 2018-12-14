@@ -1,49 +1,64 @@
 ({
     
     choseVolunteer : function(cmp, event) {
-        var volunteers = cmp.get('v.volunteerResults');
-        var idx = event.getSource().get('v.value');
-        var chosenVolunteer = volunteers[idx];
+        let volunteers = cmp.get('v.volunteers');
+        let idx = event.getSource().get('v.value');
+        let chosenVolunteer = volunteers[idx];
         
         cmp.set('v.chosenVolunteer', chosenVolunteer);
     
         this.resetVolunteerSearch(cmp);
         
-        var eventParams = {
-            'selectedObject' : chosenVolunteer,
+        let eventParams = {
+            'selectedObject' : chosenVolunteer.id,
             'action' : 'SELECTION'
         };
     
         this.fireEvent(cmp, eventParams);
-        
-        
+    },
+    
+    clearNameInput : function(cmp) {
+        cmp.set('v.userNameInput', '');
     },
     
     displayNoVolunteerResults : function(cmp) {
-        cmp.set('v.volunteerResults', '');
+        cmp.set('v.volunteers', '');
         cmp.set('v.showVolunteersPicklist', false);
         cmp.set('v.showNoVolunteers', true);
     },
     
     doNameSearch : function(cmp) {
-        var nameInput = cmp.get('v.userNameInput');
+        let action = cmp.get('c.searchVolunteers');
+        let nameInput = cmp.get('v.userNameInput');
         nameInput = nameInput ? nameInput.trim() : '';
-        
+    
         if (!nameInput.length) {
-            cmp.set('v.volunteerResults', []);
+            cmp.set('v.volunteers', []);
             return;
         }
-        
+    
         if (nameInput.length < 3) {
             return;
         }
         
-        var eventParams = {
-            'userInput' : nameInput,
-            'action' : 'USER_INPUT'
-        };
+        action.setParams({
+            'nameInput' : nameInput
+        });
         
-        this.fireEvent(cmp, eventParams);
+        action.setCallback(this, function(response) {
+            let state = response.getState();
+            
+            if ('SUCCESS' === state) {
+                cmp.set('v.volunteers', response.getReturnValue());
+                this.handleVolunteerResultsChange(cmp);
+            }
+            else if ('ERROR' === state) {
+                cmp.set('v.volunteers', []);
+                console.error('error searching volunteers', response.getError());
+            }
+        });
+        
+        $A.enqueueAction(action);
     },
     
     fireEvent : function(cmp, params) {
@@ -72,12 +87,12 @@
     },
     
     handleVolunteerResultsChange : function(cmp) {
-        var volunteerResults = cmp.get('v.volunteerResults');
-        var hasVolunteers = (volunteerResults && volunteerResults.length);
+        let volunteers = cmp.get('v.volunteers');
+        let hasVolunteers = (volunteers && volunteers.length);
     
         if (!hasVolunteers) {
             this.resetChosenVolunteer(cmp);
-            this.resetVolunteerSearch(cmp);
+            cmp.set('v.showVolunteersPicklist', false);
         }
         
         cmp.set('v.showVolunteersPicklist', hasVolunteers);
@@ -86,7 +101,6 @@
     
     resetChosenVolunteer : function(cmp) {
         cmp.set('v.chosenVolunteer', '');
-        cmp.set('v.userNameInput', '');
     
         var eventParams = {
             'selectedObject' : null,

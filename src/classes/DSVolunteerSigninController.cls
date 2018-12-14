@@ -6,44 +6,11 @@
  */
 public without sharing class DSVolunteerSigninController {
     
-    /**
-     * Finds contacts and their related volunteer hours.
-     *
-     * @param nameInput
-     *
-     * @return List of contacts and hours
-     */
     @AuraEnabled
-    public static List<DoorSurveyVolunteerViewModel> searchContacts(String nameInput) {
-        Map<Id, DoorSurveyVolunteerViewModel> results = new Map<Id, DoorSurveyVolunteerViewModel>();
+    public static DoorSurveyVolunteerViewModel loadVolunteerData(Id volunteerId) {
         VolunteerService service = VolunteerService.getInstance();
-        VolunteerShiftService vsService = VolunteerShiftService.getInstance();
-        List<String> contactIds = new List<String>();
-        
-        // first find matching contacts who are allowed to volunteer.
-        List<Contact> contacts = service.findContactByFuzzyNameSearch(nameInput);
-        
-        // if any contacts are found, find any shifts that they signed up for
-        // that match today's date.
-        if (contacts != null && !contacts.isEmpty()) {
-            for (Contact c : contacts) {
-                contactIds.add(c.Id);
-                results.put(c.Id, new DoorSurveyVolunteerViewModel(c));
-            }
-            
-            for (GW_Volunteers__Volunteer_Hours__c h :
-                vsService.findHoursByContactAndDate(
-                    contactIds,
-                    Date.today(),
-                    Date.today().addDays(1)
-                )
-            ) {
-            
-                results.get(h.GW_Volunteers__Contact__c).shifts.add(new DoorSurveyShiftViewModel(h));
-            }
-        }
-        
-        return results.values();
+        VolunteerViewModel vvm = service.getVolunteerAndTodaysUpcomingShifts(volunteerId);
+        return new DoorSurveyVolunteerViewModel(vvm);
     }
     
     /**
@@ -67,14 +34,14 @@ public without sharing class DSVolunteerSigninController {
         List<DoorSurveyShiftViewModel> results = new List<DoorSurveyShiftViewModel>();
         VolunteerShiftService vsService = VolunteerShiftService.getInstance();
         
-        for (GW_Volunteers__Volunteer_Shift__c vs :
+        for (VolunteerShiftViewModel vs :
             vsService.getShiftsBetweenDates(
                 Date.today(),
                 Date.today().addDays(1)
             )
         ) {
             
-            if (vs.GW_Volunteers__Number_of_Volunteers_Still_Needed__c > 0) {
+            if (vs.volunteersStillNeeded > 0) {
                 results.add(new DoorSurveyShiftViewModel(vs));
             }
         }
@@ -86,24 +53,24 @@ public without sharing class DSVolunteerSigninController {
      * Signs the volunteer up for shifts (creates hours) and also sign the volunteer
      * in to those hours (marks completed).
      *
-     * @param contactId
+     * @param volunteerId
      * @param shiftIds
      */
     @AuraEnabled
-    public static void signVolunteerUpForShifts(String contactId, String[] shiftIds) {
+    public static void signVolunteerUpForShifts(String volunteerId, String[] shiftIds) {
         VolunteerShiftService vsService = VolunteerShiftService.getInstance();
-        vsService.signContactUpForHours(contactId, shiftIds, VolunteerShiftService.COMPLETED_STATUS);
+        vsService.signVolunteerUpForHours(volunteerId, shiftIds, VolunteerShiftService.COMPLETED_STATUS);
     }
     
     /**
      * Signs the volunteer into the unplanned shift/job/campaign
      *
-     * @param contactId
+     * @param volunteerId
      * @param hours
      */
     @AuraEnabled
-    public static void signVolunteerInForUnplannedShift(String contactId, Decimal hours) {
+    public static void signVolunteerInForUnplannedShift(String volunteerId, Decimal hours) {
         VolunteerShiftService vsService = VolunteerShiftService.getInstance();
-        vsService.signInToUnplannedShift(contactId, hours);
+        vsService.signInToUnplannedShift(volunteerId, hours);
     }
 }

@@ -1,6 +1,9 @@
-<aura:component description="VolunteerRegistrationForm" access="global"
+<aura:component description="VolunteerRegistrationForm" access="global" extends="c:VolunteerSuper"
         controller="VolunteerRegistrationController"
         implements="forceCommunity:availableForAllPageTypes">
+
+    <aura:set attribute="requireAuthentication" value="false" />
+    <aura:set attribute="pageHeading" value="Apply to be a Volunteer" />
 
     <aura:attribute name="firstName" access="private" type="String" default="" />
     <aura:attribute name="lastName" access="private" type="String" default="" />
@@ -31,18 +34,21 @@
     <aura:attribute name="ecPhone3" access="private" type="Integer" default="" />
     <aura:attribute name="reason" access="private" type="String" default="" />
     <aura:attribute name="training" access="private" type="String" default="" />
-    <aura:attribute name="trainingOptions" access="private" type="Object[]" default="" />
     <aura:attribute name="pronounOptions" access="private" type="String[]" default="" />
     <aura:attribute name="isSubmitting" access="private" type="Boolean" default="false" />
     <aura:attribute name="didSuccessfullySave" access="private" type="Boolean" default="false" />
     <aura:attribute name="showForm" access="private" type="Boolean" default="true" />
     <aura:attribute name="showError" access="private" type="Boolean" default="false" />
     <aura:attribute name="errorMsg" access="private" type="String" default="" />
+    <aura:attribute name="showSpinner" access="private" type="Boolean" default="false" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
+    <div>
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner alternativeText="Saving" size="large" />
+        </aura:if>
 
-    <div class="slds">
         <aura:if isTrue="{!v.didSuccessfullySave}">
             <c:VolunteerToast toastType="success" iconName="utility:success" isRelative="true"
                     toastHeading="Your volunteer registration information has been successfully submitted!" />
@@ -55,7 +61,9 @@
         </aura:if>
 
         <aura:if isTrue="{!v.showForm}">
-            <div class="form-section-title">Your Basic Information</div>
+            <h3 class="slds-text-heading_medium slds-border_bottom slds-m-top_large">
+                Your Basic Information
+            </h3>
             <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
                     Name *
@@ -130,7 +138,7 @@
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium">
                     <lightning:input name="email" label="Email" type="text"
                             required="true" aura:id="required" value="{!v.email}"
-                            class="no-label" />
+                            variant="label-hidden" />
                 </div>
 
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
@@ -186,7 +194,7 @@
                 </div>
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium">
                     <lightning:select name="homeless" value="{!v.homeless}"
-                            label="Are you currently homeless?" class="no-label">
+                            label="Are you currently homeless?" variant="label-hidden">
                         <option value="false" text="No" />
                         <option value="true" text="Yes" />
                     </lightning:select>
@@ -198,7 +206,7 @@
                 </div>
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium">
                     <lightning:select name="hospitalized" value="{!v.hospitalized}"
-                            label="Have you been hospitalized in the last 6 months?" class="no-label">
+                            label="Have you been hospitalized in the last 6 months?" variant="label-hidden">
                         <option value="false" text="No" />
                         <option value="true" text="Yes" />
                     </lightning:select>
@@ -211,7 +219,7 @@
                         <lightning:textarea name="hospitalizationExplanation"
                                 aura:id="conditionallyRequired" 
                                 label="Hospitalization explanation"
-                                class="no-label" maxlength="2000" 
+                                variant="label-hidden" maxlength="2000"
                                 value="{!v.hospitalizationExplanation}"
                                 required="{!v.hospitalized == 'true'}" />
                     </div>
@@ -223,7 +231,7 @@
                 </div>
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium">
                     <lightning:select name="volunteeringForSchool" value="{!v.volunteeringForSchool}"
-                            label="Volunteering for school or community service?" class="no-label">
+                            label="Volunteering for school or community service?" variant="label-hidden">
                         <option value="false" text="No" />
                         <option value="true" text="Yes" />
                     </lightning:select>
@@ -237,12 +245,14 @@
                                 aura:id="conditionallyRequired"
                                 label="How long do you plan on volunteering?"
                                 type="text" value="{!v.volunteeringForSchoolLength}"
-                                class="no-label" required="{!v.volunteeringForSchool == 'true'}" />
+                                variant="label-hidden" required="{!v.volunteeringForSchool == 'true'}" />
                     </div>
                 </div>
             </div>
 
-            <div class="form-section-title">Emergency Contact Information</div>
+            <h3 class="slds-text-heading_medium slds-border_bottom slds-m-top_large">
+                Emergency Contact Information
+            </h3>
             <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
                     Emergency Contact's Name *
@@ -263,7 +273,7 @@
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium">
                     <lightning:input name="ecRelationship" label="Relationship"
                             type="text" required="true" value="{!v.ecRelationship}"
-                            aura:id="required" class="no-label" />
+                            aura:id="required" variant="label-hidden" />
                 </div>
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">Phone *</div>
                 <div class="slds-size_1-of-1 slds-grid slds-p-horizontal_medium slds-grid_pull-padded-medium">
@@ -288,7 +298,9 @@
                 </div>
             </div>
 
-            <div class="form-section-title">Volunteering Information</div>
+            <h3 class="slds-text-heading_medium slds-border_bottom slds-m-top_large">
+                Volunteering Information
+            </h3>
             <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
                     Why do you want to volunteer?
@@ -298,22 +310,8 @@
                 </div>
                 <div class="slds-size_1-of-1 slds-p-horizontal_medium">
                     <lightning:textarea name="reason" label="Reason"
-                            class="no-label" maxlength="2500" value="{!v.reason}" />
+                            variant="label-hidden" maxlength="2500" value="{!v.reason}" />
                 </div>
-                <aura:if isTrue="{!and(not(v.homeless == 'true'), not(v.hospitalized == 'true'))}">
-                    <div class="slds-size_1-of-1 slds-p-horizontal_medium fieldset-label">
-                        Which Volunteer Training will you attend? *
-                    </div>
-                    <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                        <lightning:select name="training" value="{!v.training}"
-                                label="training" class="no-label">
-                            <aura:iteration items="{!v.trainingOptions}" var="o">
-                                <option value="{!o.id}" text="{!o.detailedName}" />
-                            </aura:iteration>
-                            <option value="X">Notify me of other trainings</option>
-                        </lightning:select>
-                    </div>
-                </aura:if>
             </div>
 
             <aura:if isTrue="{!v.showError}">

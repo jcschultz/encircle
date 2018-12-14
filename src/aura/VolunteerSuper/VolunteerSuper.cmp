@@ -1,0 +1,67 @@
+<aura:component description="VolunteerSuper" extensible="true" access="global">
+
+    <aura:attribute name="requireAuthentication" type="Boolean"
+        description="Is the user required to be logged in as a volunteer to access this page?" />
+    <aura:attribute name="volunteerId" type="Id" default="" description="ID of the current volunteer" />
+    <aura:attribute name="pageHeading" type="String" default=""
+        description="Text to be displayed as the heading of the page." />
+
+    <!-- private attributes used for displaying/hiding content -->
+    <aura:attribute name="showRecordFinder" type="Boolean" default="false" access="private" />
+    <aura:attribute name="showBody" type="Boolean" default="false" access="private" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.handleInit}" />
+    <aura:handler name="volunteerRecordFinderEvent" event="c:VolunteerRecordFinderEvent"
+        action="{!c.handleVolunteerRecordFinderEvent}" />
+
+    <div>
+        <div class="slds-grid slds-grid_align-spread">
+            <div class="header-logo-container">
+                <img src="{!$Resource.VolunteerPortalAssets + '/img/text_logo.png'}" alt="" class="header-logo" />
+            </div>
+
+            <div class="slds-grid">
+                <div class="home-btn-container slds-m-vertical_medium slds-m-right_x-small">
+                    <lightning:buttonIcon
+                        alternativeText="Go Home"
+                        variant="brand"
+                        iconName="utility:home"
+                        onclick="{!c.handleHomeClick}"
+                    />
+                </div>
+                <aura:if isTrue="{!not(empty(v.volunteerId))}">
+                    <div class="logout-btn-container slds-m-vertical_medium slds-m-right_x-small">
+                        <lightning:button
+                            variant="brand"
+                            label="Log out"
+                            onclick="{!c.handleLogOutClick}"
+                        />
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+
+        <lightning:layout horizontalAlign="center" multipleRows="true" class="super-main-container slds-container_large slds-container_center">
+            <aura:if isTrue="{!not(empty(v.pageHeading))}">
+                <lightning:layoutItem size="12" class="content-container">
+                    <h1 class="slds-text-heading_medium slds-text-align_center slds-m-vertical_large">
+                        {!v.pageHeading}
+                    </h1>
+                </lightning:layoutItem>
+            </aura:if>
+
+            <aura:if isTrue="{!v.showRecordFinder}">
+                <lightning:layoutItem size="12" class="content-container" padding="around-medium">
+                    <c:VolunteerRecordFinder />
+                </lightning:layoutItem>
+            </aura:if>
+
+            <aura:if isTrue="{!v.showBody}">
+                <lightning:layoutItem size="12" class="content-container" padding="around-medium">
+                    {!v.body}
+                </lightning:layoutItem>
+            </aura:if>
+        </lightning:layout>
+    </div>
+
+</aura:component>

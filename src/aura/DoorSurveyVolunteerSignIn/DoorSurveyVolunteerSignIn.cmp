@@ -30,13 +30,13 @@
             Your Name
         </div>
 
-        <aura:if isTrue="{!v.chosenVolunteer == ''}">
+        <aura:if isTrue="{!empty(v.chosenVolunteer)}">
             <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
-                <c:VolunteerNameTypeAhead volunteerResults="{!v.volunteerResults}" />
+                <c:VolunteerNameTypeAhead volunteerType="VOLUNTEER" />
             </div>
         </aura:if>
 
-        <aura:if isTrue="{!v.chosenVolunteer != ''}">
+        <aura:if isTrue="{! not(empty(v.chosenVolunteer))}">
             <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
                 <div class="chosen-volunteer">
                     <span class="slds-text-heading_medium">
