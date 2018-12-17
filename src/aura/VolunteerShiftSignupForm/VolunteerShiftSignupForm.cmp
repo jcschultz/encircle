@@ -14,6 +14,8 @@
     <aura:attribute name="errorHeading" access="private" type="String" default="" />
 
     <aura:handler name="shiftToggleEvent" event="c:VolunteerShiftToggleEvent" action="{!c.handleShiftToggle}" />
+    <aura:handler name="change" value="{!v.volunteerId}" action="{!c.handleVolunteerIdChange}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <div>
         <aura:if isTrue="{!v.didSuccessfullySave}">
@@ -25,30 +27,49 @@
             <lightning:spinner variant="brand" alternativeText="Saving" size="large" />
         </aura:if>
 
-
-        <h3 class="slds-border_bottom slds-text-heading_medium">Choose Your Volunteering Shifts</h3>
-        <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-around--medium" role="status">
-            <div class="slds-media__figure">
-                <lightning:icon alternativeText="Information"
-                        iconName="utility:info" />
-            </div>
-            <div class="slds-media__body">
-                <p>
-                    Scroll through the calendar below and make your selection
-                    by clicking on the shifts that still need volunteers.
-                    <span class="strong-text">Your selections
-                        are not saved until you scroll to the bottom of the page
-                        and click the &quot;Sign Up&quot; button.</span>
-                </p>
-            </div>
-        </div>
-        <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
-            <div class="slds-size_1-of-1 slds-p-horizontal_medium">
-                <div class="calendar-list-container">
-                    <c:VolunteerShiftCalendar />
+        <aura:if isTrue="{!v.volunteer.allowedToVolunteer}">
+            <h3 class="slds-border_bottom slds-text-heading_medium">Choose Your Volunteering Shifts</h3>
+            <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-around--medium" role="status">
+                <div class="slds-media__figure">
+                    <lightning:icon alternativeText="Information"
+                            iconName="utility:info" />
+                </div>
+                <div class="slds-media__body">
+                    <p>
+                        Scroll through the calendar below and make your selection
+                        by clicking on the shifts that still need volunteers.
+                        <span class="strong-text">Your selections
+                            are not saved until you scroll to the bottom of the page
+                            and click the &quot;Sign Up&quot; button.</span>
+                    </p>
                 </div>
             </div>
-        </div>
+            <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <div class="calendar-list-container">
+                        <c:VolunteerShiftCalendar />
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!and(not(empty(v.volunteer)), not(v.volunteer.allowedToVolunteer))}">
+            <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-around--medium" role="status">
+                <div class="slds-media__figure">
+                    <lightning:icon alternativeText="Information"
+                            iconName="utility:error" />
+                </div>
+                <div class="slds-media__body">
+                    <p>
+                        You have not yet been approved to sign up for volunteer shifts.
+                        Approval requires registering, passing a background check, attending
+                        trainings, and agreeing to confidentiality contracts. If you believe
+                        this is an error, please email us at
+                        <a href="mailto:info@encircletogether.org">info@encircletogether.org</a>.
+                    </p>
+                </div>
+            </div>
+        </aura:if>
 
 
         <aura:if isTrue="{!and(v.selectedShifts != '', v.selectedShifts.length > 0)}">

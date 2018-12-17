@@ -16,6 +16,35 @@
         return index;
     },
     
+    loadVolunteerDetails : function(cmp) {
+        const volunteerId = cmp.get('v.volunteerId');
+        
+        if (!volunteerId) {
+            cmp.set('v.volunteer', '');
+            return;
+        }
+        
+        cmp.set('v.showSpinner', true);
+        
+        const action = cmp.get('c.loadVolunteerViewModel');
+        
+        action.setParams({
+            'volunteerId' : volunteerId
+        });
+        
+        action.setCallback(this, function(response){
+            const state = response.getState();
+            
+            if ('SUCCESS' === state) {
+                cmp.set('v.volunteer', response.getReturnValue());
+            }
+            
+            cmp.set('v.showSpinner', false);
+        });
+        
+        $A.enqueueAction(action);
+    },
+    
     parseShiftToggle : function(cmp, event) {
         let shift = event.getParams();
         let selectedShifts = cmp.get('v.selectedShifts');

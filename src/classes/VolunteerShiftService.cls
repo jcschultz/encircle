@@ -93,6 +93,13 @@ public virtual class VolunteerShiftService {
         List<VolunteerHoursViewModel> newHours = new List<VolunteerHoursViewModel>();
         VolunteerShiftMapper shiftMapper = VolunteerShiftMapper.getInstance();
         VolunteerHourMapper hourMapper = VolunteerHourMapper.getInstance();
+        VolunteerService volService = VolunteerService.getInstance();
+        
+        // check that volunteer is allowed to volunteer
+        VolunteerViewModel vol = volService.getVolunteerById(volunteerId);
+        if (!vol.allowedToVolunteer) {
+            throw new AuraHandledException('You have not yet been approved for volunteering.');
+        }
         
         List<VolunteerShiftViewModel> shifts = shiftMapper.getShiftsByIds(shiftIds);
         

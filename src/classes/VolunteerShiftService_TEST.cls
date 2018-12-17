@@ -55,11 +55,29 @@ private class VolunteerShiftService_TEST {
     }
     
     @IsTest
+    private static void testNotApproved() {
+        VolunteerShiftMapper.instance = new VolunteerShiftMapperStub();
+        VolunteerHourMapper.instance = new VolunteerHourMapperStub();
+        EmailService.instance = new EmailServiceStub();
+        VolunteerShiftService service = VolunteerShiftService.getInstance();
+        VolunteerService.instance = new UnApprovedVolServiceStub();
+        
+        try {
+            List<VolunteerHoursViewModel> hours = service.signVolunteerUpForHours(
+                null, null, null
+            );
+            
+            System.assert(false, 'You shall not pass');
+        } catch (Exception e) {}
+    }
+    
+    @IsTest
     private static void testSignUp() {
         VolunteerShiftMapper.instance = new VolunteerShiftMapperStub();
         VolunteerHourMapper.instance = new VolunteerHourMapperStub();
         EmailService.instance = new EmailServiceStub();
         VolunteerShiftService service = VolunteerShiftService.getInstance();
+        VolunteerService.instance = new ApprovedVolServiceStub();
         
         List<VolunteerHoursViewModel> hours = service.signVolunteerUpForHours(
             null, null, null
@@ -152,6 +170,24 @@ private class VolunteerShiftService_TEST {
             h.locationStreet = 'street st';
             h.jobName = 'my job';
             return new List<VolunteerHoursViewModel>{h};
+        }
+    }
+    
+    private class UnApprovedVolServiceStub extends VolunteerService {
+        public override VolunteerViewModel getVolunteerById(Id volunteerId) {
+            VolunteerViewModel vvm = new VolunteerViewModel();
+            vvm.id = volunteerId;
+            vvm.allowedToVolunteer = false;
+            return vvm;
+        }
+    }
+    
+    private class ApprovedVolServiceStub extends VolunteerService {
+        public override VolunteerViewModel getVolunteerById(Id volunteerId) {
+            VolunteerViewModel vvm = new VolunteerViewModel();
+            vvm.id = volunteerId;
+            vvm.allowedToVolunteer = true;
+            return vvm;
         }
     }
     

@@ -19,6 +19,15 @@ private class VolunteerShiftSignupCtrl_TEST {
         System.assertEquals(conId, hours[0].volunteerId);
     }
     
+    @IsTest
+    private static void testLoadData() {
+        VolunteerService.instance = new VolunteerServiceStub();
+        
+        VolunteerViewModel vvm = VolunteerShiftSignupController.loadVolunteerViewModel(conId);
+        
+        System.assertEquals(conId, vvm.id);
+    }
+    
     private class VolunteerShiftServiceStub extends VolunteerShiftService {
         public override List<VolunteerHoursViewModel> signVolunteerUpForHours(String volunteerId, String[] shiftIds, String status) {
             VolunteerHoursViewModel vhvm = new VolunteerHoursViewModel();
@@ -26,6 +35,16 @@ private class VolunteerShiftSignupCtrl_TEST {
             vhvm.volunteerId = conId;
             
             return new List<VolunteerHoursViewModel>{vhvm};
+        }
+    }
+    
+    private class VolunteerServiceStub extends VolunteerService {
+        public override VolunteerViewModel getVolunteerAndUpcomingShifts(Id volunteerId) {
+            VolunteerViewModel vvm = new VolunteerViewModel();
+            vvm.id = conId;
+            vvm.name = 'test name';
+            
+            return vvm;
         }
     }
 }

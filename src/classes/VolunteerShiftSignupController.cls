@@ -18,4 +18,10 @@ public class VolunteerShiftSignupController {
         return vsService.signVolunteerUpForHours(volunteerId, shiftIds, SIGNUP_STATUS);
     }
     
+    @AuraEnabled
+    public static VolunteerViewModel loadVolunteerViewModel(Id volunteerId) {
+        VolunteerService service = VolunteerService.getInstance();
+        return service.getVolunteerAndUpcomingShifts(volunteerId);
+    }
+    
 }
