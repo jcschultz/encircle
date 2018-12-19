@@ -32,6 +32,8 @@
         <members>VolTrainingAttendanceTriggerHandler</members>
         <members>VolunteerHourMapper</members>
         <members>VolunteerHourMapper_TEST</members>
+        <members>VolunteerHourService</members>
+        <members>VolunteerHourService_TEST</members>
         <members>VolunteerHoursViewModel</members>
         <members>VolunteerMapper</members>
         <members>VolunteerMapper_TEST</members>

@@ -11,4 +11,10 @@ public without sharing class MyVolunteerProfileController {
         VolunteerService service = VolunteerService.getInstance();
         return service.getVolunteerAndUpcomingShifts(volunteerId);
     }
+    
+    @AuraEnabled
+    public static List<VolunteerHoursViewModel> deleteShift(Id volunteerId, Id hourId) {
+        VolunteerHourService service = VolunteerHourService.getInstance();
+        return service.deleteHours(volunteerId, new List<Id>{hourId});
+    }
 }

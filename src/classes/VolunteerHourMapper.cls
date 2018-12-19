@@ -138,4 +138,17 @@ public virtual without sharing class VolunteerHourMapper {
     
         return getHoursById(ids);
     }
+    
+    public virtual void deleteHours(Id[] ids) {
+        List<GW_Volunteers__Volunteer_Hours__c> hours = new List<GW_Volunteers__Volunteer_Hours__c>();
+        
+        for (Id hourId : ids) {
+            GW_Volunteers__Volunteer_Hours__c h = new GW_Volunteers__Volunteer_Hours__c(
+                Id = hourId
+            );
+            hours.add(h);
+        }
+        
+        delete hours;
+    }
 }

@@ -4,10 +4,8 @@
     <aura:set attribute="requireAuthentication" value="true" />
     <aura:set attribute="pageHeading" value="My Volunteer Profile" />
     
-    <aura:attribute name="volunteerResults" access="private" type="Object[]" />
     <aura:attribute name="volunteer" access="private" type="Object" default="" />
     <aura:attribute name="upcomingShifts" access="private" type="Object[]" default="" />
-    <aura:attribute name="noUpcomingShifts" type="Boolean" access="private" default="false" />
     <aura:attribute name="showSpinner" type="Boolean" access="private" default="false" />
 
     <aura:handler name="myShiftRowEvent" event="c:MyShiftRowEvent" action="{!c.handleShiftRowEvent}" />

@@ -22,6 +22,14 @@ private class MyVolunteerProfileController_TEST {
         System.assertEquals(1, vvm.hours.size());
     }
     
+    @IsTest
+    private static void testDelete() {
+        VolunteerHourService.instance = new VolunteerHourServiceStub();
+        
+        List<VolunteerHoursViewModel> hours = MyVolunteerProfileController.deleteShift(conId, hourId);
+        System.assertNotEquals(null, hours);
+    }
+    
     private class VolunteerServiceStub extends VolunteerService {
         public override VolunteerViewModel getVolunteerAndUpcomingShifts(Id volunteerId) {
             VolunteerViewModel vvm = new VolunteerViewModel();
@@ -39,6 +47,12 @@ private class MyVolunteerProfileController_TEST {
             vvm.hours.add(hour);
     
             return vvm;
+        }
+    }
+    
+    private class VolunteerHourServiceStub extends VolunteerHourService {
+        public override List<VolunteerHoursViewModel> deleteHours(Id volunteerId, Id[] hourIds) {
+            return new List<VolunteerHoursViewModel>();
         }
     }
     

@@ -115,5 +115,8 @@ private class VolunteerHourMapper_TEST {
         
         System.assertEquals(1, hoursById.size());
         System.assertEquals(VolunteerHourMapper.COMPLETED_STATUS, hoursById[0].status);
+        
+        mapper.deleteHours(new List<Id>{hoursById[0].id});
+        System.assertEquals(null, mapper.getHoursById(new List<Id>{hoursById[0].id}));
     }
 }

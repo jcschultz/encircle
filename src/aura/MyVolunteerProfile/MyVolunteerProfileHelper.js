@@ -3,12 +3,12 @@
     
     deleteShift : function(cmp, hourId) {
         const action = cmp.get('c.deleteShift');
-        const volunteerId = cmp.get('v.chosenVolunteer');
+        const volunteer = cmp.get('v.volunteer');
         
         cmp.set('v.showSpinner', true);
         
         action.setParams({
-            'volunteerId' : volunteerId,
+            'volunteerId' : volunteer.id,
             'hourId' : hourId
         });
         
@@ -16,7 +16,8 @@
             const state = response.getState();
             
             if ('SUCCESS' === state) {
-                this.loadVolunteerDetails(cmp);
+                volunteer.hours = response.getReturnValue();
+                cmp.set('v.volunteer', volunteer);
             }
             
             cmp.set('v.showSpinner', false);
