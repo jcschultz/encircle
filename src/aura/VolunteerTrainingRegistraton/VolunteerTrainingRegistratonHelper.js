@@ -2,8 +2,13 @@
     
     loadTrainingViewModel : function(cmp) {
         const action = cmp.get('c.getTrainings');
+        const volunteerId = cmp.get('v.volunteerId');
         
-        action.setParams({'volunteerId' : cmp.get('v.volunteerId')});
+        if (!volunteerId) {
+            return;
+        }
+        
+        action.setParams({'volunteerId' : volunteerId});
         
         action.setCallback(this, function(response){
             const state = response.getState();
