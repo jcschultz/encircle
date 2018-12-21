@@ -45,6 +45,7 @@ public virtual without sharing class VolunteerMapper {
         c.Emergency_Contact_Last_Name__c = vol.emergencyContactLastName;
         c.Emergency_Contact_Relationship__c = vol.emergencyContactRelationship;
         c.Emergency_Contact_Phone__c = vol.emergencyContactPhone;
+        c.Volunteer__c = true;
         
         // upsert contact and details
         upsert c;
