@@ -30,6 +30,9 @@
         <members>VolNameTypeAheadCtrl_TEST</members>
         <members>VolShiftCalService_TEST</members>
         <members>VolTrainingAttendanceTriggerHandler</members>
+        <members>VolTrainingRegistrationController</members>
+        <members>VolTrainingRegistrationController_TEST</members>
+        <members>VolTrainingRegistrationViewModel</members>
         <members>VolunteerHourMapper</members>
         <members>VolunteerHourMapper_TEST</members>
         <members>VolunteerHourService</members>
@@ -54,7 +57,14 @@
         <members>VolunteerShiftSignupController</members>
         <members>VolunteerShiftSignupCtrl_TEST</members>
         <members>VolunteerShiftViewModel</members>
+        <members>VolunteerTrainingAttendanceMapper</members>
+        <members>VolunteerTrainingAttendanceMapper_TEST</members>
+        <members>VolunteerTrainingMapper</members>
+        <members>VolunteerTrainingMapper_TEST</members>
+        <members>VolunteerTrainingService</members>
+        <members>VolunteerTrainingService_TEST</members>
         <members>VolunteerTrainingTriggerHandler</members>
+        <members>VolunteerTrainingViewModel</members>
         <members>VolunteerViewModel</members>
         <name>ApexClass</name>
     </types>
@@ -89,6 +99,7 @@
         <members>VolunteerShiftToggleEvent</members>
         <members>VolunteerSuper</members>
         <members>VolunteerToast</members>
+        <members>VolunteerTrainingRegistraton</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>

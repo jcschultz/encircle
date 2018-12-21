@@ -1,0 +1,149 @@
+<aura:component access="global" extends="c:VolunteerSuper" controller="VolTrainingRegistrationController"
+        implements="forceCommunity:availableForAllPageTypes"
+        description="Allows volunteers to register for trainings">
+
+    <aura:set attribute="requireAuthentication" value="true" />
+    <aura:set attribute="pageHeading" value="Register for Volunteer Training" />
+
+    <aura:attribute name="trainingVM" access="private" type="Object" default="" />
+    <aura:attribute name="showSpinner" access="private" type="Boolean" default="false" />
+
+    <aura:handler name="change" value="{!v.volunteerId}" action="{!c.handleVolunteerIdChange}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <div>
+        <aura:if isTrue="{!v.showSpinner}">
+            <lightning:spinner variant="brand" size="large" alternativeText="Working..." />
+        </aura:if>
+
+        <aura:if isTrue="{!not(empty(v.trainingVM.myTrainings))}">
+            <h2 class="slds-text-heading_small">Your Current Trainings</h2>
+            <p>Trainings that you're currently signed up for are listed below.</p>
+
+            <div class="slds-grid slds-wrap slds-grid_pull-padded-medium slds-m-bottom_large">
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table_stacked-horizontal selected-shifts-table">
+                        <thead>
+                        <tr class="slds-text-title_caps">
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Location</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <aura:iteration items="{!v.trainingVM.myTrainings}" var="t">
+                            <tr>
+                                <td data-label="Start">
+                                    <lightning:formattedDateTime
+                                        value="{!t.startDateTime}"
+                                        year="numeric"
+                                        month="short"
+                                        day="numeric"
+                                        weekday="short"
+                                        hour="numeric"
+                                        minute="2-digit"
+                                    />
+                                </td>
+                                <td data-label="End">
+                                    <lightning:formattedDateTime
+                                        value="{!t.endDateTime}"
+                                        year="numeric"
+                                        month="short"
+                                        day="numeric"
+                                        weekday="short"
+                                        hour="numeric"
+                                        minute="2-digit"
+                                    />
+                                </td>
+                                <td data-label="Location">
+                                    {!t.location}
+                                </td>
+                                <td data-label="Description" class="slds-cell-wrap">
+                                    {!t.description}
+                                </td>
+                                <td>
+                                    <lightning:button
+                                            variant="brand"
+                                            label="Unregister"
+                                            value="{!t.id}"
+                                            onclick="{!c.handleUnregisterClick}"
+                                    />
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </aura:if>
+
+        <h2 class="slds-text-heading_small">Upcoming Trainings</h2>
+
+        <aura:if isTrue="{!empty(v.trainingVM.trainingsExclusiveOfMe)}">
+            There are no trainings currently available for registration.
+        </aura:if>
+
+        <aura:if isTrue="{!not(empty(v.trainingVM.trainingsExclusiveOfMe))}">
+            <div class="slds-grid slds-wrap slds-grid_pull-padded-medium">
+                <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table_stacked-horizontal selected-shifts-table">
+                        <thead>
+                        <tr class="slds-text-title_caps">
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Location</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <aura:iteration items="{!v.trainingVM.trainingsExclusiveOfMe}" var="t">
+                            <tr>
+                                <td data-label="Start">
+                                    <lightning:formattedDateTime
+                                        value="{!t.startDateTime}"
+                                        year="numeric"
+                                        month="short"
+                                        day="numeric"
+                                        weekday="short"
+                                        hour="numeric"
+                                        minute="2-digit"
+                                    />
+                                </td>
+                                <td data-label="End">
+                                    <lightning:formattedDateTime
+                                        value="{!t.endDateTime}"
+                                        year="numeric"
+                                        month="short"
+                                        day="numeric"
+                                        weekday="short"
+                                        hour="numeric"
+                                        minute="2-digit"
+                                    />
+                                </td>
+                                <td data-label="Location">
+                                    {!t.location}
+                                </td>
+                                <td data-label="Description" class="slds-cell-wrap">
+                                    {!t.description}
+                                </td>
+                                <td>
+                                    <lightning:button
+                                        variant="brand"
+                                        label="Register"
+                                        value="{!t.id}"
+                                        onclick="{!c.handleRegisterClick}"
+                                    />
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </aura:if>
+    </div>
+
+</aura:component>
