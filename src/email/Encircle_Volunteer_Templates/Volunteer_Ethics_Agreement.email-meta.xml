@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Ethics agreement, automatically sent when a volunteer completes training.</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>Volunteer Ethics Agreement</name>
+    <style>none</style>
+    <subject>Encircle Ethics Agreement</subject>
+    <type>text</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

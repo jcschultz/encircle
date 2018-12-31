@@ -1,0 +1,78 @@
+<aura:component controller="VolunteerTrainingCompletedController" implements="force:lightningQuickAction,force:hasRecordId,flexipage:availableForAllPageTypes" >
+    <aura:attribute name="volunteerAttendances" type="Volunteer_Training_Attendance__c[]" />
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="selectedCount" type="integer" default="0"/>
+   
+    <aura:handler name="init" value="{!this}" action="{!c.getAttendences}"/>
+
+    <div class="slds-page-header slds-border_bottom">
+        <p class="slds-page-header__title slds-truncate" title="">Mark Volunteer Trainings Completed</p>
+        <p class="slds-text-body_regular">People who have completed training but not yet signed the Encircle Ethics and Confidentiality Agreements will be sent an email to do so.</p>
+        <div class="slds-grid">
+            <div class="slds-col slds-size_3-of-4">
+                <span class="slds-badge">Number Selected: {!v.selectedCount}</span>
+            </div>
+            <div class="slds-col slds-size_3-of-4">
+                <button class="slds-button slds-button--brand" onclick="{!c.save}">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+        <thead>
+            <tr class="slds-text-title--caps">
+                <th style="width:3.25rem;" class="slds-text-align--right">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <label class="slds-checkbox">
+                                <!--header checkbox for select all-->
+                                <ui:inputCheckbox aura:id="selectAll" change="{!c.selectAll}"/>
+                                <span class="slds-checkbox--faux"></span>
+                                <span class="slds-form-element__label text"></span>
+                            </label>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <span class="slds-truncate" title="Completed Training">Completed Training</span>
+                </th>
+                <th>
+                    <span class="slds-truncate" title="Name">Volunteer Name</span>
+                </th>
+                <th>
+                    <div class="slds-truncate" title="Statement of Confidentiality">Has Signed Agreement?</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.volunteerAttendances}" var="vol">
+                <tr>
+                    <td scope="row" class="slds-text-align--right" style="width:3.25rem;">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <label class="slds-checkbox">
+                                <ui:inputCheckbox text="{!vol.Id}" aura:id="boxPack" value="{!vol.Completed_Training__c}" change="{!c.checkboxSelect}"/>
+                                <span class="slds-checkbox--faux"></span>
+                                <span class="slds-form-element__label text"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+                    <td scope="row">
+                        <div class="slds-truncate" title="{!vol.Completed_Training__c}">{!vol.Completed_Training__c}</div>
+                    </td>
+                    <td scope="row">
+                        <div class="slds-truncate" title="{!vol.Volunteer__r.Name}">
+                            <a href="{!'/one/one.app?#/sObject/'+ vol.Volunteer__c + '/view'}" target="_blank">{!vol.Volunteer__r.Name}</a>
+                        </div>
+                    </td>
+                    <td scope="row">
+                        <div class="slds-truncate" title="{!vol.Volunteer__r.Statement_of_Confidentiality__c}">
+                            {!vol.Volunteer__r.Statement_of_Confidentiality__c}
+                        </div>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+</aura:component>
