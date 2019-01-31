@@ -28,18 +28,19 @@ public class VolunteerTrainingCompletedController {
             	Statement_of_Confidentiality__c = false AND 
             	HasOptedOutOfEmail = false AND
                	Email != null 
-        ]);
-        
+        ]);        
         EmailTemplate template = [SELECT Id, Name FROM EmailTemplate WHERE DeveloperName = 'Volunteer_Ethics_Agreement' LIMIT 1];
-        
-        Messaging.MassEmailMessage message = createEmailMessage(new List<Id>(emailRecipients.keySet()), template.id);
-		Messaging.SendEmail(New Messaging.MassEmailMessage[]{message});
+
+        if (!emailRecipients.isEmpty() && template != null) {
+            Messaging.MassEmailMessage message = createEmailMessage(new List<Id>(emailRecipients.keySet()), template.id);
+            Messaging.SendEmail(New Messaging.MassEmailMessage[]{message});
+        }
     }
 
 	//creates email message
     private static Messaging.MassEmailMessage createEmailMessage(List<Id> contacts, Id template) {
 		Messaging.MassEmailMessage mail = new Messaging.MassEmailMessage(); 
-		mail.setTargetObjectIds(new List<Id>(contacts));
+		mail.setTargetObjectIds(contacts);
         mail.setTemplateId(template);
         mail.setUseSignature(false);
         mail.setReplyTo('donotreply@encircletogether.org');
