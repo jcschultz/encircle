@@ -5,8 +5,11 @@ public class CalendarDataViewModel {
     public Date nextStartDate;
     @AuraEnabled
     public Date nextEndDate;
+    @AuraEnabled
+    public List<String> cities;
     
     public CalendarDataViewModel() {
         days = new List<CalendarRowViewModel>();
+        cities = new List<String>();
     }
 }

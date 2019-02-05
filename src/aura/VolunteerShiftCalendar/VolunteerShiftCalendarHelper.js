@@ -48,6 +48,8 @@
         var jobClasses = component.get('v.jobClasses');
         var jobCount = component.get('v.jobCount');
         var lastMonth = '';
+        var cities = component.get('v.cities');
+        var selectedCity = component.get('v.selectedCity');
         
         if (!calendarDays) {
             calendarDays = [];
@@ -55,6 +57,10 @@
         
         if (!jobClasses) {
             jobClasses = {};
+        }
+        
+        if (!cities) {
+            cities = [];
         }
         
         for (var i = 0; i < newData.days.length; i++) {
@@ -72,13 +78,30 @@
             }
         }
         
+        for (var i = 0; i < newData.cities.length; i++) {
+            if (cities.indexOf(newData.cities[i]) < 0) {
+                cities.push(newData.cities[i]);
+            }
+        }
+        cities.sort();
+        
+        if (!selectedCity) {
+            selectedCity = cities[0];
+        }
+        
         component.set('v.calendarDays', calendarDays.concat(newData.days));
         component.set('v.nextStartDate', newData.nextStartDate);
         component.set('v.nextEndDate', newData.nextEndDate);
         component.set('v.showSpinner', false);
         component.set('v.jobClasses', jobClasses);
         component.set('v.jobCount', jobCount);
+        component.set('v.cities', newData.cities);
+        component.set('v.selectedCity', selectedCity);
     },
+    
+    selectCity : function(cmp, city) {
+        cmp.set('v.selectedCity', city);
+    }
     
     
 })

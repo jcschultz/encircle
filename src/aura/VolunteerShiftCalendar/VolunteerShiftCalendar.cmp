@@ -6,9 +6,28 @@
     <aura:attribute name="showSpinner" access="private" type="Boolean" default="true" />
     <aura:attribute name="jobClasses" access="private" type="Object" />
     <aura:attribute name="jobCount" access="private" type="Integer" default="0" />
+    <aura:attribute name="cities" access="private" type="String[]" />
+    <aura:attribute name="selectedCity" access="private" type="String" default="" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
+    <div class="slds-m-around_large slds-grid slds-grid_align-center slds-grid_vertical-align-center">
+        <div class="slds-text-heading_medium slds-m-top_small slds-p-right_medium">
+            Filter shifts by city:
+        </div>
+        <div>
+            <lightning:select
+                label="Cities"
+                aura:id="cityFilter"
+                onchange="{!c.handleCityFilterChange}"
+                variant="label-hidden"
+            >
+                <aura:iteration items="{!v.cities}" var="city">
+                    <option value="{!city}">{!city}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+    </div>
 
     <table class="slds-table slds-table_striped">
         <aura:iteration items="{!v.calendarDays}" var="cd">
@@ -29,10 +48,12 @@
                     <td class="day-shifts-col">
                         <div class="slds-grid slds-wrap">
                             <aura:iteration items="{!cd.shifts}" var="shift">
-                                <c:VolunteerShiftCalendarShift shift="{!shift}"
+                                <aura:if isTrue="{!shift.city == v.selectedCity}">
+                                    <c:VolunteerShiftCalendarShift shift="{!shift}"
                                         monthAbbreviation="{!cd.monthAbbreviation}"
                                         dateOfMonth="{!cd.dateOfMonth}"
                                         dayOfWeek="{!cd.dayOfWeek}" />
+                                </aura:if>
                             </aura:iteration>
                         </div>
                     </td>

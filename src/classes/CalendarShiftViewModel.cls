@@ -21,6 +21,8 @@ public class CalendarShiftViewModel {
     public Boolean selected;
     @AuraEnabled
     public List<CalendarVolunteerViewModel> volunteers;
+    @AuraEnabled
+    public String city;
     
     public CalendarShiftViewModel() {
         this.volunteers = new List<CalendarVolunteerViewModel>();

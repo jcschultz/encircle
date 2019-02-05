@@ -78,6 +78,11 @@ public without sharing class VolunteerShiftCalendarController {
             if (dates.containsKey(d)) {
                 dates.get(d).add(vs);
             }
+            
+            // add job location to list of locations
+            if (String.isNotBlank(vs.GW_Volunteers__Job_Location_City__c) && !cdvm.cities.contains(vs.GW_Volunteers__Job_Location_City__c)) {
+                cdvm.cities.add(vs.GW_Volunteers__Job_Location_City__c);
+            }
         }
         
         for (Date d : dates.keySet()) {
@@ -113,6 +118,7 @@ public without sharing class VolunteerShiftCalendarController {
                     shift.volunteersNeeded = Integer.valueOf(vs.GW_Volunteers__Desired_Number_of_Volunteers__c);
                     shift.volunteersStillNeeded = Integer.valueOf(vs.GW_Volunteers__Number_of_Volunteers_Still_Needed__c);
                     shift.volunteersSignedUp = Integer.valueOf(vs.GW_Volunteers__Total_Volunteers__c);
+                    shift.city = vs.GW_Volunteers__Job_Location_City__c;
                     
                     if (vs.GW_Volunteers__Volunteer_Hours__r != null && !vs.GW_Volunteers__Volunteer_Hours__r.isEmpty()) {
                         for (GW_Volunteers__Volunteer_Hours__c h : vs.GW_Volunteers__Volunteer_Hours__r) {
@@ -132,6 +138,8 @@ public without sharing class VolunteerShiftCalendarController {
             
             cdvm.days.add(dayRow);
         }
+        
+        cdvm.cities.sort();
         
         return cdvm;
     }
