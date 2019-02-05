@@ -1,0 +1,66 @@
+<aura:component extends="c:VolunteerSuper" controller="VolunteerConfAgreementController" implements="forceCommunity:availableForAllPageTypes" access="global">
+	<aura:set attribute="pageHeading" value="Welcome to the Encircle Volunteer Portal" />
+	<aura:set attribute="requireAuthentication" value="true" />
+
+    <aura:attribute name="volunteer" access="private" type="Object" default="" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <div class="slds-grid slds-wrap slds-grid_pull-padded-medium slds-m-bottom_large">
+        <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+            <h2 class="slds-text-heading_small">Encircle Ethics Agreement: Non-Therapeutic Service Provider</h2>
+            <br/>
+            <p>As a condition working with Encircle LGBTQ Family and Youth Resource Center and its programs, I,___________________________________, agree to adhere to the following ethical standards:</p>
+            <p>Although it is not possible to conceptualize every ethical issue that may arise in the course of working and dealing with clients, there are some common questions and situations that have been addressed below. This is not intended to be an exhaustive listing. It is intended to describe some of the more common issues which arise. As always, we rely on the individual and collective good judgment of staff, paid and volunteer, with regard to situations not described below. A "client" or "service recipient" is defined as any individual receiving direct services from Encircle.</p>    
+            <ol>
+                <li>I agree not to engage sexually with any client of Encircle or any significant other of an Encircle client.</li>
+                <li>I agree not to house any client of Encircle.</li>
+                <li>I agree not to enter into a financial relationship with any client of Encircle. This may create a conflict of interest or be seen as exploitation of a service recipient, i.e. bartering for services or using a service recipient's expertise or business for one's own personal gain. A client may be a volunteer in your department, and there are regulations there where they cannot be a paid employee. You cannot hire a client to be your employee in any regard outside the agency.</li>
+                <li>I agree that only qualified mental health providers should provide mental health therapy.</li>
+                <li>If I should happen to see a client outside of the center I will not identify the client as a client of Encircle.</li>
+                <li>I agree not to give out money to a client for any reason.</li>
+                <li>I agree not to give out the home phone number or address of any staff member to a client or anyone.</li>
+                <li>I agree not to discuss my personal feelings about other staff members with clients. I agree to not discuss my feelings about any client with other clients.</li>
+                <li>I agree to not do special favors for clients.</li>
+                <li>I agree to not disclose information about my personal life, problems, relationship, etc. to clients. There may be times when limited self-disclosure is appropriate but carefully consider the purpose of disclosing personal information. Such disclosure should be discussed with a supervisor or in regular supervision sessions.</li>
+                <li>I agree to not attempt to do therapy with any client (unless I am a therapist assigned to the client). In-depth exploration into a client's psychological history of sexual or physical abuse or drug problem should be done with the appropriate professional (i.e. therapist or drug abuse counselor). If a client wants to explore these issues with staff, it is appropriate to listen and be supportive, but the client should always be directed to discuss these issues further with a therapist or counselor.</li>
+            </ol>
+            <p>In order to protect the best interest of clients and volunteers and as a condition of being a paid staff or volunteer of Encircle and its programs, I agree to adhere to the agency's ethical standards.</p>
+            <p>I agree to speak to my supervisor in the event that any of the above ethical standards remain unclear or when an ethical situation arises that needs clarification.</p>
+            <p>I agree to maintain the confidentiality of all non-public information of Encircle and of any of its clients.</p>
+            <p>I agree to adhere to the ethical standards stated above and to use good judgement to follow the "spirit" of the policy where specific situations are not fully stipulated.</p>
+            <br/>
+        	<h3>Statement of Confidentiality</h3>
+            <br/>
+            <p>I, {!v.volunteer.Name}, volunteer of Encircle LGBTQ Family and Youth Resource Center, agree to adhere to the following guidelines:</p>
+            <ol>
+                <li>I will assure that all records are housed in a secure and confidential manner.</li>
+                <li>I understand that all information concerning any client is privileged information, and may not be shared with any unauthorized individual without the express written consent of the client. Exceptions: see “c”.</li>
+                <li>
+                    I understand that there are exceptions to confidentiality and that they are:
+        			<ul>
+                    	<li>Reasonable suspicion of abuse to children or elderly persons.</li>
+	                    <li>The disclosure of a serious intent to inflict harm upon oneself or another individual. I further understand that the Executive Director and/or supervisor must first be apprised of any potential need to waive the right to confidentiality.</li>
+            	    </ul>
+                </li>
+                <li>The failure to protect private information by a volunteer is cause for disciplinary action, up to and including termination of the volunteer relationship with Encircle.</li>
+            </ol>
+        	<p>I acknowledge that the policy concerning confidentiality has been explained to me, a copy has been provided to me for future reference, and that if I have any questions, I can ask a staff member.</p>
+            <p>
+                <ui:inputCheckbox 
+                    aura:id="agreeCheckbox" 
+                    change="{!c.toggleButtonEnabled}" 
+                />
+                By clicking the box you are agreeing to all terms and conditions in the form above.
+            </p>
+                <lightning:button
+                    class="slds-size_1-of-1 slds-align-bottom"
+                    label="I Agree"
+                    variant="brand"
+                    onclick="{!c.handleAgree}"
+                    aura:id="agreeButton"
+                    disabled="true"
+                />
+        </div>
+    </div>
+</aura:component>
